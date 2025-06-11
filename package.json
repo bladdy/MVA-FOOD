@@ -9,6 +9,37 @@
     "astro": "astro"
   },
   "dependencies": {
-    "astro": "^5.9.2"
+    "@astrojs/check": "^0.9.3",
+    "@astrojs/react": "^4.2.0",
+    "@astrojs/tailwind": "^5.1.1",
+    "@astrojs/vercel": "^8.1.4",
+    "@babel/runtime": "^7.26.9",
+    "@supabase/supabase-js": "^2.49.4",
+    "@types/react": "^19.0.8",
+    "@types/react-dom": "^19.0.3",
+    "@types/react-select": "^5.0.1",
+    "@vercel/speed-insights": "^1.1.0",
+    "astro": "^5.2.6",
+    "date-fns": "^4.1.0",
+    "html2pdf.js": "^0.10.3",
+    "jspdf": "^3.0.1",
+    "jspdf-autotable": "^5.0.2",
+    "mongodb": "^6.16.0",
+    "ogl": "^1.0.11",
+    "react": "^19.0.0",
+    "react-datepicker": "^8.3.0",
+    "react-dom": "^19.0.0",
+    "react-router-dom": "^7.5.3",
+    "react-select": "^5.10.1",
+    "sharp": "^0.33.5",
+    "tailwindcss": "^3.4.12",
+    "typescript": "^5.6.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.1",
+    "eslint": "^8.30.0",
+    "eslint-plugin-react": "^7.32.0",
+    "prettier": "^3.3.3",
+    "prettier-plugin-astro": "^0.14.1"
   }
 }
