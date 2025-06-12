@@ -1,0 +1,87 @@
+---
+import Restaurant from "./Restaurant.astro";
+import { Image } from "astro:assets";
+const restaurants = [
+  {
+    slug: "burguer",
+    name: "Burguer",
+    image: "https://centrosantafe.com.mx/cdn/shop/files/701.png?v=5733697768863393566",
+  },
+  {
+    slug: "kfc",
+    name: "KFC",
+    image: "https://1000marcas.net/wp-content/uploads/2020/01/KFC-logo.png",
+  },
+  {
+    slug: "mcdonalds",
+    name: "McDonalds",
+    image: "https://1000marcas.net/wp-content/uploads/2019/11/McDonalds-logo.png",
+  },
+  {
+    slug: "pizza-hut",
+    name: "Pizza Hut",
+    image: "https://1000marcas.net/wp-content/uploads/2020/01/Pizza-Hut-logo.png",
+  },
+  {
+    slug: "dominos",
+    name: "Dominos",
+    image: "https://1000marcas.net/wp-content/uploads/2020/01/Logo-Dominos.png",
+  },
+  {
+    slug: "subway",
+    name: "Subway",
+    image: "https://1000marcas.net/wp-content/uploads/2020/03/Logo-Subway.png",
+  },
+  {
+    slug: "starbucks",
+    name: "Starbucks",
+    image: "https://1000marcas.net/wp-content/uploads/2019/12/Starbucks-Logo.png",
+  },
+  {
+    slug: "taco-bell",
+    name: "Taco Bell",
+    image: "https://1000marcas.net/wp-content/uploads/2020/03/Logo-Taco-Bell.png",
+  },
+  {
+    slug: "carls-jr",
+    name: "Carls Jr",
+    image: "https://1000marcas.net/wp-content/uploads/2021/02/Carls-Jr.-Logo.png",
+  }
+];
+---
+
+<section
+  id="features"
+  class="pt-20 "
+>
+  <div class="text-center mb-16 pt-16">
+    <h2 class="text-4xl font-semibold text-orange-600 mb-4">
+      Nuestros Clientes
+    </h2>
+    <p class="text-lg text-gray-700">
+      Descubre una variedad de restaurantes que ofrecen deliciosos platos.
+    </p>
+  </div>
+  <!-- Grid container -->
+  <div class="max-w-5xl mx-auto mt-10">
+    <div class="grid grid-cols-4 gap-6 p-6">
+      {
+        restaurants.map((restaurant) => (
+          <div class="flex justify-center items-center">
+            <Restaurant href={`/restaurant/${restaurant.slug}`}>
+              <Image
+                src={restaurant.image}
+                alt={restaurant.name}
+                title={restaurant.name}
+                width="162"
+                height="162"
+                class="inline-block w-22 transition-transform group-hover:scale-110"
+              />
+            </Restaurant>
+          </div>
+        ))
+      }
+
+    </div>
+  </div>
+</section>

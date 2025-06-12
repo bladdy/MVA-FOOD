@@ -1,0 +1,116 @@
+---
+import Check from '../assets/svg/devices-check.svg';
+import PhotoEdit from '../assets/svg/photo-edit.svg';
+import QRCode from '../assets/svg/qrcode.svg';
+---
+
+<section id="features" class="py-20 bg-gradient-to-r from-orange-100 to-orange-50">
+    
+    
+    <!-- Section Title -->
+    <div class="text-center mb-16 pt-16">
+        <h2 class="text-4xl font-semibold text-orange-600 mb-4">Tu Menú en 3 Pasos</h2>
+        <p class="text-lg text-gray-700">Sigue estos simples pasos para tener tu menú listo en minutos.</p>
+    </div>
+
+    <!-- Feature Cards -->
+    <div class="w-2/3 mx-auto px-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
+            <!-- Feature Card 1 -->
+            <div class="p-6 bg-white shadow-lg rounded-lg text-center feature-step">
+                <div class="text-4xl text-orange-600 mb-4">
+                    <Check class="w-12 h-12 mx-auto " />
+                </div>
+                <h4 class="text-2xl font-semibold text-orange-800 mb-3">Carga tus Platos</h4>
+                <p class="text-gray-600">También puedes añadir descripciones, precios y fotos de tus platos de manera fácil y rápida.</p>
+            </div>
+
+            <!-- Feature Card 2 -->
+            <div class="p-6 bg-white shadow-lg rounded-lg text-center feature-step">
+                <div class="text-4xl text-orange-600 mb-4">
+                    <PhotoEdit class="w-12 h-12 mx-auto " />
+                </div>
+                <h4 class="text-2xl font-semibold text-orange-800 mb-3">Genera Tu Código QR</h4>
+                <p class="text-gray-600">El sistema generará un código QR único para tu restaurante, facilitando el acceso al menú desde cualquier dispositivo.</p>
+            </div>
+
+            <!-- Feature Card 3 -->
+            <div class="p-6 bg-white shadow-lg rounded-lg text-center feature-step">
+                <div class="text-4xl text-orange-600 mb-4">
+                    <QRCode class="w-12 h-12 mx-auto " />
+                </div>
+                <h4 class="text-2xl font-semibold text-orange-800 mb-3">Presume de Tu Menú</h4>
+                <p class="text-gray-600">Tus clientes podrán ver tu menú con sus dispositivos móviles, mejorando la experiencia y facilitando la consulta.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Call to Action -->
+    <div class="text-center mt-16">
+        <h3 class="text-3xl font-semibold text-orange-900 mb-4">Todo lo que necesitas para tu menú en nuestra aplicación.</h3>
+        <p class="text-lg text-gray-700 mb-8">Gestiona tu menú de forma intuitiva y accesible desde cualquier dispositivo.</p>
+        <a href="#" class="bg-orange-600 text-white px-8 py-3 hover:bg-orange-700 rounded-full">Comienza Ahora</a>
+    </div>
+</section>
+
+<style>
+    .feature-step {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .feature-step:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    } 
+    .feature-step img {
+        width: 50px;
+        height: 50px;
+    }
+    .feature-step h4 {
+        color: #1a202c; /* Tailwind's gray-800 */
+    }
+    .feature-step p {
+        color: #4a5568; /* Tailwind's gray-600 */
+    }
+    .feature-step a {
+        background-color: #2b6cb0; /* Tailwind's orange-600 */
+        color: white;
+        transition: background-color 0.3s ease;
+    }
+    .feature-step a:hover {
+        background-color: #2c5282; /* Tailwind's blue-700 */
+    }
+    @media (max-width: 768px) {
+        .feature-step {
+            margin-bottom: 20px;
+        }
+    }
+    @media (min-width: 768px) {
+        .feature-step {
+            margin-bottom: 0;
+        }
+    }
+    @media (min-width: 1024px) {
+        .feature-step {
+            margin-bottom: 0;
+        }
+    }
+    @media (min-width: 1280px) {
+        .feature-step {
+            margin-bottom: 0;
+        }
+    }
+</style>
+<script>
+    // This script is optional and can be used for additional interactivity
+    document.addEventListener('DOMContentLoaded', () => {
+        const steps = document.querySelectorAll('.feature-step');
+        steps.forEach(step => {
+            step.addEventListener('click', () => {
+                const h4 = step.querySelector('h4');
+                if (h4) {
+                    alert(`You clicked on: ${h4.innerText}`);
+                }
+            });
+        });
+    });
+</script>   
