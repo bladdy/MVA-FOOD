@@ -1,0 +1,49 @@
+---
+import Fb from '../assets/svg/facebook.svg';
+import Ig from '../assets/svg/instagram.svg';
+import X from '../assets/svg/x.svg';
+---
+
+
+<footer class="bg-gray-800 text-white py-6">
+  <div class="container mx-auto flex justify-between items-center px-6">
+    <!-- Logo Section -->
+    <div class="flex items-center">
+      <img src="img/mva-logo-rb.png" alt="Logo" class="h-32 w-auto" />
+    </div>
+
+    <!-- Navigation Section -->
+    <nav>
+      <ul class="flex space-x-6">
+        <li class="hover:underline hover:text-orange-600">
+          <a href="/privacy">Privacy Policy</a>
+        </li>
+        <li class="hover:underline hover:text-orange-600">
+          <a href="/terms">Terms of Service</a>
+        </li>
+        <li class="hover:underline hover:text-orange-600">
+          <a href="/contact">Contact Us</a>
+        </li>
+      </ul>
+    </nav>
+
+    <!-- Social Media Section -->
+    <div class="flex space-x-6">
+      <a href="#" class="hover:text-orange-600"><Fb width={40} height={40}/></a>
+      <a href="#" class="hover:text-orange-600"><Ig width={40} height={40}/></a>
+      <a href="#" class="hover:text-orange-600"><X width={40} height={40}/></a>
+    </div>
+  </div>
+
+  <!-- Footer Bottom Section -->
+  <div class="text-center mt-6">
+    <p>&copy; <span id="year"></span> Mva Foods. All rights reserved.</p>
+  </div>
+</footer>
+
+<script>
+  const yearElement = document.getElementById('year');
+  if (yearElement) {
+    yearElement.innerText = String(new Date().getFullYear());
+  }
+</script>
