@@ -9,7 +9,6 @@
     "astro": "astro"
   },
   "dependencies": {
-    "@fontsource/poppins": "5.2.6",
     "@astrojs/check": "^0.9.3",
     "@astrojs/react": "^4.2.0",
     "@astrojs/tailwind": "^5.1.1",
