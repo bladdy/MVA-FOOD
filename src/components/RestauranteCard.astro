@@ -1,0 +1,63 @@
+---
+import Location from "../assets/svg/map-pin.svg";
+import Food from "../assets/svg/tools-kitchen-3.svg";
+import { Image } from "astro:assets";
+
+export interface Props {
+  name: string;
+  image: string;
+  perfilImage: string;
+  tipoComida?: string[];
+  direccion?: string;
+  href?: string;
+}
+
+const {
+  name,
+  image,
+  perfilImage,
+  tipoComida,
+  direccion,
+  href = "/",
+} = Astro.props;
+---
+
+<a
+  href={href}
+  class="col-span-4 relative rounded-xl backdrop-blur-md border border-black/10 shadow-inner shadow-white/10 overflow-hidden group"
+>
+  <div
+    class="absolute z-10 bottom-0 top-0 w-full h-full
+      bg-gradient-to-b from-transparent from-40% via-[#151836]/50 to-[#151836]/80"
+  >
+  </div>
+
+  <div
+    class="absolute left-0 top-0 bottom-0 w-full
+      h-full group-hover:scale-110 transition-scale duration-1000
+      ease-in-out opacity-90 bg-blend-luminosity bg-center bg-cover bg-no-repeat -z-10"
+    style={`background-image: url(${perfilImage});`}
+  >
+  </div>
+
+  <div
+    class="relative flex flex-col gap-1 p-6 z-20 select-none justify-end h-full"
+  >
+    <Image src={image} alt={name} title={name} width="61" height="61" />
+    <h2 class="text-3xl font-semibold text-balance text-white">{name}</h2>
+    <div class="flex items-start">
+      <div>
+        <Food class="text-orange-600 text-sm mr-2" />
+      </div>
+      <h2 class="text-sm font-semibold text-balance text-white">
+        {tipoComida?.join(", ") ?? "Sin categoría"}
+      </h2>
+    </div>
+    <div class="flex items-start">
+      <div>
+        <Location class="text-orange-600 text-sm mr-2" />
+      </div>
+      <h2 class="text-sm text-balance text-white">{direccion}</h2>
+    </div>
+  </div>
+</a>
