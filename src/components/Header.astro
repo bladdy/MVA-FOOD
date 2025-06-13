@@ -54,41 +54,6 @@
     menuToggle.addEventListener("click", () => {
         mobileMenu.classList.toggle("hidden");
     });
-  // Scroll suave al hacer clic en enlaces de anclas
-  /*document.querySelectorAll('a[href^="#"]').forEach(link => {
-    link.addEventListener("click", function (e) {
-      const hash = this.getAttribute("href");
-      const target = document.querySelector(hash);
-      if (target) {
-        e.preventDefault();
-        target.scrollIntoView({ behavior: "smooth", block: "start" });
-      }
-    });
-  });
-*/
-// Agrega animación suave + redirección condicional
- /* document.querySelectorAll('a[href^="#"]').forEach(link => {
-    link.addEventListener("click", function (e) {
-      const hash = this.getAttribute("href");
-      const currentPath = window.location.pathname;
-
-      if (hash.startsWith("#")) {
-        // Si NO estamos en /inicio, redirigir a /inicio#...
-        if (currentPath.includes("/inicio")) {
-          e.preventDefault();
-          window.location.href = "/inicio/" + hash;
-        } else {
-          // Si ya estamos en /inicio, hacer scroll suave
-          e.preventDefault();
-          const target = document.querySelector(hash);
-          if (target) {
-            target.scrollIntoView({ behavior: "smooth", block: "start" });
-          }
-        }
-      }
-    });
-  });*/
-  // Animación suave para enlaces internos con hash (por ejemplo: #caracteristicas)
  document.querySelectorAll('a[href^="#"]').forEach(link => {
     link.addEventListener("click", function (e) {
       const hash = this.getAttribute("href");
