@@ -1,60 +1,86 @@
 <!-- Navegación -->
-<div>
-  <nav class="bg-white shadow-md fixed w-full z-50">
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex justify-between items-center py-4">
-        <!-- Logo -->
-        <a href="/" class="text-2xl font-bold flex items-center">
-          <img src="mva-logo-rb.png" alt="Logo" class="h-12 w-12 mr-2" />
-          <h1 class="text-orange-600 hover:text-orange-900 transition-colors duration-300">Mva Foods</h1>
-        </a>
+<nav class="bg-white shadow-md fixed w-full z-50">
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-between items-center py-4">
+      <!-- Logo -->
+      <a href="/" class="text-2xl font-bold flex items-center">
+        <img src="/mva-logo-rb.png" alt="Logo" class="h-12 w-12 mr-2" />
+        <h1
+          class="text-orange-600 hover:text-orange-900 transition-colors duration-300"
+        >
+          Mva Foods
+        </h1>
+      </a>
 
-        <!-- Menú para pantallas grandes -->
-        <div class="hidden md:flex space-x-6 text-orange-600 text-xl">
-          <a href="#inicio" class="hover:text-orange-900">Inicio</a>
-          <a href="/restaurantes" class="hover:text-orange-900">Restaurantes</a>
-          <a href="#caracteristicas" class="hover:text-orange-900">Características</a>
-          <a href="#precios" class="hover:text-orange-900">Precios</a>
-          <a href="#contacto" class="hover:text-orange-900">Contacto</a>
-        </div>
-
-        <!-- Botón de Agendar clientes -->
-        <div class="hidden md:flex">
-          <a href="#clientes" class="bg-[#D96D2D] text-white px-10 py-2 rounded-full hover:bg-[#5c3016] transition-colors duration-300">
-            Clientes
-          </a>
-        </div>
-
-        <!-- Menú móvil -->
-        <div class="md:hidden">
-          <button id="menu-toggle" class="text-orange-600 focus:outline-none text-2xl text-bold">☰</button>
-        </div>
+      <!-- Menú para pantallas grandes -->
+      <div class="hidden md:flex space-x-6 text-orange-600 text-xl">
+        <a href="#inicio" class="hover:text-orange-900">Inicio</a>
+        <a href="/restaurantes" class="hover:text-orange-900">Restaurantes</a>
+        <a href="#caracteristicas" class="hover:text-orange-900"
+          >Características</a
+        >
+        <a href="#precios" class="hover:text-orange-900">Precios</a>
+        <a href="#contacto" class="hover:text-orange-900">Contacto</a>
       </div>
 
-      <!-- Menú móvil desplegable -->
-      <div id="mobile-menu" class="hidden md:hidden flex-col space-y-2 pb-4">
-        <a href="#inicio" class="text-orange-600 hover:text-orange-900 block">Inicio</a>
-        <a href="/restaurantes" class="text-orange-600 hover:text-orange-900 block">Restaurantes</a>
-        <a href="#caracteristicas" class="text-orange-600 hover:text-orange-900 block">Características</a>
-        <a href="#precios" class="text-orange-600 hover:text-orange-900 block">Precios</a>
-        <a href="#contacto" class="text-orange-600 hover:text-orange-900 block">Contacto</a>
-        <a href="#clientes" class="bg-orange-600 text-white px-4 py-2 rounded-lg text-center hover:bg-orange-900 block">
+      <!-- Botón de Agendar clientes -->
+      <div class="hidden md:flex">
+        <a
+          href="#clientes"
+          class="bg-[#D96D2D] text-white px-10 py-2 rounded-full hover:bg-[#5c3016] transition-colors duration-300"
+        >
           Clientes
         </a>
       </div>
+
+      <!-- Menú móvil -->
+      <div class="md:hidden">
+        <button
+          id="menu-toggle"
+          class="text-orange-600 focus:outline-none text-2xl text-bold"
+          >☰</button
+        >
+      </div>
     </div>
-  </nav>
-</div>
+
+    <!-- Menú móvil desplegable -->
+    <div id="mobile-menu" class="hidden md:hidden flex-col space-y-2 pb-4">
+      <a href="#inicio" class="text-orange-600 hover:text-orange-900 block"
+        >Inicio</a
+      >
+      <a
+        href="/restaurantes"
+        class="text-orange-600 hover:text-orange-900 block">Restaurantes</a
+      >
+      <a
+        href="#caracteristicas"
+        class="text-orange-600 hover:text-orange-900 block">Características</a
+      >
+      <a href="#precios" class="text-orange-600 hover:text-orange-900 block"
+        >Precios</a
+      >
+      <a href="#contacto" class="text-orange-600 hover:text-orange-900 block"
+        >Contacto</a
+      >
+      <a
+        href="#clientes"
+        class="bg-orange-600 text-white px-4 py-2 rounded-lg text-center hover:bg-orange-900 block"
+      >
+        Clientes
+      </a>
+    </div>
+  </div>
+</nav>
 
 <!-- JavaScript -->
 <script type="module">
-    const menuToggle = document.getElementById("menu-toggle");
-    const mobileMenu = document.getElementById("mobile-menu");
+  const menuToggle = document.getElementById("menu-toggle");
+  const mobileMenu = document.getElementById("mobile-menu");
 
-    menuToggle.addEventListener("click", () => {
-        mobileMenu.classList.toggle("hidden");
-    });
- document.querySelectorAll('a[href^="#"]').forEach(link => {
+  menuToggle.addEventListener("click", () => {
+    mobileMenu.classList.toggle("hidden");
+  });
+  document.querySelectorAll('a[href^="#"]').forEach((link) => {
     link.addEventListener("click", function (e) {
       const hash = this.getAttribute("href");
 
