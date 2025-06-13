@@ -48,6 +48,12 @@
 
 <!-- JavaScript -->
 <script type="module">
+    const menuToggle = document.getElementById("menu-toggle");
+    const mobileMenu = document.getElementById("mobile-menu");
+
+    menuToggle.addEventListener("click", () => {
+        mobileMenu.classList.toggle("hidden");
+    });
   // Scroll suave al hacer clic en enlaces de anclas
   /*document.querySelectorAll('a[href^="#"]').forEach(link => {
     link.addEventListener("click", function (e) {
