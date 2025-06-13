@@ -1,12 +1,14 @@
 ---
 
 import RestaurantSearch from '@/components/RestaurantSearch.astro';
-import Layout from '../layouts/Layout.astro';
+import Layout from '@/layouts/Layout.astro';
 import RestaurantsList from '@/components/RestaurantsList.astro';
+
+
+export const prerender = true
 ---
 
 <Layout title="Mva Foods - Home" 
-class="bg-gray-100"
     description="Welcome to Mva Foods, your go-to destination for delicious and healthy food options.">
     <div class="py-20">
         <div class="flex flex-col">

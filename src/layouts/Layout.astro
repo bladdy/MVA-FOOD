@@ -1,6 +1,17 @@
 ---
 import Footer from "@/components/Footer.astro";
 import Header from "@/components/Header.astro";
+
+interface Props {
+  title: string
+  description?: string
+}
+  
+  const {
+  title = "",
+  description = '',
+
+} = Astro.props
 ---
 
 <!doctype html>
@@ -8,20 +19,16 @@ import Header from "@/components/Header.astro";
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/x-icon" href="img/mva-logo-rb.png" />
+		<link rel="icon" type="image/svg+xml" href="mva-logo-rb.png" />
 		<meta name="generator" content={Astro.generator} />
-		<meta name="description" content="Mva Foods - Your go-to destination for delicious and healthy food options." />
 		<meta name="keywords" content="menus, comida, comida rapida, delivery, comida saludable" />
 		<meta name="author" content="Bladdy Almanzar" />
-		<title>Mva Foods</title>
+		<title>{title}</title>
 	</head>
 	<body>
-		<div class="max-w-full">
-
-			<Header/>
-				<slot />
-			<Footer/>
-		</div>
+		<Header/>
+			<slot />
+		<Footer/>
 	</body>
 </html>
 

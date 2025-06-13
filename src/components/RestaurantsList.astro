@@ -3,7 +3,7 @@ import RestauranteCard from "./RestauranteCard.astro";
 
 const restaurants = [
   {
-    slug: "burguer",
+    id: "burguer",
     name: "Burguer",
     image: "https://centrosantafe.com.mx/cdn/shop/files/701.png?v=5733697768863393566",
     tipos: ["Americana", "Tacos"],
@@ -11,7 +11,7 @@ const restaurants = [
     direccion: "Federico Geraldino 61, Plaza Laura, local 1 A. Piantini. Santo Domingo. Distrito Nacional."
   },
   {
-    slug: "kfc",
+    id: "kfc",
     name: "KFC",
     image: "https://1000marcas.net/wp-content/uploads/2020/01/KFC-logo.png",
     tipos: ["Pollo"],
@@ -32,7 +32,7 @@ const restaurants = [
       {
         restaurants.map((restaurant) => (
           <RestauranteCard
-            href={`/restaurantes/${restaurant.slug}`}
+            href={`/restaurantes/${restaurant.id}`}
             name={restaurant.name}
             image={restaurant.image}
             perfilImage={restaurant.perfilImage ?? "/img/default.jpg"}

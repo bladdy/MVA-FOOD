@@ -11,5 +11,17 @@ export default defineConfig({
   integrations: [tailwind(), react()],
   output: 'server',
   adapter: vercel(),
+  vite: {
+    resolve: {
+      alias: {
+        '@': '/src',
+        '@components': '/src/components'
+      }
+    }
+  },
+  server: {
+    host: true,
+    port: 4321,
+  }
 
 });

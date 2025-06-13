@@ -1,0 +1,13 @@
+---
+import Layout from "@/layouts/Layout.astro";
+const { id } = Astro.params;
+// Descripción dinámica
+const description = `Perfil y Menu de ${id}`
+
+---
+
+<Layout title=`Mva Foods - ${id}` description={description}>
+  <div class="py-20 h-screen">
+    <h2 class="pt-52">Este es el restaurante - {id}</h2>
+  </div>
+</Layout>
