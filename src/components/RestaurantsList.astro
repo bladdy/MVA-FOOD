@@ -1,0 +1,105 @@
+---
+// Caracteristics section
+import Location from "../assets/svg/map-pin.svg";
+import Food from "../assets/svg/tools-kitchen-3.svg";
+import { Image } from "astro:assets";
+const restaurants = [
+  {
+    slug: "burguer",
+    name: "Burguer",
+    image: "https://centrosantafe.com.mx/cdn/shop/files/701.png?v=5733697768863393566",
+    perfilImage: "/img/fast-food-3.jpg",
+  },
+  {
+    slug: "kfc",
+    name: "KFC",
+    image: "https://1000marcas.net/wp-content/uploads/2020/01/KFC-logo.png",
+  },
+  {
+    slug: "mcdonalds",
+    name: "McDonalds",
+    image: "https://1000marcas.net/wp-content/uploads/2019/11/McDonalds-logo.png",
+  },
+  {
+    slug: "pizza-hut",
+    name: "Pizza Hut",
+    image: "https://1000marcas.net/wp-content/uploads/2020/01/Pizza-Hut-logo.png",
+  },
+  {
+    slug: "dominos",
+    name: "Dominos",
+    image: "https://1000marcas.net/wp-content/uploads/2020/01/Logo-Dominos.png",
+  },
+  {
+    slug: "subway",
+    name: "Subway",
+    image: "https://1000marcas.net/wp-content/uploads/2020/03/Logo-Subway.png",
+  },
+  {
+    slug: "starbucks",
+    name: "Starbucks",
+    image: "https://1000marcas.net/wp-content/uploads/2019/12/Starbucks-Logo.png",
+  },
+  {
+    slug: "taco-bell",
+    name: "Taco Bell",
+    image: "https://1000marcas.net/wp-content/uploads/2020/03/Logo-Taco-Bell.png",
+  },
+  {
+    slug: "carls-jr",
+    name: "Carls Jr",
+    image: "https://1000marcas.net/wp-content/uploads/2021/02/Carls-Jr.-Logo.png",
+  }
+];
+---
+
+
+<div class="lg:w-4/6 w-full">
+    <div class="mx-auto py-4 flex flex-col justify-center items-center">
+        <h2 class="text-3xl font-semibold text-orange-600 lg:mb-6 text-center">
+        Restaurantes
+        </h2>
+
+        <section  class="w-full max-w-[1600px] grid lg:grid-cols-12 auto-rows-[15rem] gap-4 mx-auto p-6 md:p-12 lg:p-20">
+            
+             {
+                 restaurants.map((restaurant) => (
+                     //Crear el componente Card pasarles la props
+                    <article
+                        class="col-span-4 relative rounded-xl backdrop-blur-md border border-black/10 shadow-inner shadow-white/10 overflow-hidden group">
+                        <div class="absolute z-10 bottom-0 top-0 w-full h-full
+                        bg-gradient-to-b from-transparent from-40% via-[#151836]/50 to-[#151836]/80"></div>
+                        <div class="absolute left-0 top-0 bottom-0 w-full
+                        h-full group-hover:scale-110 transition-scale duration-1000
+                        ease-in-out opacity-90 bg-blend-luminosity bg-center bg-cover bg-no-repeat -z-10"
+                        style={`background-image: url(${restaurant.perfilImage});`}></div>
+                        <div class="relative flex flex-col gap-1 p-6 z-20 select-none justify-end h-full">
+                            <Image
+                                src={restaurant.image}
+                                alt={restaurant.name}
+                                title={restaurant.name}
+                                width="61"
+                                height="61"
+                            />
+                            <h2 class="text-3xl font-semibold text-balance text-white">{restaurant.name}</h2>
+                            <div class="flex items-start">
+                                <Food class="text-orange-600 text-sm mr-2"/>
+                                <h2 class="text-sm font-semibold text-balance text-white">Americana</h2>
+                            </div>
+                            <div class="flex items-start">
+                                <Location class="text-orange-600 text-lg mr-2"/>
+                                <h2 class="text-sm text-balance text-white"> Federico Geraldino 61, Plaza Laura, local 1 A. Piantini. Santo Domingo. Distrito Nacional.</h2>
+                            </div>
+                        </div>
+                    </article>
+                    ))
+             }
+            
+        </section >
+        
+
+    </div>
+    
+</div>
+
+

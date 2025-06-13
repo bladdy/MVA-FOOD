@@ -1,65 +1,99 @@
-
-
+<!-- Navegación -->
 <div>
-    <nav class="bg-white shadow-md fixed w-full z-50">
-        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center py-4">
-                <!-- Logo -->
-                <a href="/" class="text-2xl font-bold flex items-center ">
-                    <img src="img/mva-logo-rb.png" alt="Logo" class="h-12 w-12 mr-2">
-                    <!-- Logo Text hay que hacerle un mask con una imagen que se vean comida-->
-                    <h1 class="text-orange-600 hover:text-orange-900 transition-colors duration-300">Mva Foods</h1>
-                </a>
+  <nav class="bg-white shadow-md fixed w-full z-50">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center py-4">
+        <!-- Logo -->
+        <a href="/" class="text-2xl font-bold flex items-center">
+          <img src="img/mva-logo-rb.png" alt="Logo" class="h-12 w-12 mr-2" />
+          <h1 class="text-orange-600 hover:text-orange-900 transition-colors duration-300">Mva Foods</h1>
+        </a>
 
-                <!-- Menú para pantallas grandes -->
-                <div class="hidden md:flex space-x-6 text-orange-600 text-xl">
-                    <a href="#home" class="hover:text-orange-900">Inicio</a>
-                    <a href="#restaurantes" class="hover:text-orange-900">Restaurantes</a>
-                    <a href="#caracteristicas" class="hover:text-orange-900">Características</a>
-                    <a href="#precios" class="hover:text-orange-900">Precios</a>
-                    <a href="#contacto" class="hover:text-orange-900">Contacto</a>
-                </div>
-
-                <!-- Botón de Agendar clientes -->
-                <div class="hidden md:flex">
-                    <a href="#clientes" class="bg-[#D96D2D] text-white px-10 py-2 rounded-full hover:bg-[#5c3016] transition-colors duration-300">
-                        Clientes
-                    </a>
-                </div>
-
-                <!-- Menú móvil -->
-                <div class="md:hidden">
-                    <button id="menu-toggle" class="text-orange-600 focus:outline-none text-2xl text-bold">
-                        ☰
-                    </button>
-                </div>
-            </div>
-
-            <!-- Menú móvil desplegable -->
-            <div id="mobile-menu" class="hidden md:hidden flex flex-col space-y-2 pb-4">
-                <a href="#home" class="text-orange-600 hover:text-orange-900 block">Inicio</a>
-                <a href="#restaurantes" class="text-orange-600 hover:text-orange-900 block">Restaurantes</a>
-                <a href="#caracteristicas" class="text-orange-600 hover:text-orange-900 block">Características</a>
-                <a href="#precios" class="text-orange-600 hover:text-orange-900 block">Precios</a>
-                <a href="#contacto" class="text-orange-600 hover:text-orange-900 block">Contacto</a>
-                <a href="#clientes" class="bg-orange-600 text-white px-4 py-2 rounded-lg text-center hover:bg-orange-900 block">
-                    Clientes
-                </a>
-            </div>
+        <!-- Menú para pantallas grandes -->
+        <div class="hidden md:flex space-x-6 text-orange-600 text-xl">
+          <a href="#inicio" class="hover:text-orange-900">Inicio</a>
+          <a href="/restaurantes" class="hover:text-orange-900">Restaurantes</a>
+          <a href="#caracteristicas" class="hover:text-orange-900">Características</a>
+          <a href="#precios" class="hover:text-orange-900">Precios</a>
+          <a href="#contacto" class="hover:text-orange-900">Contacto</a>
         </div>
-    </nav>
 
+        <!-- Botón de Agendar clientes -->
+        <div class="hidden md:flex">
+          <a href="#clientes" class="bg-[#D96D2D] text-white px-10 py-2 rounded-full hover:bg-[#5c3016] transition-colors duration-300">
+            Clientes
+          </a>
+        </div>
+
+        <!-- Menú móvil -->
+        <div class="md:hidden">
+          <button id="menu-toggle" class="text-orange-600 focus:outline-none text-2xl text-bold">☰</button>
+        </div>
+      </div>
+
+      <!-- Menú móvil desplegable -->
+      <div id="mobile-menu" class="hidden md:hidden flex flex-col space-y-2 pb-4">
+        <a href="#inicio" class="text-orange-600 hover:text-orange-900 block">Inicio</a>
+        <a href="/restaurantes" class="text-orange-600 hover:text-orange-900 block">Restaurantes</a>
+        <a href="#caracteristicas" class="text-orange-600 hover:text-orange-900 block">Características</a>
+        <a href="#precios" class="text-orange-600 hover:text-orange-900 block">Precios</a>
+        <a href="#contacto" class="text-orange-600 hover:text-orange-900 block">Contacto</a>
+        <a href="#clientes" class="bg-orange-600 text-white px-4 py-2 rounded-lg text-center hover:bg-orange-900 block">
+          Clientes
+        </a>
+      </div>
+    </div>
+  </nav>
 </div>
 
-<script>
-    const menuToggle = document.getElementById("menu-toggle");
-    const mobileMenu = document.getElementById("mobile-menu");
+<!-- JavaScript -->
+<script type="module">
+  // Scroll suave al hacer clic en enlaces de anclas
+  /*document.querySelectorAll('a[href^="#"]').forEach(link => {
+    link.addEventListener("click", function (e) {
+      const hash = this.getAttribute("href");
+      const target = document.querySelector(hash);
+      if (target) {
+        e.preventDefault();
+        target.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    });
+  });
+*/
+// Agrega animación suave + redirección condicional
+ /* document.querySelectorAll('a[href^="#"]').forEach(link => {
+    link.addEventListener("click", function (e) {
+      const hash = this.getAttribute("href");
+      const currentPath = window.location.pathname;
 
-    if (menuToggle) {
-        menuToggle.addEventListener("click", () => {
-            if (mobileMenu) {
-                mobileMenu.classList.toggle("hidden");
-            }
-        });
-    }
+      if (hash.startsWith("#")) {
+        // Si NO estamos en /inicio, redirigir a /inicio#...
+        if (currentPath.includes("/inicio")) {
+          e.preventDefault();
+          window.location.href = "/inicio/" + hash;
+        } else {
+          // Si ya estamos en /inicio, hacer scroll suave
+          e.preventDefault();
+          const target = document.querySelector(hash);
+          if (target) {
+            target.scrollIntoView({ behavior: "smooth", block: "start" });
+          }
+        }
+      }
+    });
+  });*/
+  // Animación suave para enlaces internos con hash (por ejemplo: #caracteristicas)
+ document.querySelectorAll('a[href^="#"]').forEach(link => {
+    link.addEventListener("click", function (e) {
+      const hash = this.getAttribute("href");
+
+      if (hash.startsWith("#")) {
+        const target = document.querySelector(hash);
+        if (target) {
+          e.preventDefault();
+          target.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      }
+    });
+  });
 </script>

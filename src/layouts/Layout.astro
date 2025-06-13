@@ -1,3 +1,8 @@
+---
+import Footer from "@/components/Footer.astro";
+import Header from "@/components/Header.astro";
+---
+
 <!doctype html>
 <html lang="en">
 	<head>
@@ -11,7 +16,12 @@
 		<title>Mva Foods</title>
 	</head>
 	<body>
-		<slot />
+		<div class="max-w-full">
+
+			<Header/>
+				<slot />
+			<Footer/>
+		</div>
 	</body>
 </html>
 

@@ -1,0 +1,98 @@
+<section class="lg:w-1/2 w-full rounded-lg px-8">
+  <div class="mx-auto py-4 flex flex-col justify-center items-center">
+    <h2 class="text-3xl font-semibold text-white lg:mb-6 text-center">
+      Búsqueda de Restaurantes
+    </h2>
+
+    <form class="flex flex-col lg:grid lg:grid-cols-5 grid-cols-12 w-full mt-4">
+      <div class="grid grid-cols-2 col-span-2">
+        <!-- Dropdown de Ubicación 1 -->
+        <div class="lg:col-span-1">
+          <div class="w-full">
+            <select
+              id="firstName"
+              name="firstName"
+              class="w-full p-3 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-600"
+              required
+            >
+              <option value="" disabled selected>Restaurante</option>
+              <option value="Juan">Adrian Tropical</option>
+              <option value="Maria">Brisal</option>
+              <option value="Carlos">Café Santo Domingo</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Dropdown de Ubicación 2 -->
+        <div class="lg:col-span-1">
+          <div class="w-full">
+            <select
+              id="firstName"
+              name="firstName"
+              class="w-full p-3 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-600"
+              required
+            >
+              <option value="" disabled selected>Tipo comida</option>
+              <option value="Juan">Criolla</option>
+              <option value="Carlos">China</option>
+              <option value="Maria">Mexicana</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 col-span-2">
+        <div class="lg:col-span-1">
+          <div class="w-full">
+            <select
+              id="firstName"
+              name="firstName"
+              class="w-full p-3 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-600"
+              required
+            >
+              <option value="" disabled selected>Ubucacion</option>
+              <optgroup label="Monclova">
+                <option value="juan"
+                  >Colonia Borjas</option>
+                <option value="maria"
+                  >Colonia Independencia</option
+                >
+                <option value="carlos"
+                  >Colonia Aviacio</option
+                >
+              </optgroup>
+            </select>
+          </div>
+        </div>
+
+        <!-- Dropdown de Ubicación 4 -->
+        <div class="lg:col-span-1">
+          <div class="w-full">
+            <select
+              id="firstName"
+              name="firstName"
+              class="w-full p-3 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-600"
+              required
+            >
+              <option value="" disabled selected>Amenidades</option>
+              <option value="Juan">Bar</option>
+              <option value="Maria">Brunch</option>
+              <option value="Carlos">Wifi</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <!-- Dropdown de Ubicación 3 -->
+
+      <!-- Botón de Enviar -->
+      <div class="w-full lg:col-span-1 col-span-6">
+        <button
+          type="submit"
+          class="w-full bg-orange-600 text-white px-8 py-3 hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-600"
+        >
+          Buscar
+        </button>
+      </div>
+    </form>
+  </div>
+</section>
