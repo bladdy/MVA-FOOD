@@ -8,6 +8,7 @@ import Phone from "@/assets/svg/phone.svg";
 import Whatsapp from "@/assets/svg/brand-whatsapp.svg";
 import Clock from "@/assets/svg/clock.svg";
 import { Image } from "astro:assets";
+import MenuSection from "@/React/MenuSection";
 // Esto importa todos los SVGs de la carpeta "amenidades"
 const svgModules = import.meta.glob(
   "/src/assets/amenidades/*.svg",
@@ -54,7 +55,7 @@ export const prerender = true;
             {restaurant.name}
           </h2>
 
-          <div class="p-4 text-start flex flex-col gap-4 mt-4">
+          <div class="text-start flex flex-col gap-4 mt-4">
             <div class="flex items-start">
               <Food class="text-orange-600 w-5 h-5 mr-2" />
               <h2 class="text-md font-semibold text-orange-600">
@@ -87,7 +88,7 @@ export const prerender = true;
               <div class="flex flex-col">
                 {
                   restaurant.horario.map((horario) => (
-                    <div class="grid grid-cols-2 justify-between text-md font-semibold text-orange-600">
+                    <div class="grid grid-cols-2 justify-between lg:gap-4 text-md font-semibold text-orange-600">
                       <p>{horario.dia}: </p> 
                       <p>{horario.apertura} a {horario.cierre}</p>
                     </div>
@@ -118,41 +119,21 @@ export const prerender = true;
 
         <!-- Contenido central -->
         <div class="w-full md:flex-1 bg-white shadow-lg rounded-lg text-center feature-step p-6 mt-6 md:mt-0">
-          <div class="mt-6">
-            <h2 class="text-2xl font-bold text-orange-600 mb-4">Menú</h2>
-            <table class="w-full text-sm text-left">
-              <tbody>
-                {
-                  restaurant.menu.map((item) => (
-                    <tr class="border-b last:border-b-0 hover:bg-orange-50 transition-colors">
-                      <td class="py-3 px-2 w-3/5">
-                        <div class="text-base font-semibold text-orange-900">{item.name}</div>
-                        <div class="text-sm text-orange-600">{item.ingredientes}</div>
-                      </td>
-                      <td class="py-3 px-2 w-1/5 text-right font-semibold text-orange-800 whitespace-nowrap">
-                        RD$ {item.price.toLocaleString('es-DO')}
-                      </td>
-                    </tr>
-                  ))
-                }
-              </tbody>
-            </table>
-            </div>
-
+          <MenuSection menu={restaurant?.menu ?? []} />
         </div>
 
         <!-- Footer -->
         <div class="w-full bg-white shadow-lg rounded-lg text-center feature-step p-6 mt-6 mb-6">
-        <div class="relative w-full h-96 overflow-hidden rounded-lg">
-          <iframe 
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d28458.6750399274!2d-101.44747150906393!3d26.924612!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x868bcdc372021f57%3A0x1f92eebe5a1ab44a!2sBurger%20King!5e0!3m2!1ses!2smx!4v1749876497694!5m2!1ses!2smx" 
-            class="absolute top-0 left-0 w-full h-full border-0 lg:h-96"
-            allowfullscreen 
-            loading="lazy" 
-            referrerpolicy="no-referrer-when-downgrade">
-          </iframe>
+            <div class="relative w-full h-96 overflow-hidden rounded-lg">
+              <iframe 
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d28458.6750399274!2d-101.44747150906393!3d26.924612!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x868bcdc372021f57%3A0x1f92eebe5a1ab44a!2sBurger%20King!5e0!3m2!1ses!2smx!4v1749876497694!5m2!1ses!2smx" 
+                class="absolute top-0 left-0 w-full h-full border-0 lg:h-96"
+                allowfullscreen 
+                loading="lazy" 
+                referrerpolicy="no-referrer-when-downgrade">
+              </iframe>
+            </div>
         </div>
-</div>
 
       </div>
     ) : (
