@@ -2,8 +2,8 @@ import type { Restaurante } from "@/Types/Restaurante";
 
 export const restaurants : Restaurante[] = [
   {
-    id: "burguer",
-    name: "Burguer",
+    id: "burger",
+    name: "Burger King",
     image: "https://centrosantafe.com.mx/cdn/shop/files/701.png?v=5733697768863393566",
     tipos: ["Americana", "Tacos"],
     perfilImage: "/img/fast-food-3.jpg",
