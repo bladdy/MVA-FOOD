@@ -39,15 +39,18 @@ export default function MenuSection({ menu }: Props) {
       {/* Botones de Categoría */}
       <div className="flex flex-wrap justify-center gap-4 mb-6">
 
-        {categoriaOrden.map((categoria) => (
-          <CategoriaButton
-            key={categoria}
-            label={categoria}
-            icon={categoriaIcons[categoria]}
-            active={selectedCategoria === categoria}
-            onClick={() => setSelectedCategoria(categoria)}
-          />
+        {categoriaOrden
+          .filter((categoria) => groupedMenu[categoria]?.length > 0)
+          .map((categoria) => (
+            <CategoriaButton
+              key={categoria}
+              label={categoria}
+              icon={categoriaIcons[categoria]}
+              active={selectedCategoria === categoria}
+              onClick={() => setSelectedCategoria(categoria)}
+            />
         ))}
+
       </div>
 
       {/* Tabla de productos */}
