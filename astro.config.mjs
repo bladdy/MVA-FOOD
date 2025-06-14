@@ -3,6 +3,7 @@ import { defineConfig } from 'astro/config';
 import tailwind from '@astrojs/tailwind';
 import react from '@astrojs/react';
 import vercel from '@astrojs/vercel';
+import svgr from 'vite-plugin-svgr';
 
 
 
@@ -12,6 +13,7 @@ export default defineConfig({
   output: 'server',
   adapter: vercel(),
   vite: {
+    plugins: [svgr()],
     resolve: {
       alias: {
         '@': '/src',

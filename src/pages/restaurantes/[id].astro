@@ -7,8 +7,22 @@ import Food from "@/assets/svg/tools-kitchen-3.svg";
 import Phone from "@/assets/svg/phone.svg";
 import Whatsapp from "@/assets/svg/brand-whatsapp.svg";
 import Clock from "@/assets/svg/clock.svg";
-
 import { Image } from "astro:assets";
+// Esto importa todos los SVGs de la carpeta "amenidades"
+const svgModules = import.meta.glob(
+  "/src/assets/amenidades/*.svg",
+  { eager: true, import: "default" }
+);
+
+// Crear un mapa por nombre de archivo
+const amenidadesMap = Object.fromEntries(
+  Object.entries(svgModules).map(([path, mod]) => {
+    const filename = path.split("/").pop(); // ej: "area-exterior.svg"
+    return [filename, mod];
+  })
+);
+
+
 const { id } = Astro.params;
 // Descripción dinámica
 export function getStaticPaths() {
@@ -17,6 +31,7 @@ export function getStaticPaths() {
   });
 }
 const restaurant = restaurants.find((res) => res.id === id);
+
 const description = `Perfil y Menu de ${id}`;
 export const prerender = true;
 ---
@@ -24,9 +39,9 @@ export const prerender = true;
 <Layout title={`Mva Foods - ${id}`} description={description}>
   {
     restaurant ? (
-      <div class="flex flex-col md:flex-row md:gap-[2%] flex-wrap content-start min-h-screen pt-24 px-4 md:p-20 bg-gradient-to-r from-orange-100 to-orange-50">
+      <div class="flex flex-col md:flex-row md:gap-[2%] flex-wrap content-start min-h-screen pt-24 px-4 md:p-24 bg-gradient-to-r from-orange-100 to-orange-50">
         <!-- Card lateral -->
-        <div class="w-full md:w-1/4 bg-white shadow-lg rounded-lg text-center feature-step mb-6 md:mb-0">
+        <div class="w-full md:w-1/4 bg-white shadow-lg rounded-lg text-center feature-step p-6">
           <Image
             src={restaurant.image}
             alt={restaurant.name}
@@ -35,57 +50,99 @@ export const prerender = true;
             height="200"
             class="inline-block w-22 transition-transform group-hover:scale-110"
           />
-          <h2 class="text-2xl md:text-3xl font-semibold text-balance text-orange-600 mt-4">
+          <h2 class="text-2xl md:text-4xl font-semibold text-balance text-orange-600 mt-4">
             {restaurant.name}
           </h2>
 
-          <div class="p-4 text-start flex flex-col gap-2 mt-4">
+          <div class="p-4 text-start flex flex-col gap-4 mt-4">
             <div class="flex items-start">
-              <Food class="text-orange-600 w-5 h-5 mr-2 mt-1" />
-              <h2 class="text-sm font-semibold text-orange-600">
+              <Food class="text-orange-600 w-5 h-5 mr-2" />
+              <h2 class="text-md font-semibold text-orange-600">
                 {restaurant.tipos?.join(", ") ?? "Sin categoría"}
               </h2>
             </div>
             <div class="flex items-start">
-              <Location class="text-orange-600 w-5 h-5 mr-2 mt-1" />
-              <h2 class="text-sm font-semibold text-orange-600">
+              <div>
+              <Location class="text-orange-600 w-5 h-5 mr-2" />
+
+              </div>
+              <h2 class="text-md font-semibold text-orange-600">
                 {restaurant.direccion}
               </h2>
             </div>
             <div class="flex items-start">
-              <Phone class="text-orange-600 w-5 h-5 mr-2 mt-1" />
-              <h2 class="text-sm font-semibold text-orange-600">
+              <Phone class="text-orange-600 w-5 h-5 mr-2 " />
+              <h2 class="text-md font-semibold text-orange-600">
                 {restaurant.phone}
               </h2>
             </div>
             <div class="flex items-start">
-              <Whatsapp class="text-orange-600 w-5 h-5 mr-2 mt-1" />
-              <h2 class="text-sm font-semibold text-orange-600">
+              <Whatsapp class="text-orange-600 w-5 h-5 mr-2" />
+              <h2 class="text-md font-semibold text-orange-600">
                 {restaurant.phone}
               </h2>
             </div>
-            <div class="flex items-start">
+            <div class="flex">
               <Clock class="text-orange-600 w-5 h-5 mr-2 mt-1" />
               <div class="flex flex-col">
                 {
                   restaurant.horario.map((horario) => (
-                    <h2 class="text-sm font-semibold text-orange-600">
-                      {horario.dia}: {horario.apertura} - {horario.cierre}
-                    </h2>
+                    <div class="grid grid-cols-2 justify-between text-md font-semibold text-orange-600">
+                      <p>{horario.dia}: </p> 
+                      <p>{horario.apertura} a {horario.cierre}</p>
+                    </div>
                   ))
                 }
               </div>
             </div>
+            <div class="flex items-start flex-wrap gap-2">
+              {
+                restaurant.amnidades.map((amnidade) => {
+                  const SvgIcon = amenidadesMap[amnidade.svg];
+                  return (
+                     <div class="flex flex-col items-center w-20 text-center group">
+                      {SvgIcon && (
+                        <SvgIcon class="w-10 h-10 mb-1 text-orange-600 fill-current transition-transform duration-200 group-hover:scale-110" />
+                      )}
+                      <h2 class="text-sm font-semibold text-orange-600">
+                        {amnidade.name}
+                      </h2>
+                    </div>
+                  );
+                })
+              }
+            </div>
+
           </div>
         </div>
 
         <!-- Contenido central -->
-        <div class="w-full md:flex-1 bg-white shadow-lg rounded-lg text-center feature-step mb-6 md:mb-0 p-6">
-          Content
+        <div class="w-full md:flex-1 bg-white shadow-lg rounded-lg text-center feature-step p-6 mt-6 md:mt-0">
+          <div class="mt-6">
+            <h2 class="text-2xl font-bold text-orange-600 mb-4">Menú</h2>
+            <table class="w-full text-sm text-left">
+              <tbody>
+                {
+                  restaurant.menu.map((item) => (
+                    <tr class="border-b last:border-b-0 hover:bg-orange-50 transition-colors">
+                      <td class="py-3 px-2 w-3/5">
+                        <div class="text-base font-semibold text-gray-900">{item.name}</div>
+                        <div class="text-sm text-gray-600">{item.ingredientes}</div>
+                      </td>
+                      <td class="py-3 px-2 w-1/5 text-right font-semibold text-gray-800 whitespace-nowrap">
+                        RD$ {item.price.toLocaleString('es-DO')}
+                      </td>
+                    </tr>
+                  ))
+                }
+              </tbody>
+            </table>
+            </div>
+
         </div>
 
         <!-- Footer -->
-        <div class="w-full bg-white shadow-lg rounded-lg text-center feature-step p-6">
+        <div class="w-full bg-white shadow-lg rounded-lg text-center feature-step p-6 mt-6 mb-6">
           Footer
         </div>
       </div>
