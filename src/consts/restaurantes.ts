@@ -66,6 +66,34 @@ export const restaurants : Restaurante[] = [
         ingredientes: "Pechuga de pollo empanizada",
         price: 120,
         categoria: "Kids"
+      },
+      {
+        id: "burger-6",
+        name: "Sopa de Pollo",
+        ingredientes: "Pollo, fideos, zanahoria, apio, cebolla",
+        price: 90,
+        categoria: "Sopas"
+      },
+      {
+        id: "burger-7",
+        name: "Brownie con Helado",
+        ingredientes: "Brownie de chocolate, helado de vainilla, sirope de chocolate",
+        price: 100,
+        categoria: "Postres"
+      },
+      {
+        id: "burger-8",
+        name: "Ensalada César",
+        ingredientes: "Lechuga, pollo a la plancha, crutones, queso parmesano, aderezo César",
+        price: 130,
+        categoria: "Entradas"
+      },
+      {
+        id: "burger-9",
+        name: "Mini Hamburguesa Kids",
+        ingredientes: "Mini hamburguesa de res, pan, queso cheddar",
+        price: 90,
+        categoria: "Kids"
       }
     ]
   },
@@ -132,6 +160,34 @@ export const restaurants : Restaurante[] = [
         name: "Helado Sundae",
         ingredientes: "Helado de vainilla, sirope de chocolate",
         price: 70,
+        categoria: "Postres"
+      },
+      {
+        id: "kfc-6",
+        name: "Sopa de Pollo Picante",
+        ingredientes: "Pollo, vegetales, especias picantes",
+        price: 95,
+        categoria: "Sopas"
+      },
+      {
+        id: "kfc-7",
+        name: "Combo Kids",
+        ingredientes: "1 pieza de pollo, papas fritas, jugo",
+        price: 110,
+        categoria: "Kids"
+      },
+      {
+        id: "kfc-8",
+        name: "Ensalada de Repollo",
+        ingredientes: "Repollo, zanahoria, aderezo especial",
+        price: 60,
+        categoria: "Entradas"
+      },
+      {
+        id: "kfc-9",
+        name: "Pie de Manzana",
+        ingredientes: "Masa crujiente, relleno de manzana",
+        price: 75,
         categoria: "Postres"
       }
     ]
