@@ -1,25 +1,7 @@
 ---
+import type { Restaurante } from "@/Types/Restaurante";
 import RestauranteCard from "./RestauranteCard.astro";
-
-const restaurants = [
-  {
-    id: "burguer",
-    name: "Burguer",
-    image: "https://centrosantafe.com.mx/cdn/shop/files/701.png?v=5733697768863393566",
-    tipos: ["Americana", "Tacos"],
-    perfilImage: "/img/fast-food-3.jpg",
-    direccion: "Federico Geraldino 61, Plaza Laura, local 1 A. Piantini. Santo Domingo. Distrito Nacional."
-  },
-  {
-    id: "kfc",
-    name: "KFC",
-    image: "https://1000marcas.net/wp-content/uploads/2020/01/KFC-logo.png",
-    tipos: ["Pollo"],
-    perfilImage: "/img/pollo-frito.jpg",
-    direccion: "Av. Churchill, Santo Domingo."
-  },
-  // Resto igual, pero añade perfilImage, tipos y direccion a cada uno si lo vas a usar.
-];
+const { restaurantes } = Astro.props
 ---
 
 <div class="lg:w-4/6 w-full">
@@ -30,7 +12,7 @@ const restaurants = [
 
     <section class="w-full max-w-[1600px] grid lg:grid-cols-12 auto-rows-[15rem] gap-4 mx-auto p-6 md:p-12 lg:p-20">
       {
-        restaurants.map((restaurant) => (
+        restaurantes.map((restaurant: Restaurante) => (
           <RestauranteCard
             href={`/restaurantes/${restaurant.id}`}
             name={restaurant.name}

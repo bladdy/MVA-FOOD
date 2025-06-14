@@ -3,6 +3,7 @@
 import RestaurantSearch from '@/components/RestaurantSearch.astro';
 import Layout from '@/layouts/Layout.astro';
 import RestaurantsList from '@/components/RestaurantsList.astro';
+import { restaurants } from '@/consts/restaurantes';
 
 
 export const prerender = true
@@ -17,7 +18,7 @@ export const prerender = true
 
             </div>
             <div class="flex justify-center pb-">
-                <RestaurantsList/>
+                <RestaurantsList restaurantes={restaurants}/>
 
             </div>
             <div class="flex justify-center pb-">

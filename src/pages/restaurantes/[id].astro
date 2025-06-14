@@ -1,13 +1,99 @@
 ---
 import Layout from "@/layouts/Layout.astro";
+import { restaurants } from "@/consts/restaurantes";
+
+import Location from "@/assets/svg/map-pin.svg";
+import Food from "@/assets/svg/tools-kitchen-3.svg";
+import Phone from "@/assets/svg/phone.svg";
+import Whatsapp from "@/assets/svg/brand-whatsapp.svg";
+import Clock from "@/assets/svg/clock.svg";
+
+import { Image } from "astro:assets";
 const { id } = Astro.params;
 // Descripción dinámica
-const description = `Perfil y Menu de ${id}`
-
+export function getStaticPaths() {
+  return restaurants.map(({ id }) => {
+    return { params: { id } };
+  });
+}
+const restaurant = restaurants.find((res) => res.id === id);
+const description = `Perfil y Menu de ${id}`;
+export const prerender = true;
 ---
 
-<Layout title=`Mva Foods - ${id}` description={description}>
-  <div class="py-20 h-screen">
-    <h2 class="pt-52">Este es el restaurante - {id}</h2>
-  </div>
+<Layout title={`Mva Foods - ${id}`} description={description}>
+  {
+    restaurant ? (
+      <div class="flex flex-col md:flex-row md:gap-[2%] flex-wrap content-start min-h-screen pt-24 px-4 md:p-20 bg-gradient-to-r from-orange-100 to-orange-50">
+        <!-- Card lateral -->
+        <div class="w-full md:w-1/4 bg-white shadow-lg rounded-lg text-center feature-step mb-6 md:mb-0">
+          <Image
+            src={restaurant.image}
+            alt={restaurant.name}
+            title={restaurant.name}
+            width="200"
+            height="200"
+            class="inline-block w-22 transition-transform group-hover:scale-110"
+          />
+          <h2 class="text-2xl md:text-3xl font-semibold text-balance text-orange-600 mt-4">
+            {restaurant.name}
+          </h2>
+
+          <div class="p-4 text-start flex flex-col gap-2 mt-4">
+            <div class="flex items-start">
+              <Food class="text-orange-600 w-5 h-5 mr-2 mt-1" />
+              <h2 class="text-sm font-semibold text-orange-600">
+                {restaurant.tipos?.join(", ") ?? "Sin categoría"}
+              </h2>
+            </div>
+            <div class="flex items-start">
+              <Location class="text-orange-600 w-5 h-5 mr-2 mt-1" />
+              <h2 class="text-sm font-semibold text-orange-600">
+                {restaurant.direccion}
+              </h2>
+            </div>
+            <div class="flex items-start">
+              <Phone class="text-orange-600 w-5 h-5 mr-2 mt-1" />
+              <h2 class="text-sm font-semibold text-orange-600">
+                {restaurant.phone}
+              </h2>
+            </div>
+            <div class="flex items-start">
+              <Whatsapp class="text-orange-600 w-5 h-5 mr-2 mt-1" />
+              <h2 class="text-sm font-semibold text-orange-600">
+                {restaurant.phone}
+              </h2>
+            </div>
+            <div class="flex items-start">
+              <Clock class="text-orange-600 w-5 h-5 mr-2 mt-1" />
+              <div class="flex flex-col">
+                {
+                  restaurant.horario.map((horario) => (
+                    <h2 class="text-sm font-semibold text-orange-600">
+                      {horario.dia}: {horario.apertura} - {horario.cierre}
+                    </h2>
+                  ))
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Contenido central -->
+        <div class="w-full md:flex-1 bg-white shadow-lg rounded-lg text-center feature-step mb-6 md:mb-0 p-6">
+          Content
+        </div>
+
+        <!-- Footer -->
+        <div class="w-full bg-white shadow-lg rounded-lg text-center feature-step p-6">
+          Footer
+        </div>
+      </div>
+    ) : (
+      <div class="p-10 text-center text-red-600 text-xl md:text-2xl">
+        Restaurante no encontrado.
+      </div>
+    )
+  }
 </Layout>
+
