@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import clsx from "clsx";
 
 interface Props {
@@ -7,17 +7,24 @@ interface Props {
   active?: boolean;
   onClick: () => void;
 }
-
 const CategoriaButton = ({ label, icon, active, onClick }: Props) => {
+  const [isClicked, setIsClicked] = useState(false);
+
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setIsClicked(true);
+    onClick();
+    setTimeout(() => setIsClicked(false), 200); // duración de la animación
+  };
   return (
     <button
-      onClick={onClick}
+      onClick={handleClick}
       className={clsx(
         "flex flex-col items-center justify-center px-2 py-2 rounded-full border transition-colors text-center shadow-sm",
         "w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32", // Tamaños responsivos
         active
           ? "border-orange-500 text-orange-700 bg-orange-50"
-          : "border-gray-300 text-gray-600 hover:border-orange-300"
+          : "border-gray-300 text-gray-600 hover:border-orange-300",
+        isClicked ? "animate-pop" : ""
       )}
     >
       <div className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 mb-2 flex items-center justify-center">

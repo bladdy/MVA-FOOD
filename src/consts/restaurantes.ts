@@ -39,6 +39,29 @@ export const restaurants : Restaurante[] = [
         price: 180,
         categoria: "Burger & Street Food"
       },
+      // Steak agregado al menú
+      {
+        id: "burger-steak-1",
+        name: "Steak a la Parrilla",
+        ingredientes: "Bistec de res a la parrilla, papas fritas, ensalada",
+        price: 350,
+        categoria: "Steak House"
+      },
+      // Pollo Frito agregado al menú
+      {
+        id: "burger-pollofrito-1",
+        name: "5 Pzas. Pollo Frito",
+        ingredientes: "Piezas de pollo empanizadas y fritas, papas fritas",
+        price: 220,
+        categoria: "Pollo Frito"
+      },
+      {
+        id: "burger-10",
+        name: "Pasta Alfredo",
+        ingredientes: "Pasta fettuccine, salsa Alfredo, queso parmesano, crema, mantequilla",
+        price: 160,
+        categoria: "Pastas"
+      },
       {
         id: "burger-2",
         name: "Hamburguesa BBQ",

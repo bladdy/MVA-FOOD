@@ -11,6 +11,9 @@ import KidsIcon from "@/components/Icons/KidsIcon";
 import SopasIcon from "@/components/Icons/SopasIcon";
 import BurgersIcon from "@/components/Icons/BurgersIcon";
 import AllCategoryIcon from "@/components/Icons/AllCategoryIcon";
+import PastasIcon from "@/components/Icons/PastasIcon";
+import SteakHouseIcon from "@/components/Icons/SteakHouseIcon";
+import FriesChickenIcon from "@/components/Icons/FriesChickenIcon";
 
 interface Props {
   titulo: string;
@@ -18,28 +21,38 @@ interface Props {
 }
 
 const categoriaIcons: Record<Categorias, JSX.Element> = {
-  "Todas": <AllCategoryIcon className="w-6 h-6" />,
-  "Entradas": <EntradasIcon className="w-6 h-6" />,
+  Todas: <AllCategoryIcon className="w-6 h-6" />,
+  Entradas: <EntradasIcon className="w-6 h-6" />,
   "Plato Fuerte": <FoodIcon className="w-6 h-6" />,
   "Burger & Street Food": <BurgersIcon className="w-6 h-6" />,
-  "Sopas": <SopasIcon className="w-6 h-6" />,
-  "Kids": <KidsIcon className="w-6 h-6" />,
-  "Bebidas": <BebidasIcon className="w-6 h-6" />,
-  "Postres": <PostresIcon className="w-6 h-6" />,
+  "Steak House": <SteakHouseIcon className="w-6 h-6" />,
+  "Pollo Frito": <FriesChickenIcon className="w-6 h-6" />,
+  Sopas: <SopasIcon className="w-6 h-6" />,
+  Kids: <KidsIcon className="w-6 h-6" />,
+  Bebidas: <BebidasIcon className="w-6 h-6" />,
+  Postres: <PostresIcon className="w-6 h-6" />,
+  Pastas:  <PastasIcon className="w-6 h-6" />,
 };
 
 export default function MenuSection({ menu, titulo }: Props) {
-  const [selectedCategoria, setSelectedCategoria] = useState<Categorias>("Todas");
+  const [selectedCategoria, setSelectedCategoria] =
+    useState<Categorias>("Todas");
 
-  const groupedMenu = menu.reduce((acc, item) => {
-    if (!acc[item.categoria]) {
-      acc[item.categoria] = [];
-    }
-    acc[item.categoria].push(item);
-    return acc;
-  }, {} as Record<Categorias, Menu[]>);
+  const groupedMenu = menu.reduce(
+    (acc, item) => {
+      if (!acc[item.categoria]) {
+        acc[item.categoria] = [];
+      }
+      acc[item.categoria].push(item);
+      return acc;
+    },
+    {} as Record<Categorias, Menu[]>
+  );
 
-  const categoriasDisponibles = ["Todas", ...baseCategorias.filter(cat => groupedMenu[cat]?.length > 0)] as Categorias[];
+  const categoriasDisponibles = [
+    "Todas",
+    ...baseCategorias.filter((cat) => groupedMenu[cat]?.length > 0),
+  ] as Categorias[];
 
   return (
     <div>
@@ -59,18 +72,23 @@ export default function MenuSection({ menu, titulo }: Props) {
       </div>
 
       {/* Contenido del Menú */}
-      <div className="mb-10">
+      <div
+        className="mb-10 transition-all duration-1000 ease-in-out"
+        key={selectedCategoria}
+      >
         {selectedCategoria === "Todas" ? (
           baseCategorias
             .filter((cat) => groupedMenu[cat]?.length)
             .map((categoria) => (
-              <div key={categoria} className="mb-8">
+              <div key={categoria} className="mb-8 animate-fade-in">
                 <div className="flex items-center justify-between border-b border-orange-200 pb-1 mb-2">
                   <div className="flex items-center gap-2 text-xl font-semibold text-orange-700">
                     {categoriaIcons[categoria]}
                     {categoria}
                   </div>
-                  <div className="text-sm font-semibold text-orange-600">Precios</div>
+                  <div className="text-sm font-semibold text-orange-600">
+                    Precios
+                  </div>
                 </div>
                 <table className="w-full text-sm text-left">
                   <tbody>
@@ -99,13 +117,15 @@ export default function MenuSection({ menu, titulo }: Props) {
               </div>
             ))
         ) : (
-          <>
+          <div className="animate-fade-in">
             <div className="flex items-center justify-between border-b border-orange-200 pb-1 mb-2">
               <div className="flex items-center gap-2 text-xl font-semibold text-orange-700">
                 {categoriaIcons[selectedCategoria]}
                 {selectedCategoria}
               </div>
-              <div className="text-sm font-semibold text-orange-600">Precios</div>
+              <div className="text-sm font-semibold text-orange-600">
+                Precios
+              </div>
             </div>
             <table className="w-full text-sm text-left">
               <tbody>
@@ -131,7 +151,7 @@ export default function MenuSection({ menu, titulo }: Props) {
                   ))}
               </tbody>
             </table>
-          </>
+          </div>
         )}
       </div>
     </div>

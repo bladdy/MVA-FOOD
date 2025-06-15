@@ -1,35 +1,29 @@
 ---
 import Layout from "@/layouts/Layout.astro";
 import { restaurants } from "@/consts/restaurantes";
-
 import Food from "@/assets/svg/tools-kitchen-3.svg";
-
 import { Image } from "astro:assets";
-import MenuSection from "@/React/MenuSection";
 import LayoutMenu from "@/layouts/LayoutMenu.astro";
-// Esto importa todos los SVGs de la carpeta "amenidades"
+import MenuSectionWrapper from "@/React/MenuSectionWrapper.jsx"; // Asegúrate que esté bien el path
+
 const svgModules = import.meta.glob("/src/assets/amenidades/*.svg", {
   eager: true,
   import: "default",
 });
-
-// Crear un mapa por nombre de archivo
 const amenidadesMap = Object.fromEntries(
   Object.entries(svgModules).map(([path, mod]) => {
-    const filename = path.split("/").pop(); // ej: "area-exterior.svg"
+    const filename = path.split("/").pop();
     return [filename, mod];
   })
 );
 
 const { id } = Astro.params;
-// Descripción dinámica
-export function getStaticPaths() {
-  return restaurants.map(({ id }) => {
-    return { params: { id } };
-  });
-}
-const restaurant = restaurants.find((res) => res.id === id);
 
+export function getStaticPaths() {
+  return restaurants.map(({ id }) => ({ params: { id } }));
+}
+
+const restaurant = restaurants.find((res) => res.id === id);
 const description = `Perfil y Menu de ${id}`;
 export const prerender = true;
 ---
@@ -56,7 +50,9 @@ export const prerender = true;
               {restaurant.tipos?.join(", ") ?? "Sin categoría"}
             </h2>
           </div>
-          <MenuSection
+
+          <!-- Aquí se reemplaza el componente -->
+          <MenuSectionWrapper
             menu={restaurant?.menu ?? []}
             titulo="Nuestro Menú"
             client:load

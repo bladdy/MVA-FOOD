@@ -2,6 +2,7 @@
 import Footer from "@/components/Footer.astro";
 import Header from "@/components/Header.astro";
 
+import "@/styles/global.css"
 interface Props {
   title: string
   description?: string
@@ -23,6 +24,7 @@ interface Props {
 		<meta name="generator" content={Astro.generator} />
 		<meta name="keywords" content="menus, comida, comida rapida, delivery, comida saludable" />
 		<meta name="author" content="Bladdy Almanzar" />
+		<link rel="stylesheet" href="/src/styles/global.css">
 		<title>{title}</title>
 	</head>
 	<body>
@@ -31,10 +33,3 @@ interface Props {
 		<Footer/>
 	</body>
 </html>
-
-<style is:global>
-	@tailwind base;
-	@tailwind components;
-	@tailwind utilities;
-	
-</style>
