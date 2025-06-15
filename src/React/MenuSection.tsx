@@ -4,19 +4,26 @@ import type { Menu, Categorias } from "@/Types/Restaurante";
 import FoodIcon from "@/components/Icons/FoodIcon"; // Puedes personalizar íconos por categoría
 import { categoriaOrden } from "@/consts/categorias";
 import CategoriaButton from "./Buttons/CategoriaButton";
+import EntradasIcon from "@/components/Icons/EntradasIcon";
+import PostresIcon from "@/components/Icons/PostresIcon";
+import BebidasIcon from "@/components/Icons/BebidasIcon";
+import KidsIcon from "@/components/Icons/KidsIcon";
+import SopasIcon from "@/components/Icons/SopasIcon";
+import BurgersIcon from "@/components/Icons/BurgersIcon";
 
 interface Props {
   menu: Menu[];
 }
 
 const categoriaIcons: Record<Categorias, JSX.Element> = {
-  "Entradas": <FoodIcon className="w-6 h-6" />,
+  //ToDo: Cambiar los iconos por los que estan en la /iconos
+  "Entradas": <EntradasIcon className="w-6 h-6" />,
   "Plato Fuerte": <FoodIcon className="w-6 h-6" />,
-  "Burger & Street Food": <FoodIcon className="w-6 h-6" />,
-  "Sopas": <FoodIcon className="w-6 h-6" />,
-  "Kids": <FoodIcon className="w-6 h-6" />,
-  "Bebidas": <FoodIcon className="w-6 h-6" />,
-  "Postres": <FoodIcon className="w-6 h-6" />,
+  "Burger & Street Food": <BurgersIcon className="w-6 h-6" />,
+  "Sopas": <SopasIcon className="w-6 h-6" />,
+  "Kids": <KidsIcon className="w-6 h-6" />,
+  "Bebidas": <BebidasIcon className="w-6 h-6" />,
+  "Postres": <PostresIcon className="w-6 h-6" />,
 };
 
 export default function MenuSection({ menu }: Props) {

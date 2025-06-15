@@ -1,7 +1,17 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
-<!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
-<svg fill="#000000" height="800px" width="800px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
-	 viewBox="0 0 471.09 471.09" xml:space="preserve">
+//KidsIcon
+
+import React from "react";
+
+interface Props {
+  className?: string;
+}
+
+const KidsIcon: React.FC<Props> = ({ className }) => {
+  return (
+
+<svg className={className} fill="currentColor" height="24" width="24" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" 
+viewBox="0 0 471.09 471.09" >
+
 <g>
 	<g>
 		<g>
@@ -30,3 +40,7 @@
 	</g>
 </g>
 </svg>
+  );
+};
+
+export default KidsIcon;
