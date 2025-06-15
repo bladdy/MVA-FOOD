@@ -12,6 +12,7 @@ import SopasIcon from "@/components/Icons/SopasIcon";
 import BurgersIcon from "@/components/Icons/BurgersIcon";
 
 interface Props {
+  titulo:string
   menu: Menu[];
 }
 
@@ -26,7 +27,7 @@ const categoriaIcons: Record<Categorias, JSX.Element> = {
   "Postres": <PostresIcon className="w-6 h-6" />,
 };
 
-export default function MenuSection({ menu }: Props) {
+export default function MenuSection({ menu, titulo }: Props) {
   const [selectedCategoria, setSelectedCategoria] = useState<Categorias>("Entradas");
 
   const groupedMenu = menu.reduce((acc, item) => {
@@ -41,7 +42,7 @@ export default function MenuSection({ menu }: Props) {
 
   return (
     <div>
-      <h2 className="text-2xl font-bold text-orange-600 mb-6">Menú</h2>
+      <h2 className="text-4xl font-bold text-orange-600 mb-6"> {titulo}</h2>
 
       {/* Botones de Categoría */}
       <div className="flex flex-wrap justify-center gap-4 mb-6">
