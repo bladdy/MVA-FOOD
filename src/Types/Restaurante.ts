@@ -32,6 +32,7 @@ export interface Amnidades {
 }
 
 export type Categorias =
+    "Todas"
   | "Entradas"
   | "Plato Fuerte"
   | "Burger & Street Food"
