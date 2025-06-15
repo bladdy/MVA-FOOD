@@ -6,7 +6,7 @@ export default function ShareButton({ title }: { title: string }) {
   const handleShare = () => {
     if (navigator.share) {
       navigator.share({
-        title: `${title}`,
+        title: `Mva Foods - ${title}`,
         text: `Mira el menú de ${title}`,
         url: window.location.href,
       });
