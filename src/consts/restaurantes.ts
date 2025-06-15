@@ -2,10 +2,10 @@ import type { Restaurante } from "@/Types/Restaurante";
 
 export const restaurants : Restaurante[] = [
   {
-    id: "burger",
-    name: "Burger King",
+    id: "demo-1",
+    name: "Demo",
     image: "https://centrosantafe.com.mx/cdn/shop/files/701.png?v=5733697768863393566",
-    tipos: ["Americana", "Tacos"],
+    tipos: ["Americana"],
     perfilImage: "/img/fast-food-3.jpg",
     direccion: "Federico Geraldino 61, Plaza Laura, local 1 A. Piantini. Santo Domingo. Distrito Nacional.",
     phone: "866 100 2222",
@@ -121,8 +121,8 @@ export const restaurants : Restaurante[] = [
     ]
   },
   {
-    id: "kfc",
-    name: "KFC",
+    id: "demo-2",
+    name: "Demo",
     image: "https://1000marcas.net/wp-content/uploads/2020/01/KFC-logo.png",
     tipos: ["Pollo"],
     perfilImage: "/img/pollo-frito.jpg",
