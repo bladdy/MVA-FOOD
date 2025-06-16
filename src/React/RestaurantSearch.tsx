@@ -42,7 +42,7 @@ export default function RestaurantSearch({ onSearch }: RestaurantSearchProps) {
             <select
               name="name"
               onChange={handleChange}
-              className="w-full p-3 border border-white focus:outline-none focus:ring-2 focus:ring-orange-600"
+              className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-600"
             >
               <option value="">Restaurante</option>
               <option value="Demo">Demo</option>
@@ -51,7 +51,7 @@ export default function RestaurantSearch({ onSearch }: RestaurantSearchProps) {
             <select
               name="tipo"
               onChange={handleChange}
-              className="w-full p-3 border border-white  focus:outline-none focus:ring-2 focus:ring-orange-600"
+              className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-600"
             >
               <option value="">Tipo comida</option>
               <option value="Americana">Americana</option>
@@ -63,7 +63,7 @@ export default function RestaurantSearch({ onSearch }: RestaurantSearchProps) {
             <select
               name="ubicacion"
               onChange={handleChange}
-              className="w-full p-3 border border-white focus:outline-none focus:ring-2 focus:ring-orange-600"
+              className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-600"
             >
               <option value="">Ubicación</option>
               <option value="Piantini">Piantini</option>
@@ -73,7 +73,7 @@ export default function RestaurantSearch({ onSearch }: RestaurantSearchProps) {
             <select
               name="amenidad"
               onChange={handleChange}
-              className="w-full p-3 border border-white focus:outline-none focus:ring-2 focus:ring-orange-600"
+              className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-600"
             >
               <option value="">Amenidades</option>
               <option value="Wifi">Wifi</option>
@@ -84,7 +84,7 @@ export default function RestaurantSearch({ onSearch }: RestaurantSearchProps) {
           <div className="w-full lg:col-span-1 col-span-6">
             <button
               type="submit"
-              className="w-full bg-orange-600 text-white px-8 py-3 hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-600"
+              className="w-full bg-orange-600 text-white px-8 py-3 hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-600 rounded-lg "
             >
               Buscar
             </button>
