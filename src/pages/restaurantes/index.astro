@@ -5,12 +5,13 @@ import RestaurantSearchWrapper from "@/React/RestaurantSearchWrapper";
 import RestaurantsList from "@/components/RestaurantsList.astro";
 import { restaurants } from "@/consts/restaurantes";
 
+//Limpiar los compnenetes que no se estan usando
+
 export const prerender = true;
 ---
 
 <Layout title="Mva Foods - Home">
   <div class="py-20">
     <RestaurantSearchWrapper client:load />
-    
   </div>
 </Layout>
