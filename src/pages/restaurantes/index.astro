@@ -1,32 +1,16 @@
 ---
+import RestaurantSearch from "@/components/RestaurantSearch.astro";
+import Layout from "@/layouts/Layout.astro";
+import RestaurantSearchWrapper from "@/React/RestaurantSearchWrapper";
+import RestaurantsList from "@/components/RestaurantsList.astro";
+import { restaurants } from "@/consts/restaurantes";
 
-import RestaurantSearch from '@/components/RestaurantSearch.astro';
-import Layout from '@/layouts/Layout.astro';
-import RestaurantsList from '@/components/RestaurantsList.astro';
-import { restaurants } from '@/consts/restaurantes';
-
-
-export const prerender = true
+export const prerender = true;
 ---
 
-<Layout title="Mva Foods - Home" 
-    description="Welcome to Mva Foods, your go-to destination for delicious and healthy food options.">
-    <div class="py-20">
-        <div class="flex flex-col">
-            <div class="items-center justify-center flex lg:h-60 bg-[url(/img/fast-food-3.jpg)] bg-cover bg-center">
-                <RestaurantSearch/>
-
-            </div>
-            <div class="flex justify-center pb-">
-                <RestaurantsList restaurantes={restaurants}/>
-
-            </div>
-            <div class="flex justify-center pb-">
-                PAGINADOR...
-
-            </div>
-
-        </div>
-
-    </section>
+<Layout title="Mva Foods - Home">
+  <div class="py-20">
+    <RestaurantSearchWrapper client:load />
+    
+  </div>
 </Layout>

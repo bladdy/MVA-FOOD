@@ -1,7 +1,9 @@
 ---
-import type { Restaurante } from "@/Types/Restaurante";
-import RestauranteCard from "./RestauranteCard.astro";
-const { restaurantes } = Astro.props
+// RestaurantsList.astro
+import RestauranteCard from './RestauranteCard.astro';
+import type { Restaurante } from '@/Types/Restaurante';
+
+const { restaurantes } = Astro.props;
 ---
 
 <div class="lg:w-4/6 w-full">
@@ -11,8 +13,8 @@ const { restaurantes } = Astro.props
     </h2>
 
     <section class="w-full max-w-[1600px] grid lg:grid-cols-12 auto-rows-[15rem] gap-4 mx-auto p-6 md:p-12 lg:p-20">
-      {
-        restaurantes.map((restaurant: Restaurante) => (
+      {restaurantes.map((restaurant: Restaurante) => {
+        return (
           <RestauranteCard
             href={`/restaurantes/${restaurant.id}`}
             name={restaurant.name}
@@ -21,8 +23,8 @@ const { restaurantes } = Astro.props
             tipoComida={restaurant.tipos ?? ["Sin categoría"]}
             direccion={restaurant.direccion ?? "Dirección no disponible"}
           />
-        ))
-      }
+        );
+      })}
     </section>
   </div>
 </div>
