@@ -42,7 +42,7 @@ export default function RestauranteCard({
     className="relative flex flex-col gap-1 p-6 z-20 select-none justify-end h-full"
   >
     <img
-      src="mva-logo-rb.png"
+      src={image}
       alt="Logo"
       className="w-14 h-14 object-cover rounded-full border-2 border-white"
     />

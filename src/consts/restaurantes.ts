@@ -4,7 +4,7 @@ export const restaurants : Restaurante[] = [
   {
     id: "demo-1",
     name: "Demo",
-    image: "https://centrosantafe.com.mx/cdn/shop/files/701.png?v=5733697768863393566",
+    image: "/mva-logo-rb.png",
     tipos: ["Americana"],
     perfilImage: "/img/fast-food-3.jpg",
     direccion: "Federico Geraldino 61, Plaza Laura, local 1 A. Piantini. Santo Domingo. Distrito Nacional.",
@@ -123,7 +123,7 @@ export const restaurants : Restaurante[] = [
   {
     id: "demo-2",
     name: "Demo",
-    image: "https://1000marcas.net/wp-content/uploads/2020/01/KFC-logo.png",
+    image: "/mva-logo-rb.png",
     tipos: ["Pollo"],
     perfilImage: "/img/pollo-frito.jpg",
     direccion: "Av. Churchill, Santo Domingo.",
