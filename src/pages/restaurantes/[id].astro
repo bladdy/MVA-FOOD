@@ -42,7 +42,7 @@ export const prerender = true;
 <Layout title={`Mva Foods - ${restaurant?.name}`} description={description}>
   {
     restaurant ? (
-      <div class="flex flex-col md:flex-row md:gap-[2%] flex-wrap content-start min-h-screen pt-24 px-4 lg:px-24 bg-gradient-to-r from-orange-100 to-orange-50">
+      <div class="flex flex-col md:flex-row md:gap-[2%] flex-wrap content-start min-h-screen pt-24 pb-10 px-4 lg:px-24 bg-gradient-to-r from-orange-100 to-orange-50">
         <!-- Card lateral -->
         <div class="w-full md:w-1/4 bg-white shadow-lg rounded-lg text-center feature-step p-6">
           <Image
@@ -118,18 +118,7 @@ export const prerender = true;
                 })
               }
             </div>
-
-          </div>
-        </div>
-
-        <!-- Contenido central -->
-        <div class="w-full md:flex-1 bg-white shadow-lg rounded-lg text-center feature-step p-6 mt-6 md:mt-0">
-          <MenuSection menu={restaurant?.menu ?? []} titulo="Menú" client:load />
-        </div>
-
-        <!-- Footer -->
-        <div class="w-full bg-white shadow-lg rounded-lg text-center feature-step p-6 mt-6 mb-6">
-            <div class="relative w-full h-96 overflow-hidden rounded-lg">
+            <div class="relative w-full h-80 overflow-hidden rounded-lg">
               <iframe 
                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d28458.6750399274!2d-101.44747150906393!3d26.924612!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x868bcdc372021f57%3A0x1f92eebe5a1ab44a!2sBurger%20King!5e0!3m2!1ses!2smx!4v1749876497694!5m2!1ses!2smx" 
                 class="absolute top-0 left-0 w-full h-full border-0 lg:h-96"
@@ -138,8 +127,14 @@ export const prerender = true;
                 referrerpolicy="no-referrer-when-downgrade">
               </iframe>
             </div>
+
+          </div>
         </div>
 
+        <!-- Contenido central -->
+        <div class="w-full md:flex-1 bg-white shadow-lg rounded-lg text-center feature-step p-6 mt-6 md:mt-0">
+          <MenuSection menu={restaurant?.menu ?? []} titulo="Menú" client:load />
+        </div>
       </div>
     ) : (
       <div class="p-10 text-center text-red-600 text-xl md:text-2xl">
