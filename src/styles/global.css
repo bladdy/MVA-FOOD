@@ -3,7 +3,22 @@
 @tailwind utilities;
 
 /* tus animaciones personalizadas u otros estilos */
-	@layer utilities {
+/* Oculta la barra de scroll en todos los navegadores */
+body,
+html {
+  scrollbar-width: none;
+  /* Firefox */
+  -ms-overflow-style: none;
+  /* IE y Edge */
+  scroll-behavior: smooth;
+}
+body::-webkit-scrollbar,
+html::-webkit-scrollbar {
+  display: none;
+  /* Chrome, Safari y Opera */
+}
+
+@layer utilities {
   .animate-fade-in {
     animation: fadeIn 0.4s ease-in-out;
   }
@@ -13,12 +28,14 @@
       opacity: 0;
       transform: translateY(10px);
     }
+
     to {
       opacity: 1;
       transform: translateY(0);
     }
   }
 }
+
 @layer utilities {
   .animate-pop {
     animation: pop 0.2s ease-out;
@@ -28,9 +45,11 @@
     0% {
       transform: scale(1);
     }
+
     50% {
       transform: scale(1.1);
     }
+
     100% {
       transform: scale(1);
     }

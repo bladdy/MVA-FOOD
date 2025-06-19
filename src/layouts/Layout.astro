@@ -1,4 +1,5 @@
 ---
+import BackToTop from "@/components/Buttons/BackToTop.astro";
 import Footer from "@/components/Footer.astro";
 import Header from "@/components/Header.astro";
 
@@ -10,7 +11,7 @@ interface Props {
   
   const {
   title = "",
-  description = '',
+  description = 'MVA-FOOD es una plataforma digital diseñada para restaurantes y food trucks que buscan modernizar su operación diaria mediante un sistema eficiente de gestión de menús, productos, colaboradores y promociones. Esta aplicación nace con el objetivo de simplificar la administración gastronómica y ofrecer una experiencia más fluida tanto para el personal del establecimiento como para sus clientes.',
 
 } = Astro.props
 ---
@@ -21,15 +22,26 @@ interface Props {
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width" />
 		<link rel="icon" type="image/svg+xml" href="/mva-logo-rb.png" />
-		<meta name="generator" content={Astro.generator} />
-		<meta name="keywords" content="menus, comida, comida rapida, delivery, comida saludable" />
-		<meta name="author" content="Bladdy Almanzar" />
+		<meta
+			name="description"
+			content={description}
+		/>
+		<meta property="og:title" content={title} />
+		<meta property="og:description" content={description} />
+		<meta property="og:type" content="website" />
+		<meta property="og:image" content="/mva-logo-rb.png" />
+		<meta property="og:url" content={Astro.url} />
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:title" content={title} />
+		<meta name="twitter:description" content={description} />
+		<meta name="twitter:image" content="/mva-logo-rb.png" />
 		<link rel="stylesheet" href="/src/styles/global.css">
 		<title>{title}</title>
 	</head>
 	<body>
 		<Header/>
 			<slot />
+			<BackToTop/>
 		<Footer/>
 	</body>
 </html>

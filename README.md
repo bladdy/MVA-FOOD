@@ -13,7 +13,7 @@
 ## 🛠️ Tecnologías utilizadas
 
 - **Backend**: .NET Core / C#
-- **Frontend**: Angular + TailwindCSS
+- **Frontend**: Astro + TailwindCSS
 - **Base de datos**: SQL Server (opcionalmente escalable a PostgreSQL o MySQL)
 - **Realtime (futuro)**: SignalR para notificaciones en tiempo real
 
