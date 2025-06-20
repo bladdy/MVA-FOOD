@@ -1,7 +1,7 @@
 ---
 import { Image } from "astro:assets";
-import qr from "../../public/img/codigo_qr.png";
-import Check from "../assets/svg/check.svg";
+import qr from "@public/img/codigo_qr.png";
+import Check from "@assets/svg/check.svg";
 ---
 <section id="precios" class="py-20 px-12">
   <div class="text-center mb-16 pt-16 max-w-6xl mx-auto">
@@ -20,7 +20,7 @@ import Check from "../assets/svg/check.svg";
               <h3 class="text-3xl text-orange-600">$200/MES</h3>
             </div>
 
-            <ul class="list-image-[url(../assets/svg/check.svg)] list-outside mb-4 text-orange-900 ">
+            <ul class="list-image-[url(@assets/svg/check.svg)] list-outside mb-4 text-orange-900 ">
               <li class="flex gap-1"><Check/>Código QR</li>
               <li class="flex gap-1"><Check/>Categoría</li>
               <li class="flex gap-1"><Check/>Ilimitados platos</li>
