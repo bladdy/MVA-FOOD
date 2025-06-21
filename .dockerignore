@@ -1,0 +1,36 @@
+# Dependencias locales (serán reinstaladas en el contenedor)
+node_modules
+.pnpm
+
+# Build de Astro
+dist
+
+# Control de versiones
+.git
+.gitignore
+
+# Archivos de registro y errores comunes
+npm-debug.log
+yarn-error.log
+pnpm-debug.log
+
+# Archivos temporales del sistema
+.DS_Store
+Thumbs.db
+
+# Archivos de entorno
+.env
+.env.local
+.env.*.local
+
+# Configuración de IDEs/editores
+.vscode
+.idea
+
+# Archivos relacionados a Docker (si no quieres copiarlos al contenedor)
+Dockerfile
+docker-compose.yml
+
+# Reports y coverage
+coverage
+*.lcov

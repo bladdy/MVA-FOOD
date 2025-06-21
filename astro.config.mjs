@@ -4,6 +4,7 @@ import tailwind from '@astrojs/tailwind';
 import react from '@astrojs/react';
 import vercel from '@astrojs/vercel';
 import svgr from 'vite-plugin-svgr';
+import node from '@astrojs/node';
 
 
 
@@ -11,7 +12,8 @@ import svgr from 'vite-plugin-svgr';
 export default defineConfig({
   integrations: [tailwind(), react()],
   output: 'server',
-  adapter: vercel(),
+  //adapter: node({ mode: 'standalone' }), // Use this for docker production with Node.js
+  adapter: vercel(), // Use this for deployment on Vercel
   vite: {
     plugins: [svgr()],
     resolve: {
