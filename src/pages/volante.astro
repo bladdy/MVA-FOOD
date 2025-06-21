@@ -1,5 +1,10 @@
 ---
 import LayoutMenu from "@/layouts/LayoutMenu.astro";
+
+import Instagram from "@assets/svg/brand-instagram.svg";
+import Facebook from "@assets/svg/brand-facebook.svg";
+import Mail from "@assets/svg/mail.svg";
+import WhatsApp from "@assets/svg/brand-whatsapp.svg";
 ---
 
 <style>
@@ -36,11 +41,11 @@ import LayoutMenu from "@/layouts/LayoutMenu.astro";
     overflow-wrap: anywhere;
   }
   .logo-shadow {
-    filter: drop-shadow(0 4px 12px rgba(19, 18, 18, 0.5));
+    filter: drop-shadow(0 4px 12px rgb(255, 255, 255));
   }
   .title-shadow {
     text-shadow:
-      2px 2px 8px rgb(0, 0, 0,0.5);
+      2px 2px 8px rgb(255, 251, 251);
   }
 </style>
 <LayoutMenu
@@ -61,7 +66,7 @@ import LayoutMenu from "@/layouts/LayoutMenu.astro";
     
     <div class="flex items-center justify-center p-4">
       <div
-        class="relative flex flex-col shadow-2xl border border-orange-200 overflow-hidden w-[360px]">
+        class="relative flex flex-col border border-orange-200 overflow-hidden w-[360px]">
         <!-- Imagen de fondo inferior -->
         <div class="absolute top-0 left-0 w-full h-full">
           <img
@@ -139,30 +144,25 @@ import LayoutMenu from "@/layouts/LayoutMenu.astro";
           <div class="mt-6 text-sm text-gray-700">
             <h4 class="font-bold mb-1 text-orange-600">Contáctanos</h4>
             <div class="flex items-center gap-2">
-              <img
-                src="https://cdn-icons-png.flaticon.com/512/732/732200.png"
-                class="w-4 h-4"
-              />
+              <Mail class="w-4 h-4 text-orange-600" />
               <span>escalate.soft.soluctions@gmail.com</span>
             </div>
             <div class="flex items-center gap-2 mt-1">
-              <img
-                src="https://cdn-icons-png.flaticon.com/512/1384/1384005.png"
-                class="w-4 h-4"
-              />
+              <Facebook class="w-4 h-4 text-orange-600" />
               <span>@escalatesoftwaresolutions</span>
             </div>
             <div class="flex items-center gap-2 mt-1">
-              <img
-                src="https://cdn-icons-png.flaticon.com/512/733/733585.png"
-                class="w-4 h-4"
-              />
+              <Instagram class="w-4 h-4 text-orange-600" />
+              <span>@escalatesoftwaresolutions</span>
+            </div>
+            <div class="flex items-center gap-2 mt-1">
+              <WhatsApp class="w-4 h-4 text-orange-600" />
               <span>+52 866 142 5258</span>
             </div>
           </div>
 
           <!-- Web -->
-          <div class="text-center text-sm text-green-600 mt-4">
+          <div class="text-center text-sm text-orange-600 mt-4">
             visítanos en nuestra web:<br />
             <a href="https://mva-food.vercel.app/" class="hover:underline"
               >https://mva-food.vercel.app/</a
@@ -174,7 +174,7 @@ import LayoutMenu from "@/layouts/LayoutMenu.astro";
 
     <div class="flex items-center justify-center p-4">
       <div
-        class="relative flex flex-col  shadow-2xl
+        class="relative flex flex-col
     border border-orange-200 overflow-hidden w-[360px]"
       >
         <!-- Imagen de fondo inferior -->
@@ -254,30 +254,25 @@ import LayoutMenu from "@/layouts/LayoutMenu.astro";
           <div class="mt-6 text-sm text-gray-700">
             <h4 class="font-bold mb-1 text-orange-600">Contáctanos</h4>
             <div class="flex items-center gap-2">
-              <img
-                src="https://cdn-icons-png.flaticon.com/512/732/732200.png"
-                class="w-4 h-4"
-              />
+              <Mail class="w-4 h-4 text-orange-600" />
               <span>escalate.soft.soluctions@gmail.com</span>
             </div>
             <div class="flex items-center gap-2 mt-1">
-              <img
-                src="https://cdn-icons-png.flaticon.com/512/1384/1384005.png"
-                class="w-4 h-4"
-              />
+              <Facebook class="w-4 h-4 text-orange-600" />
               <span>@escalatesoftwaresolutions</span>
             </div>
             <div class="flex items-center gap-2 mt-1">
-              <img
-                src="https://cdn-icons-png.flaticon.com/512/733/733585.png"
-                class="w-4 h-4"
-              />
+              <Instagram class="w-4 h-4 text-orange-600" />
+              <span>@escalatesoftwaresolutions</span>
+            </div>
+            <div class="flex items-center gap-2 mt-1">
+              <WhatsApp class="w-4 h-4 text-orange-600" />
               <span>+52 866 142 5258</span>
             </div>
           </div>
 
           <!-- Web -->
-          <div class="text-center text-sm text-green-600 mt-4">
+          <div class="text-center text-sm text-orange-600 mt-4">
             visítanos en nuestra web:<br />
             <a href="https://mva-food.vercel.app/" class="hover:underline"
               >https://mva-food.vercel.app/</a
