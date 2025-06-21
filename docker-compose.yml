@@ -1,4 +1,4 @@
-version: '3.8'
+version: '1.0'
 
 services:
   astro-ssr:
@@ -11,5 +11,5 @@ services:
       - /app/node_modules
     environment:
       - NODE_ENV=production
-    # ⬅️ Ejecuta tu archivo `entry.mjs`
+    # ⬅️ Ejecuta tu archivo `entry.mjs` este es el punto de entrada de tu aplicación Astro
     command: node dist/server/entry.mjs
