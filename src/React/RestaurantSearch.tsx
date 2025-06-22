@@ -1,5 +1,6 @@
 // components/RestaurantSearch.jsx
 import { useState, useEffect } from 'react';
+import CustomSelector from './CustomSelector';
 
 interface Filters {
   name: string;
@@ -64,62 +65,48 @@ export default function RestaurantSearch({ onSearch }: RestaurantSearchProps) {
           Búsqueda de Restaurantes
         </h2>
 
-        <form onSubmit={handleSubmit} className="flex flex-col lg:grid lg:grid-cols-5 grid-cols-12 w-full mt-4 gap-1">
+        <form onSubmit={handleSubmit} className="flex flex-col items-center lg:grid lg:grid-cols-5 grid-cols-12 w-full mt-4 gap-1">
           <div className="grid grid-cols-2 col-span-2 gap-1">
-            <select
-              name="name"
+            <CustomSelector
+              label="Restaurantes"
+              options={["Demo"]}
               value={filters.name}
-              onChange={handleChange}
-              className="px-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-600"
-            >
-              <option value="">Restaurante</option>
-              <option value="Demo">Demo</option>
-            </select>
-
-            <select
-              name="tipo"
+              onChange={(value) => setFilters({ ...filters, name: value })}
+            />
+            <CustomSelector
+              label="Tipo"
+              options={["Americana", "Pollo"]}
               value={filters.tipo}
-              onChange={handleChange}
-              className="px-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-600"
-            >
-              <option value="">Tipo comida</option>
-              <option value="Americana">Americana</option>
-              <option value="Pollo">Pollo</option>
-            </select>
+              onChange={(value) => setFilters({ ...filters, tipo: value })}
+            />
+
+          
           </div>
 
           <div className="grid grid-cols-2 col-span-2 gap-1">
-            <select
-              name="ubicacion"
+            <CustomSelector
+              label="Ubicación"
+              options={["Piantini", "Churchill"]}
               value={filters.ubicacion}
-              onChange={handleChange}
-              className="px-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-600"
-            >
-              <option value="">Ubicación</option>
-              <option value="Piantini">Piantini</option>
-              <option value="Churchill">Churchill</option>
-            </select>
+              onChange={(value) => setFilters({ ...filters, ubicacion: value })}
+            />
 
-            <select
-              name="amenidad"
+            <CustomSelector
+              label="Amenidades"
+              options={["Wifi", "Delivery"]}
               value={filters.amenidad}
-              onChange={handleChange}
-              className="px-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-600"
-            >
-              <option value="">Amenidades</option>
-              <option value="Wifi">Wifi</option>
-              <option value="Delivery">Delivery</option>
-            </select>
+              onChange={(value) => setFilters({ ...filters, amenidad: value })}
+            />
           </div>
 
-          <div className="w-full lg:col-span-1 col-span-6">
+            <div className="col-span-1 flex items-end w-full">
             <button
               type="submit"
-              className="w-full bg-orange-600 text-white px-8 py-3 hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-600 rounded-lg "
+              className="w-full h-10 bg-orange-600 text-white py-2 hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-600 rounded-lg"
             >
               Buscar
             </button>
-          </div>
+            </div>
         </form>
       </div>
     </section>
