@@ -26,7 +26,7 @@ export default function RestauranteCard({
 >
   <div
     className="absolute z-10 bottom-0 top-0 w-full h-full
-      bg-gradient-to-b from-transparent from-40% via-[#151836]/50 to-[#151836]/80"
+      bg-gradient-to-b from-transparent from-40% via-[#151836]/80 to-[#151836]/100"
   >
   </div>
 

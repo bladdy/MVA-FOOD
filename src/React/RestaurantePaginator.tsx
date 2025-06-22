@@ -16,7 +16,7 @@ export default function RestaurantePaginator({ currentPage, totalPages, onPageCh
       <button
         onClick={() => onPageChange(currentPage - 1)}
         disabled={currentPage === 1}
-        className="px-4 py-2 bg-orange-600 text-white rounded-l-full hover:bg-orange-800  border-r border-white"
+        className="px-4 py-2 bg-orange-600 text-white rounded-l-full hover:bg-orange-800  border-r border-white disabled:opacity-50 disabled:cursor-not-allowed "
       >
       <ArrowLIcon/>
       </button>
@@ -38,7 +38,7 @@ export default function RestaurantePaginator({ currentPage, totalPages, onPageCh
       <button
         onClick={() => onPageChange(currentPage + 1)}
         disabled={currentPage === totalPages}
-        className="px-4 py-2 bg-orange-600 text-white rounded-r-full hover:bg-orange-800  border-l border-white"
+        className="px-4 py-2 bg-orange-600 text-white rounded-r-full hover:bg-orange-800 border-l border-white disabled:opacity-50 disabled:cursor-not-allowed"
         >
         <ArrowRIcon/>
       </button>
