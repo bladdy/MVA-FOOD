@@ -1,9 +1,14 @@
-FROM node:18-alpine
+# Usa una imagen base de node.js versión 22 basada en Alpine Linux
+# Esta imagen es ligera y adecuada para producción 
+# Puedes cambiar la versión de Node.js según tus necesidades
+# Verificar la version de alpine 
+FROM node:22-alpine3.22
 
 WORKDIR /app
-
+# Copiar los archivos de configuración de tu proyecto
 COPY package.json pnpm-lock.yaml ./
 
+# Instalar pnpm (opcional, si usas npm usa RUN npm install)
 RUN corepack enable && corepack prepare pnpm@latest --activate
 RUN pnpm install --frozen-lockfile
 
@@ -11,7 +16,8 @@ COPY . .
 
 RUN pnpm run build
 
+# Exponer el puerto que configuraste en astro.config (4321)
 EXPOSE 4321
 
-# ⬅️ Ejecuta tu archivo `entry.mjs`
-CMD ["node", "dist/server/entry.mjs"]
+# Ejecutar el servidor Node generado por Astro
+CMD ["node", "dist/server/index.mjs"]
