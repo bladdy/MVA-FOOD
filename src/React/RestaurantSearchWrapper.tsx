@@ -55,7 +55,7 @@ export default function RestaurantSearchWrapper() {
   return (
     <div className="flex flex-col">
       <div className="items-center justify-center flex lg:h-60 bg-[url(/img/fast-food-3.jpg)] bg-cover bg-center">
-        <RestaurantSearch onSearch={handleSearch} />
+        <RestaurantSearch onSearch={handleSearch}/>
       </div>
 
 
