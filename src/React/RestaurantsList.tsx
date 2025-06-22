@@ -22,7 +22,7 @@ export default function RestaurantsList({ restaurantes }: RestaurantsListProps) 
           Restaurantes
         </h2>
 
-        <section className="w-full max-w-[1600px] grid lg:grid-cols-12 auto-rows-[15rem] gap-4 mx-auto p-6 md:p-12 lg:p-20">
+        <section className="w-full max-w-[1600px] grid lg:grid-cols-12 auto-rows-[15rem] gap-4 mx-auto p-6 md:p-6 lg:p-10">
           {restaurantes.map((restaurant) => (
             <RestauranteCard
               key={restaurant.id}

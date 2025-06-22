@@ -58,16 +58,30 @@ export default function RestaurantSearchWrapper() {
         <RestaurantSearch onSearch={handleSearch} />
       </div>
 
-      <div className="w-full max-w-7xl px-4"></div>
-      <div className="flex justify-center pb-">
-        <RestaurantsList restaurantes={filteredRestaurants} />
+
+      <div className="flex justify-center pb-4 min-h-[calc(100vh-25rem)]">
+        {
+          paginatedRestaurants.length > 0 ? (
+        <RestaurantsList restaurantes={paginatedRestaurants} />
+          ) : (
+        <div className="flex flex-1 items-center justify-center">
+          <h1 className="p-10 text-center text-orange-600 text-xl md:text-2xl">
+            No se encontraron restaurantes.
+          </h1>
+        </div>
+          )
+        }
       </div>
-      <div className="flex justify-center pb-">
-        <RestaurantePaginator
-          currentPage={currentPage}
-          totalPages={totalPages}
-          onPageChange={handlePageChange}
-        />
+      <div className="flex justify-center pb-2">
+        {
+          paginatedRestaurants.length > 0 && (
+            <RestaurantePaginator
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={handlePageChange}
+            />
+          )
+        }
       </div>
     </div>
   );
