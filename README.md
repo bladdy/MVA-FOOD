@@ -44,6 +44,69 @@ Próximamente se incluirán instrucciones paso a paso para clonar, configurar y 
 
 Este proyecto se desarrollará inicialmente como software de código cerrado para uso específico, pero podrá liberarse bajo una licencia abierta en el futuro.
 
+## 📁 Estructura del Proyecto
+
+```
+MVA-FOOD/
+├── client/     # Frontend en Astro + Tailwind CSS
+├── api/        # Backend en .NET Core Web API + JWT
+├── docker-compose.yml
+├── nginx.conf  # Opcional: para servir imágenes u app
+├── README.md
+├── .gitignore
+├── .gitattributes
+```
+
+---
+
+## 🚀 Cómo iniciar el proyecto
+
+### 🧱 Requisitos
+- Node.js + pnpm
+- .NET 6+
+- Docker + Docker Compose
+
+### 🔧 Instalación
+
+```bash
+# Frontend
+cd client
+pnpm install
+pnpm dev
+```
+
+```bash
+# Backend
+cd api
+dotnet restore
+dotnet run
+```
+
+O con Docker:
+```bash
+docker-compose up --build
+```
+
+---
+
+## 📦 Servicios
+
+| Servicio  | Ruta                 | Puerto |
+|-----------|----------------------|--------|
+| Frontend  | http://localhost:4321 | `4321` |
+| Backend   | http://localhost:5000 | `5000` |
+| NGINX     | http://localhost:8080 | `8080` |
+| FTP       | ftp://localhost:21    | `21`   |
+
+---
+
+## ✨ Funcionalidades
+
+- Registro e inicio de sesión con JWT
+- CRUD de restaurantes y platos
+- Carga de imágenes a través de FTP
+- Panel administrador
+- API segura y desacoplada
 ---
 
 Desarrollado con ❤️ por el equipo MVA.
