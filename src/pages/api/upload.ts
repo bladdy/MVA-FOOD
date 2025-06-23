@@ -1,58 +1,32 @@
-// src/pages/api/upload.ts
-import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
-import type { APIRoute } from 'astro';
-
-const s3 = new S3Client({
-  region: 'us-east-1', // Cualquiera (MinIO no valida región)
-  endpoint: 'http://localhost:9000',
-  forcePathStyle: true, // Necesario para MinIO
-  credentials: {
-    accessKeyId: 'admin',
-    secretAccessKey: 'admin123',
-  },
-});
+import type { APIRoute } from "astro";
+import { uploadToFtp } from "@/lib/ftpService";
+import path from "path";
+import fs from "fs/promises";
+import os from "os";
 
 export const POST: APIRoute = async ({ request }) => {
   const formData = await request.formData();
-  const file = formData.get('file') as File;
+  const file = formData.get("file") as File;
+  const tipo ="logo" //formData.get("tipo"); // ej: 'perfil' o 'logo'
 
-  if (!file) {
-    return new Response(JSON.stringify({ error: 'No file uploaded' }), {
-      status: 400,
-    });
+  if (!file || file.size === 0 || !tipo) {
+    return new Response("Archivo o tipo no válido", { status: 400 });
   }
 
-  const arrayBuffer = await file.arrayBuffer();
-  const buffer = Buffer.from(arrayBuffer);
-
-  const fileName = `${Date.now()}_${file.name}`;
+  const buffer = Buffer.from(await file.arrayBuffer());
+  const tempPath = path.join(os.tmpdir(), file.name);
+  await fs.writeFile(tempPath, buffer);
 
   try {
-    const command = new PutObjectCommand({
-      Bucket: 'uploads', // Asegúrate de que el bucket exista
-      Key: fileName,
-      Body: buffer,
-      ContentType: file.type,
-    });
-
-    await s3.send(command);
+    const rutaRelativa = await uploadToFtp(tempPath, `restaurante/${tipo}`, file.name);
 
     return new Response(
-      JSON.stringify({ message: 'Upload successful', fileName }),
-      { status: 200 }
+      JSON.stringify({ url: `http://localhost:8080/${rutaRelativa}` }),
+      { status: 200, headers: { "Content-Type": "application/json" } }
     );
-
-    /*
-     * Aquí puedes agregar lógica adicional después de la carga, como guardar la URL en una base de datos
-    {
-        "message": "Upload successful",
-        "fileName": "1750554757468_work.png"
-        "fileUrl": "http://localhost:9000/uploads/1750554757468_work.png"
-     */
   } catch (err) {
-    console.error('Upload error:', err);
-    return new Response(JSON.stringify({ error: 'Upload failed' }), {
-      status: 500,
-    });
+    return new Response("Error al subir al servidor FTP", { status: 500 });
+  } finally {
+    await fs.unlink(tempPath);
   }
 };

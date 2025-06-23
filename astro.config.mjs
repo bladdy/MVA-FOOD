@@ -22,12 +22,13 @@ export default defineConfig({
         '@components': '/src/components',
         '@assets': '/src/assets',
         '@public': '/public',
+        '@lib': '/src/lib',
       }
     }
   },
   server: {
     host: true,
-    port: 4321,
+    port: 4444,
   },
   devToolbar: {
     // Disable the developer toolbar

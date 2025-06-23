@@ -11,9 +11,15 @@ const url =
 <Layout title="Mva Foods - QR">
   <div class="bg-gray-100 flex justify-center items-center lg:h-screen p-24">
     <!-- <QRCodeGenerator client:only url={url} /> -->
-     <form action="/api/upload" method="post" enctype="multipart/form-data">
-        <input type="file" name="file" accept="image/*" required />
-        <button type="submit">Subir imagen</button>
-      </form>
+     <form method="post" action="/api/upload" enctype="multipart/form-data" class="space-y-4">
+      <input type="file" name="file" />
+      <input type="hidden" name="tipo" value="perfil" />
+      <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+        Subir Imagen
+      </button>
+    </form>
+       <p class="mt-6 text-sm text-gray-500">
+      Las imágenes se mostrarán en: <code>http://localhost:8080/imagenes/nombre.jpg</code>
+    </p>
   </div>
 </Layout>
