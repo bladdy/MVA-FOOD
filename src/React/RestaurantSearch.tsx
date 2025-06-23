@@ -66,37 +66,42 @@ export default function RestaurantSearch({ onSearch }: RestaurantSearchProps) {
         </h2>
 
         <form onSubmit={handleSubmit} className="flex flex-col items-center lg:grid lg:grid-cols-5 grid-cols-12 w-full mt-4 gap-1">
-          <div className="grid grid-cols-2 col-span-2 gap-1">
-            <CustomSelector
-              label="Restaurantes"
-              options={["Demo"]}
-              value={filters.name}
-              onChange={(value) => setFilters({ ...filters, name: value })}
-            />
-            <CustomSelector
-              label="Tipo"
-              options={["Americana", "Pollo"]}
-              value={filters.tipo}
-              onChange={(value) => setFilters({ ...filters, tipo: value })}
-            />
-
-          
+          <div className="grid grid-cols-2 col-span-2 gap-1 w-full">
+            <div className="w-full">
+              <CustomSelector
+                label="Restaurantes"
+                options={["Demo"]}
+                value={filters.name}
+                onChange={(value) => setFilters({ ...filters, name: value })}
+              />
+            </div>
+            <div className="w-full">
+              <CustomSelector
+                label="Tipo"
+                options={["Americana", "Pollo"]}
+                value={filters.tipo}
+                onChange={(value) => setFilters({ ...filters, tipo: value })}
+              />
+            </div>
           </div>
 
-          <div className="grid grid-cols-2 col-span-2 gap-1">
-            <CustomSelector
-              label="Ubicación"
-              options={["Piantini", "Churchill"]}
-              value={filters.ubicacion}
-              onChange={(value) => setFilters({ ...filters, ubicacion: value })}
-            />
-
-            <CustomSelector
-              label="Amenidades"
-              options={["Wifi", "Delivery"]}
-              value={filters.amenidad}
-              onChange={(value) => setFilters({ ...filters, amenidad: value })}
-            />
+          <div className="grid grid-cols-2 col-span-2 gap-1 w-full">
+            <div className="w-full">
+              <CustomSelector
+                label="Ubicación"
+                options={["Piantini", "Churchill"]}
+                value={filters.ubicacion}
+                onChange={(value) => setFilters({ ...filters, ubicacion: value })}
+              />
+            </div>
+            <div className="w-full">
+              <CustomSelector
+                label="Amenidades"
+                options={["Wifi", "Delivery"]}
+                value={filters.amenidad}
+                onChange={(value) => setFilters({ ...filters, amenidad: value })}
+              />
+            </div>
           </div>
 
             <div className="col-span-1 flex items-end w-full">

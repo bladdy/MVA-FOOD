@@ -1,10 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import ArrowDIcon from "../components/Icons/ArrowDIcon";
 import SearchIcon from "@/components/Icons/SearchIcon";
 
 // CustomSelector.tsx
-// Este componente es un selector personalizado que muestra una lista de opciones
-// y permite seleccionar una opción. Se cierra al hacer clic fuera del selector.
+
 interface CustomSelectorProps {
     label?: string;
   options: string[];
@@ -19,24 +18,53 @@ const CustomSelector: React.FC<CustomSelectorProps> = ({
   onChange,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [dropdownWidth, setDropdownWidth] = useState<string | undefined>(undefined);
+
+  useEffect(() => {
+    if (isOpen && containerRef.current) {
+      setDropdownWidth(`${containerRef.current.offsetWidth}px`);
+    }
+  }, [isOpen]);
+
   const [inputValue, setInputValue] = useState("");
 
+  // Unique id for each selector instance
+  const selectorId = Math.random().toString(36).substr(2, 9);
+
   const toggleDropdown = () => {
+    if (!isOpen) {
+      // Notify others to close
+      window.dispatchEvent(new CustomEvent("custom-selector-open", { detail: selectorId }));
+    }
     setIsOpen(!isOpen);
   };
+
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as HTMLElement;
       if (!target.closest(".custom-selector")) {
         setIsOpen(false);
+        setInputValue("");
+      }
+    };
+
+    const handleOtherSelectorOpen = (e: Event) => {
+      const customEvent = e as CustomEvent;
+      if (customEvent.detail !== selectorId) {
+        setIsOpen(false);
+        setInputValue("");
       }
     };
 
     document.addEventListener("mousedown", handleClickOutside);
+    window.addEventListener("custom-selector-open", handleOtherSelectorOpen);
+
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
+      window.removeEventListener("custom-selector-open", handleOtherSelectorOpen);
     };
-  }, []);
+  }, [selectorId]);
 
   return (
     <div className="custom-selector w-full font-medium h-full relative">
@@ -51,47 +79,38 @@ const CustomSelector: React.FC<CustomSelectorProps> = ({
           className={`ml-2 text-orange-500 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
         />
       </div>
-      <ul className={`absolute left-0 right-0 z-10 bg-white border border-gray-300 rounded-lg shadow-lg mt-1 max-h-60 overflow-auto transition-all duration-200 ease-in-out ${isOpen ? "block" : "hidden"}`}>
-        <div className="flex items-center px-4 py-2 border-b">
-          <SearchIcon className="text-gray-400 size-3" />
-          <input
-            type="text"
-            value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
-            className="placeholder:text-gray-700 px-2 w-full outline-none"
-            placeholder={label}
-          />
-        </div>
-        {options
-          .filter(option => option.toLowerCase().includes(inputValue.toLowerCase()))
-          .map((option) => (
-            <li
-              key={option}
-              className={`px-4 py-2 hover:bg-orange-500 hover:text-white cursor-pointer ${option === value ? "bg-orange-100" : ""}`}
-              onClick={() => {
-                onChange(option);
-                setIsOpen(false);
-                setInputValue("");
-              }}
-            >
-              {option}
-            </li>
-        ))}
-      </ul>
+      {isOpen && (
+        <ul className="absolute left-0 right-0 z-10 bg-white border border-gray-300 rounded-lg shadow-lg mt-1 max-h-60 overflow-auto transition-all duration-200 ease-in-out block">
+          <div className="flex items-center px-4 py-2 border-b">
+            <SearchIcon className="text-gray-400 size-3" />
+            <input
+              type="text"
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+              className="placeholder:text-gray-700 px-2 w-full outline-none"
+              placeholder={label}
+              onClick={e => e.stopPropagation()}
+            />
+          </div>
+          {options
+            .filter(option => option.toLowerCase().includes(inputValue.toLowerCase()))
+            .map((option) => (
+              <li
+                key={option}
+                className={`px-4 py-2 hover:bg-orange-500 hover:text-white cursor-pointer ${option === value ? "bg-orange-100" : ""}`}
+                onClick={() => {
+                  onChange(option);
+                  setIsOpen(false);
+                  setInputValue("");
+                }}
+              >
+                {option}
+              </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 };
 
 export default CustomSelector;
-
-/*<div className="absolute z-10 hidden bg-white border border-gray-300 rounded-lg shadow-lg mt-1">
-        {options.map((option) => (
-          <div
-            key={option}
-            className="px-4 py-2 hover:bg-blue-500 hover:text-white cursor-pointer"
-            onClick={() => onChange(option)}
-          >
-            {option}
-          </div>
-        ))}
-      </div>*/
