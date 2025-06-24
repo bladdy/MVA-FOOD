@@ -12,10 +12,10 @@ client/.astro/
 client/dist/
 
 # .NET Core (en /api)
-api/bin/
-api/obj/
-api/*.db
-api/.vs/
+api/MvaFood.Api/bin/
+api/MvaFood.Api/obj/
+api/MvaFood.Api/*.db
+api/MvaFood.Api/.vs/
 
 # Docker
 **/Dockerfile
