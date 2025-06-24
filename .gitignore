@@ -9,6 +9,7 @@ dist/
 # Astro (en /client)
 client/node_modules/
 client/.astro/
+client/.vercel/
 client/dist/
 
 # .NET Core (en /api)
