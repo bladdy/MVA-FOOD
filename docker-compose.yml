@@ -1,8 +1,8 @@
-version: '3.8'
-
 services:
   astro-ssr:
-    build: .
+    build:
+      context: ./client
+      dockerfile: Dockerfile
     container_name: astro-ssr-container
     ports:
       - "4321:4321"
@@ -15,6 +15,21 @@ services:
     depends_on:
       - ftp-storage
       - nginx-storage
+      - api
+  
+  api:
+    build:
+      context: ./api/MvaFood.Api
+    container_name: api-container
+    ports:
+      - "5000:5000"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:5000
+    volumes:
+      - ./api/MvaFood.Api:/app
+    working_dir: /app
+    command: dotnet watch run
 
   ftp-storage:
     image: stilliard/pure-ftpd:hardened
