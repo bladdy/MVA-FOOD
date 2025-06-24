@@ -1,3 +1,4 @@
+
 services:
   astro-ssr:
     build:
@@ -6,9 +7,6 @@ services:
     container_name: astro-ssr-container
     ports:
       - "4321:4321"
-    volumes:
-      - .:/app
-      - astro_node_modules:/app/node_modules
     environment:
       - NODE_ENV=production
     command: node dist/server/entry.mjs
@@ -16,18 +14,16 @@ services:
       - ftp-storage
       - nginx-storage
       - api
-  
   api:
     build:
-      context: ./api/MvaFood.Api
+      context: .
+      dockerfile: ./api/MvaFood.Api/Dockerfile
     container_name: api-container
     ports:
       - "5000:5000"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:5000
-    volumes:
-      - ./api/MvaFood.Api:/app
     working_dir: /app
     command: dotnet watch run
 
