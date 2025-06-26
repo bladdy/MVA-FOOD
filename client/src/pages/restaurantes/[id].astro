@@ -1,15 +1,15 @@
 ---
-import Layout from "@/layouts/Layout.astro";
-import { restaurants } from "@/consts/restaurantes";
+import Layout from '@/layouts/Layout.astro';
+import { restaurants } from '@/consts/restaurantes';
 
-import Location from "@/assets/svg/map-pin.svg";
-import Food from "@/assets/svg/tools-kitchen-3.svg";
-import Phone from "@/assets/svg/phone.svg";
-import Whatsapp from "@/assets/svg/brand-whatsapp.svg";
-import Clock from "@/assets/svg/clock.svg";
-import { Image } from "astro:assets";
-import MenuSection from "@/React/MenuSection";
-import ShareButton from "@/React/Buttons/ShareButton";
+import Location from '@/assets/svg/map-pin.svg';
+import Food from '@/assets/svg/tools-kitchen-3.svg';
+import Phone from '@/assets/svg/phone.svg';
+import Whatsapp from '@/assets/svg/brand-whatsapp.svg';
+import Clock from '@/assets/svg/clock.svg';
+import { Image } from 'astro:assets';
+import MenuSection from '@/React/MenuSection';
+import ShareButton from '@/React/Buttons/ShareButton';
 // Esto importa todos los SVGs de la carpeta "amenidades"
 const svgModules = import.meta.glob(
   "/src/assets/amenidades/*.svg",
