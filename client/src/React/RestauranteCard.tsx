@@ -45,8 +45,9 @@ export default function RestauranteCard({
       src={image}
       alt="Logo"
       className="w-14 h-14 object-cover rounded-full border-2 border-white"
+      style={{"viewTransitionName": href}}
     />
-    
+
     <h2 className="text-3xl font-semibold text-balance text-white">{name}</h2>
     <div className="flex items-start">
       <div>

@@ -21,6 +21,9 @@ export default defineConfig({
         '@assets': '/src/assets',
         '@public': '/public',
         '@lib': '/src/lib',
+        '@layouts': '/src/layouts',
+        '@consts': '/src/consts',
+        '@React': '/src/components/React',
       }
     }
   },
