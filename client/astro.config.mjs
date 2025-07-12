@@ -24,8 +24,8 @@ export default defineConfig({
         '@layouts': '/src/layouts',
         '@consts': '/src/consts',
         '@React': '/src/components/React',
-      }
-    }
+      },
+    },
   },
   server: {
     host: true,
@@ -35,6 +35,6 @@ export default defineConfig({
     // Disable the developer toolbar
     enabled: false,
     // You can also modify other options here
-  }
+  },
 
 });

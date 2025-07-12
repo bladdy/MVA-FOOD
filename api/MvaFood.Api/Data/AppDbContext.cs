@@ -15,9 +15,10 @@ namespace MvaFood.Api.Data
         public DbSet<Menu> Menus => Set<Menu>();
         public DbSet<Amenidad> Amenidades => Set<Amenidad>();
         public DbSet<Horario> Horarios => Set<Horario>();
+        
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            
+
         }
     }
 }
