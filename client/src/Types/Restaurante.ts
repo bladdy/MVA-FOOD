@@ -12,10 +12,18 @@ export interface Restaurante {
   perfilImage: string;
   direccion: string;
   phone: string;
+  plan: Plan;
   horario: Horario[];
   amnidades: Amnidades[];
   menu: Menu[];
 }
+
+export interface PedidoItem {
+  producto: Menu;
+  cantidad: number;
+  notas?: string;
+}
+
 
 export interface Menu {
   // Define the properties of Menu here, for example:
@@ -24,11 +32,28 @@ export interface Menu {
   ingredientes: string;
   price: number;
   categoria: Categorias;
+  imagen: string;
+}
+
+export interface Plan {
+  id: number;
+  name: string;
 }
 
 export interface Amnidades {
   svg: string;
   name: string;
+}
+
+export interface Variante {
+  id: string;
+  name: string;
+  obligatorio: boolean;
+  maxSeleccion?: number; // si >1, es checkbox
+  opciones: {
+    nombre: string;
+    precio?: number;
+  }[];
 }
 
 export type Categorias =
