@@ -13,7 +13,7 @@ import ShareButton from '@/React/Buttons/ShareButton';
 // Esto importa todos los SVGs de la carpeta "amenidades"
 const svgModules = import.meta.glob(
   "/src/assets/amenidades/*.svg",
-  { eager: true, import: "default" }
+  { eager: true, import: "default" },
 );
 
 // Crear un mapa por nombre de archivo
@@ -21,7 +21,7 @@ const amenidadesMap = Object.fromEntries(
   Object.entries(svgModules).map(([path, mod]) => {
     const filename = path.split("/").pop(); // ej: "area-exterior.svg"
     return [filename, mod];
-  })
+  }),
 );
 
 

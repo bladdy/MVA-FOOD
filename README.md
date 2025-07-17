@@ -110,3 +110,7 @@ docker-compose up --build
 ---
 
 Desarrollado con ❤️ por el equipo MVA.
+
+## Idea
+https://www.maspedidos.menu/ejemplo/ejemplo
+https://meniuapp.com/en-US/
