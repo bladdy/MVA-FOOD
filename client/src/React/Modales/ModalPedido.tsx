@@ -56,39 +56,42 @@ export default function ModalPedido({
                   <div className="text-md font-semibold text-gray-800">
                     {item.producto.name}
                   </div>
-                  <div className="text-sm text-gray-600">{item.notas}</div>
+                  <div className="text-sm text-gray-600 text-left">{item.notas}</div>
+                </div>
+                {/* Control cantidad */}
+                <div className="flex flex-col items-center space-x-1 gap-4">
                   <div className="text-sm font-bold text-gray-900 mt-1">
                     ${item.producto.price.toLocaleString("es-MX")} × {item.cantidad}
                   </div>
-                </div>
-                {/* Control cantidad */}
-                <div className="flex items-center space-x-1">
-                  {onCantidadChange && (
-                    <>
-                      {item.cantidad === 1 ? (
+                  <div className="flex justify-center">
+                    {onCantidadChange && (
+                        <>
+                        {item.cantidad === 1 ? (
+                            <button
+                            className="text-red-500 hover:text-red-700"
+                            onClick={() => onCantidadChange(idx, 0)}
+                            >
+                            <TrashIcon className="h-5 w-5" />
+                            </button>
+                        ) : (
+                            <button
+                            className="text-gray-600 hover:text-gray-800"
+                            onClick={() => onCantidadChange(idx, item.cantidad - 1)}
+                            >
+                            <MinusIcon className="h-5 w-5" />
+                            </button>
+                        )}
+                        <span className="text-base px-2">{item.cantidad}</span>
                         <button
-                          className="text-red-500 hover:text-red-700"
-                          onClick={() => onCantidadChange(idx, 0)}
+                            className="text-gray-600 hover:text-gray-800"
+                            onClick={() => onCantidadChange(idx, item.cantidad + 1)}
                         >
-                          <TrashIcon className="h-3 w-3" />
+                            <AddIcon className="h-5 w-5" />
                         </button>
-                      ) : (
-                        <button
-                          className="text-gray-600 hover:text-gray-800"
-                          onClick={() => onCantidadChange(idx, item.cantidad - 1)}
-                        >
-                          <MinusIcon className="h-3 w-3" />
-                        </button>
-                      )}
-                      <span className="text-sm px-2">{item.cantidad}</span>
-                      <button
-                        className="text-gray-600 hover:text-gray-800"
-                        onClick={() => onCantidadChange(idx, item.cantidad + 1)}
-                      >
-                        <AddIcon className="h-3 w-3" />
-                      </button>
-                    </>
-                  )}
+                        </>
+                    )}
+
+                  </div>
                 </div>
               </li>
             ))}

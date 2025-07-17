@@ -90,7 +90,12 @@ export default function ModalProducto({
                 return (
                   <li key={opcion.nombre} className="flex justify-between items-center px-3 py-2 hover:bg-gray-50">
                     <span>{opcion.nombre}</span>
-                    <label className="cursor-pointer">
+                    <label className="flex cursor-pointer text-gray items-center gap-1">
+                        {opcion.precio ? (
+                        <span className="text-xs px-2 py-0.5 rounded-full bg-gray-300">
+                            ${opcion.precio}
+                        </span>
+                        ) : null}
                       <input
                         type={isRadio ? "radio" : "checkbox"}
                         name={grupo.id}
