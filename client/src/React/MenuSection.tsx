@@ -88,7 +88,7 @@ export default function MenuSection({ menu, titulo }: Props) {
 
   return (
     <div className="relative">
-      <h2 className="text-4xl font-bold text-orange-600 mb-6">{titulo}</h2>
+      <h2 className="text-xl md:text-4xl font-bold text-orange-600 mb-6">{titulo}</h2>
 
       {/* Botones de Categoría */}
       <div className="flex flex-wrap justify-center gap-4 mb-6">
