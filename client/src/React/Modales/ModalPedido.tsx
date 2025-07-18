@@ -22,8 +22,8 @@ export default function ModalPedido({
   envioGratis?: boolean;
 }) {
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white p-6 rounded-2xl w-full max-w-xl shadow-lg">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 px-2">
+      <div className="bg-white rounded-2xl w-full max-w-xl max-h-[90vh] overflow-y-auto shadow-lg p-6">
         {/* Header */}
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-2xl font-bold text-orange-600">Tu Pedido</h2>
@@ -53,44 +53,33 @@ export default function ModalPedido({
                   className="w-16 h-16 rounded-lg object-cover"
                 />
                 <div className="flex-1">
-                  <div className="text-md font-semibold text-gray-800">
-                    {item.producto.name}
-                  </div>
+                  <div className="text-md font-semibold text-gray-800">{item.producto.name}</div>
                   <div className="text-sm text-gray-600 text-left">{item.notas}</div>
                 </div>
+
                 {/* Control cantidad */}
-                <div className="flex flex-col items-center space-x-1 gap-4">
+                <div className="flex flex-col items-center gap-4">
                   <div className="text-sm font-bold text-gray-900 mt-1">
                     ${item.producto.price.toLocaleString("es-MX")} × {item.cantidad}
                   </div>
                   <div className="flex justify-center">
                     {onCantidadChange && (
-                        <>
+                      <>
                         {item.cantidad === 1 ? (
-                            <button
-                            className="text-red-500 hover:text-red-700"
-                            onClick={() => onCantidadChange(idx, 0)}
-                            >
+                          <button className="text-red-500 hover:text-red-700" onClick={() => onCantidadChange(idx, 0)}>
                             <TrashIcon className="h-5 w-5" />
-                            </button>
+                          </button>
                         ) : (
-                            <button
-                            className="text-gray-600 hover:text-gray-800"
-                            onClick={() => onCantidadChange(idx, item.cantidad - 1)}
-                            >
+                          <button className="text-gray-600 hover:text-gray-800" onClick={() => onCantidadChange(idx, item.cantidad - 1)}>
                             <MinusIcon className="h-5 w-5" />
-                            </button>
+                          </button>
                         )}
                         <span className="text-base px-2">{item.cantidad}</span>
-                        <button
-                            className="text-gray-600 hover:text-gray-800"
-                            onClick={() => onCantidadChange(idx, item.cantidad + 1)}
-                        >
-                            <AddIcon className="h-5 w-5" />
+                        <button className="text-gray-600 hover:text-gray-800" onClick={() => onCantidadChange(idx, item.cantidad + 1)}>
+                          <AddIcon className="h-5 w-5" />
                         </button>
-                        </>
+                      </>
                     )}
-
                   </div>
                 </div>
               </li>
@@ -101,9 +90,7 @@ export default function ModalPedido({
         {/* Comentarios */}
         {setComentario && (
           <div className="mb-4">
-            <label className="font-semibold text-sm text-gray-800 mb-1 block">
-              Comentarios generales
-            </label>
+            <label className="font-semibold text-sm text-gray-800 mb-1 block">Comentarios generales</label>
             <textarea
               className="w-full border border-gray-300 rounded-lg p-2 text-sm"
               placeholder="Instrucciones adicionales"
