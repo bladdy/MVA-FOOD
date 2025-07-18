@@ -27,7 +27,7 @@ export default function ModalPedido({
         {/* Header */}
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-2xl font-bold text-orange-600">Tu Pedido</h2>
-          <button onClick={onClose}>
+          <button onClick={onClose} className="text-lg font-bold bg-orange-500 hover:bg-orange-600 text-white p-2 rounded-full">
             <CrossIcon className="h-6 w-6" />
           </button>
         </div>

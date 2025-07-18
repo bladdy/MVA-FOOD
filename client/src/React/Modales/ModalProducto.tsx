@@ -1,4 +1,5 @@
 import type { Menu, Variante } from "@/Types/Restaurante";
+import CrossIcon from "@/components/Icons/CrossIcon";
 import { variantesPorCategoria } from "@/consts/variantes";
 import { useState } from "react";
 
@@ -18,7 +19,6 @@ export default function ModalProducto({
 
   const toggleSeleccion = (grupoId: string, opcion: string) => {
     const seleccionadas = selecciones[grupoId] || [];
-
     const grupo = variantes.find((v) => v.id === grupoId);
     const max = grupo?.maxSeleccion ?? 1;
 
@@ -65,7 +65,16 @@ export default function ModalProducto({
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white p-6 rounded-lg max-w-md w-full overflow-y-auto max-h-[90vh]">
+      <div className="relative bg-white p-6 rounded-lg max-w-md w-full overflow-y-auto max-h-[90vh] shadow-xl">
+        {/* Botón de cierre */}
+        <button
+          onClick={onClose}
+          className="absolute top-2 right-2 text-lg font-bold bg-orange-500 hover:bg-orange-600 text-white p-2 rounded-full"
+          aria-label="Cerrar modal"
+        >
+          <CrossIcon className="h-4 w-4"/>
+        </button>
+
         <h2 className="text-xl font-bold mb-2 text-orange-600">{producto.name}</h2>
         <p className="text-sm mb-4 text-gray-600">{producto.ingredientes}</p>
 
@@ -73,7 +82,13 @@ export default function ModalProducto({
           <div key={grupo.id} className="mb-6">
             <div className="flex items-center justify-between mb-1">
               <h4 className="font-semibold">{grupo.name}</h4>
-              <span className={`text-xs px-2 py-0.5 rounded-full ${grupo.obligatorio ? "bg-green-100 text-green-700" : "bg-gray-200 text-gray-600"}`}>
+              <span
+                className={`text-xs px-2 py-0.5 rounded-full ${
+                  grupo.obligatorio
+                    ? "bg-green-100 text-green-700"
+                    : "bg-gray-200 text-gray-600"
+                }`}
+              >
                 {grupo.obligatorio ? "obligatorio" : "opcional"}
               </span>
             </div>
@@ -88,20 +103,25 @@ export default function ModalProducto({
                 const isRadio = grupo.maxSeleccion === 1;
 
                 return (
-                  <li key={opcion.nombre} className="flex justify-between items-center px-3 py-2 hover:bg-gray-50">
+                  <li
+                    key={opcion.nombre}
+                    className="flex justify-between items-center px-3 py-2 hover:bg-gray-50"
+                  >
                     <span>{opcion.nombre}</span>
                     <label className="flex cursor-pointer text-gray items-center gap-1">
-                        {opcion.precio ? (
+                      {opcion.precio && (
                         <span className="text-xs px-2 py-0.5 rounded-full bg-gray-300">
-                            ${opcion.precio}
+                          ${opcion.precio}
                         </span>
-                        ) : null}
+                      )}
                       <input
                         type={isRadio ? "radio" : "checkbox"}
                         name={grupo.id}
                         value={opcion.nombre}
                         checked={checked}
-                        onChange={() => toggleSeleccion(grupo.id, opcion.nombre)}
+                        onChange={() =>
+                          toggleSeleccion(grupo.id, opcion.nombre)
+                        }
                         className="w-5 h-5 text-orange-500 accent-orange-500"
                       />
                     </label>
@@ -120,7 +140,7 @@ export default function ModalProducto({
         />
 
         <button
-          className="w-full bg-green-600 text-white py-3 rounded font-semibold"
+          className="w-full bg-green-600 text-white py-3 rounded font-semibold hover:bg-green-700 transition"
           onClick={handleAgregar}
         >
           Agregar producto ${calcularTotal()}
