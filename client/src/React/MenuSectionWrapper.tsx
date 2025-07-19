@@ -5,9 +5,10 @@ import MenuSection from "./MenuSection";
 interface MenuSectionWrapperProps {
   menu: any; // Replace 'any' with the actual type if known
   titulo: string;
+  tomaPedido: boolean;
 }
 
-const MenuSectionWrapper = ({ menu, titulo }: MenuSectionWrapperProps) => {
+const MenuSectionWrapper = ({ menu, titulo, tomaPedido }: MenuSectionWrapperProps) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -22,7 +23,7 @@ const MenuSectionWrapper = ({ menu, titulo }: MenuSectionWrapperProps) => {
       <p className="mt-4 text-orange-600 font-semibold">Cargando menú...</p>
     </div>
   ) : (
-    <MenuSection menu={menu} titulo={titulo} />
+    <MenuSection menu={menu} titulo={titulo} tomaPedido={tomaPedido} />
   );
 };
 

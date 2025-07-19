@@ -25,6 +25,9 @@ import AddIcon from "@/components/Icons/AddIcon";
 interface Props {
   titulo: string;
   menu: Menu[];
+  tomaPedido?: boolean; // Si se usa en un contexto donde no se toma pedido, como el menú de inicio
+  // Si no se toma pedido, no se mostrarán los botones de agregar al pedido ni el modal de pedido
+  // Si se toma pedido, se mostrarán los botones y el modal de pedido
 }
 
 const categoriaIcons: Record<Categorias, JSX.Element> = {
@@ -41,7 +44,7 @@ const categoriaIcons: Record<Categorias, JSX.Element> = {
   Pastas: <PastasIcon className="w-6 h-6" />,
 };
 
-export default function MenuSection({ menu, titulo }: Props) {
+export default function MenuSection({ menu, titulo, tomaPedido }: Props) {
   const {
     pedido,
     total,
@@ -141,14 +144,16 @@ export default function MenuSection({ menu, titulo }: Props) {
                       </td>
                       <td className="py-3 px-2 w-1/5 text-right font-semibold text-orange-800 whitespace-nowrap">
                         <div>${item.price.toLocaleString("es-MX")}</div>
-                        <div>
-                          <button
-                            className="bg-orange-500 hover:bg-orange-600 text-white p-1 rounded-full"
-                            onClick={() => setModalProducto(item)}
-                          >
-                            <AddIcon className="w-4 h-4" />
-                          </button>
-                        </div>
+                        {tomaPedido && (
+                          <div>
+                            <button
+                              className="bg-orange-500 hover:bg-orange-600 text-white p-1 rounded-full"
+                              onClick={() => setModalProducto(item)}
+                            >
+                              <AddIcon className="w-4 h-4" />
+                            </button>
+                          </div>
+                        )}
                       </td>
                     </tr>
                   ))}

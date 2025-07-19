@@ -24,8 +24,14 @@ export function getStaticPaths() {
   return restaurants.map(({ id }) => ({ params: { id } }));
 }
 
+var tomarPedido = false; // Cambia esto si quieres que se tome pedido
+
 const restaurant = restaurants.find((res) => res.id === id);
 const description = `Perfil y Menu de ${id}`;
+if (restaurant?.plan.id === 2) {
+  
+  tomarPedido = true; // Si el restaurante tiene plan de toma de pedidos, se activa
+}
 export const prerender = true;
 ---
 
@@ -56,6 +62,7 @@ export const prerender = true;
 
           <!-- Aquí se reemplaza el componente -->
           <MenuSectionWrapper
+            tomaPedido={tomarPedido}
             menu={restaurant?.menu ?? []}
             titulo="Nuestro Menú"
             client:load

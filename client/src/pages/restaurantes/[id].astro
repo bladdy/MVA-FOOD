@@ -33,6 +33,11 @@ export function getStaticPaths() {
   });
 }
 const restaurant = restaurants.find((res) => res.id === id);
+var tomarPedido = false; // Cambia esto si quieres que se tome pedido
+if (restaurant?.plan.id === 2) {
+  
+  tomarPedido = true; // Si el restaurante tiene plan de toma de pedidos, se activa
+}
 
 const description = `Perfil y Menu de ${id}`;
 export const prerender = true;
@@ -134,7 +139,7 @@ export const prerender = true;
 
         <!-- Contenido central -->
         <div class="w-full md:flex-1 bg-white shadow-lg rounded-lg text-center feature-step p-6 mt-6 md:mt-0">
-          <MenuSection menu={restaurant?.menu ?? []} titulo="Menú" client:load />
+          <MenuSection menu={restaurant?.menu ?? []} titulo="Menú" tomaPedido={tomarPedido} client:load />
         </div>
       </div>
     ) : (
