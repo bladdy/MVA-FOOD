@@ -6,9 +6,9 @@ export const restaurants : Restaurante[] = [
     name: "Demo",
     image: "/mva-logo-rb.png",
     tipos: ["Americana"],
-    plan: {      
-      id:1,
-      name:"PLAN GOLD"
+    plan: {
+      id: 2,
+      name: "PLAN GOLD"
     },
     perfilImage: "/img/fast-food-3.jpg",
     direccion: "Federico Geraldino 61, Plaza Laura, local 1 A. Piantini. Santo Domingo. Distrito Nacional.",

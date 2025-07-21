@@ -1,4 +1,3 @@
-// MenuSection.tsx
 import { useState, type JSX } from "react";
 import type { Menu, Categorias } from "@/Types/Restaurante";
 
@@ -21,13 +20,12 @@ import PastasIcon from "@/components/Icons/PastasIcon";
 import SteakHouseIcon from "@/components/Icons/SteakHouseIcon";
 import FriesChickenIcon from "@/components/Icons/FriesChickenIcon";
 import AddIcon from "@/components/Icons/AddIcon";
+import CrossIcon from "@/components/Icons/CrossIcon"; // Para cerrar la galería
 
 interface Props {
   titulo: string;
   menu: Menu[];
-  tomaPedido?: boolean; // Si se usa en un contexto donde no se toma pedido, como el menú de inicio
-  // Si no se toma pedido, no se mostrarán los botones de agregar al pedido ni el modal de pedido
-  // Si se toma pedido, se mostrarán los botones y el modal de pedido
+  tomaPedido?: boolean;
 }
 
 const categoriaIcons: Record<Categorias, JSX.Element> = {
@@ -54,17 +52,15 @@ export default function MenuSection({ menu, titulo, tomaPedido }: Props) {
     agregarProducto,
     modalPedidoAbierto,
     setModalPedidoAbierto,
-    setPedido, // necesario para actualizar cantidades
+    setPedido,
   } = usePedido();
 
-  const [selectedCategoria, setSelectedCategoria] =
-    useState<Categorias>("Todas");
+  const [selectedCategoria, setSelectedCategoria] = useState<Categorias>("Todas");
+  const [imagenSeleccionada, setImagenSeleccionada] = useState<string | null>(null); // ⭐️ Galería
 
   const groupedMenu = menu.reduce(
     (acc, item) => {
-      if (!acc[item.categoria]) {
-        acc[item.categoria] = [];
-      }
+      if (!acc[item.categoria]) acc[item.categoria] = [];
       acc[item.categoria].push(item);
       return acc;
     },
@@ -76,17 +72,14 @@ export default function MenuSection({ menu, titulo, tomaPedido }: Props) {
     ...baseCategorias.filter((cat) => groupedMenu[cat]?.length > 0),
   ] as Categorias[];
 
-  // ✅ Función para cambiar cantidad
   const handleCantidadChange = (index: number, nuevaCantidad: number) => {
+    const nuevoPedido = [...pedido];
     if (nuevaCantidad <= 0) {
-      const nuevoPedido = [...pedido];
       nuevoPedido.splice(index, 1);
-      setPedido(nuevoPedido);
     } else {
-      const nuevoPedido = [...pedido];
       nuevoPedido[index].cantidad = nuevaCantidad;
-      setPedido(nuevoPedido);
     }
+    setPedido(nuevoPedido);
   };
 
   return (
@@ -107,10 +100,7 @@ export default function MenuSection({ menu, titulo, tomaPedido }: Props) {
       </div>
 
       {/* Contenido del Menú */}
-      <div
-        className="mb-10 transition-all duration-1000 ease-in-out"
-        key={selectedCategoria}
-      >
+      <div className="mb-10 transition-all duration-1000 ease-in-out" key={selectedCategoria}>
         {(selectedCategoria === "Todas"
           ? baseCategorias.filter((cat) => groupedMenu[cat]?.length)
           : [selectedCategoria]
@@ -121,38 +111,35 @@ export default function MenuSection({ menu, titulo, tomaPedido }: Props) {
                 {categoriaIcons[categoria]}
                 {categoria}
               </div>
-              <div className="text-sm font-semibold text-orange-600">
-                Precios
-              </div>
+              <div className="text-sm font-semibold text-orange-600">Precios</div>
             </div>
             <table className="w-full text-sm text-left">
               <tbody>
                 {(groupedMenu[categoria] ?? [])
                   .sort((a, b) => a.name.localeCompare(b.name))
                   .map((item) => (
-                    <tr
-                      key={item.id}
-                      className="border-b last:border-b-0 hover:bg-orange-50 transition-colors"
-                    >
-                      <td className="py-3 px-2 w-3/5">
-                        <div className="text-base font-semibold text-orange-900">
-                          {item.name}
-                        </div>
-                        <div className="text-sm text-orange-600">
-                          {item.ingredientes}
-                        </div>
+                    <tr key={item.id} className="border-b last:border-b-0 hover:bg-orange-50 transition-colors">
+                      <td className="w-1/6">
+                        <img
+                          src={item.imagen || "/mva-logo-rb.png"}
+                          alt={item.name}
+                          className="w-16 h-16 object-cover rounded cursor-pointer hover:opacity-90 transition"
+                          onClick={() => setImagenSeleccionada(item.imagen || "/mva-logo-rb.png")}
+                        />
                       </td>
-                      <td className="py-3 px-2 w-1/5 text-right font-semibold text-orange-800 whitespace-nowrap">
+                      <td className="py-3 px-0 w-4/6">
+                        <div className="text-base font-semibold text-orange-900">{item.name}</div>
+                        <div className="text-sm text-orange-600">{item.ingredientes}</div>
+                      </td>
+                      <td className="py-3 px-2 w-1/6 text-right font-semibold text-orange-800 whitespace-nowrap">
                         <div>${item.price.toLocaleString("es-MX")}</div>
                         {tomaPedido && (
-                          <div>
-                            <button
-                              className="bg-orange-500 hover:bg-orange-600 text-white p-1 rounded-full"
-                              onClick={() => setModalProducto(item)}
-                            >
-                              <AddIcon className="w-4 h-4" />
-                            </button>
-                          </div>
+                          <button
+                            className="bg-orange-500 hover:bg-orange-600 text-white p-1 rounded-full mt-1"
+                            onClick={() => setModalProducto(item)}
+                          >
+                            <AddIcon className="w-4 h-4" />
+                          </button>
                         )}
                       </td>
                     </tr>
@@ -162,6 +149,25 @@ export default function MenuSection({ menu, titulo, tomaPedido }: Props) {
           </div>
         ))}
 
+        {/* Galería Modal */}
+        {imagenSeleccionada && (
+          <div className="fixed inset-0 z-50 bg-black bg-opacity-80 flex items-center justify-center p-4">
+            <div className="relative max-w-full max-h-full">
+              <button
+                className="absolute top-2 right-2 text-white bg-orange-500 hover:bg-orange-600 p-2 rounded-full"
+                onClick={() => setImagenSeleccionada(null)}
+              >
+                <CrossIcon className="w-5 h-5" />
+              </button>
+              <img
+                src={imagenSeleccionada}
+                alt="Imagen del producto"
+                className="max-w-full max-h-[90vh] rounded-lg shadow-lg"
+              />
+            </div>
+          </div>
+        )}
+
         {/* Modales */}
         {modalProducto && (
           <ModalProducto
@@ -170,17 +176,16 @@ export default function MenuSection({ menu, titulo, tomaPedido }: Props) {
             onAgregar={(notas) => agregarProducto(modalProducto, notas)}
           />
         )}
-
         {modalPedidoAbierto && (
           <ModalPedido
             pedido={pedido}
             total={total}
             onClose={() => setModalPedidoAbierto(false)}
-            onCantidadChange={handleCantidadChange} // ✅ Aquí se pasa
+            onCantidadChange={handleCantidadChange}
           />
         )}
 
-        {/* Botón flotante Ver pedido */}
+        {/* Botón flotante */}
         {cantidad > 0 && (
           <BotonVerPedido
             total={total}
