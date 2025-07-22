@@ -1,4 +1,5 @@
 import AddIcon from "@/components/Icons/AddIcon";
+import CheckIcon from "@/components/Icons/CheckIcon";
 import CrossIcon from "@/components/Icons/CrossIcon";
 import MinusIcon from "@/components/Icons/MinusIcon";
 import TrashIcon from "@/components/Icons/TrashIcon";
@@ -21,6 +22,12 @@ export default function ModalPedido({
   setComentario?: (value: string) => void;
   envioGratis?: boolean;
 }) {
+  const metaEnvioGratis = 200;
+  const progreso = Math.min((total / metaEnvioGratis) * 100, 100);
+  let progresoColor = "bg-red-500";
+  if (total >= 150 && total < 200) progresoColor = "bg-yellow-500";
+  if (total >= 200) progresoColor = "bg-green-500";
+
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 px-2">
       <div className="bg-white rounded-2xl w-full max-w-xl max-h-[90vh] overflow-y-auto shadow-lg p-6">
@@ -34,9 +41,32 @@ export default function ModalPedido({
 
         {/* Envío Gratis */}
         {envioGratis && (
-          <div className="bg-green-100 text-green-700 p-2 px-4 rounded-lg mb-4 flex items-center justify-between">
-            <span>¡Listo! Ya tienes envío gratis *</span>
-            <div className="w-1/4 h-1 bg-green-500 rounded-full ml-4"></div>
+          <div className="bg-gray-100 text-sm text-gray-700 p-2 px-4 rounded-lg mb-4">
+            {total >= metaEnvioGratis ? (
+              <>
+              <div className="flex justify-between items-center mb-1">
+                  <span className="text-green-600 font-semibold flex items-center justify-center gap-1">
+                    ¡Listo! Ya tienes envío gratis <CheckIcon className="inline-block w-4 h-4 text-green-500" />
+                  </span>
+                  <span className="text-xs text-gray-500 ml-2">Meta: ${metaEnvioGratis}</span>
+                </div>
+                <div className="w-full h-2 bg-gray-300 rounded-full overflow-hidden">
+                  <div className={`h-full ${progresoColor}`} style={{ width: `${progreso}%` }} />
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="flex justify-between items-center mb-1">
+                  <span>
+                    Te faltan <strong>${(metaEnvioGratis - total).toFixed(2)}</strong> para envío gratis
+                  </span>
+                  <span className="text-xs text-gray-500 ml-2">Meta: ${metaEnvioGratis}</span>
+                </div>
+                <div className="w-full h-2 bg-gray-300 rounded-full overflow-hidden">
+                  <div className={`h-full ${progresoColor}`} style={{ width: `${progreso}%` }} />
+                </div>
+              </>
+            )}
           </div>
         )}
 
