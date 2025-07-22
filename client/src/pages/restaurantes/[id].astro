@@ -10,6 +10,7 @@ import Clock from '@/assets/svg/clock.svg';
 import { Image } from 'astro:assets';
 import MenuSection from '@/React/MenuSection';
 import ShareButton from '@/React/Buttons/ShareButton';
+import MenuSectionWrapper from '@/React/MenuSectionWrapper';
 // Esto importa todos los SVGs de la carpeta "amenidades"
 const svgModules = import.meta.glob(
   "/src/assets/amenidades/*.svg",
@@ -139,7 +140,13 @@ export const prerender = true;
 
         <!-- Contenido central -->
         <div class="w-full md:flex-1 bg-white shadow-lg rounded-lg text-center feature-step p-6 mt-6 md:mt-0">
-          <MenuSection menu={restaurant?.menu ?? []} titulo="Menú" tomaPedido={tomarPedido} client:load />
+          <!-- MenuSection menu={restaurant?.menu ?? []} titulo="Menú" tomaPedido={tomarPedido} client:load /> -->
+          <MenuSectionWrapper
+            tomaPedido={tomarPedido}
+            menu={restaurant?.menu ?? []}
+            titulo="Menú"
+            client:load
+          />
         </div>
       </div>
     ) : (
