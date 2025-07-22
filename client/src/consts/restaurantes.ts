@@ -141,7 +141,7 @@ export const restaurants : Restaurante[] = [
     image: "/mva-logo-rb.png",
     tipos: ["Pollo"],
     plan: {
-      id:2,
+      id:1,
       name:"PLAN PLATINUM"
     },
     perfilImage: "/img/pollo-frito.jpg",

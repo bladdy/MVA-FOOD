@@ -1,44 +1,34 @@
 ---
-import Layout from "@/layouts/Layout.astro";
 import { restaurants } from "@/consts/restaurantes";
 import Food from "@/assets/svg/tools-kitchen-3.svg";
 import { Image } from "astro:assets";
 import LayoutMenu from "@/layouts/LayoutMenu.astro";
-import MenuSectionWrapper from "@/React/MenuSectionWrapper.jsx"; // Asegúrate que esté bien el path
+import MenuSectionWrapper from "@/React/MenuSectionWrapper.jsx"; 
 import ShareButton from "@/React/Buttons/ShareButton";
 
-const svgModules = import.meta.glob("/src/assets/amenidades/*.svg", {
-  eager: true,
-  import: "default",
-});
-const amenidadesMap = Object.fromEntries(
-  Object.entries(svgModules).map(([path, mod]) => {
-    const filename = path.split("/").pop();
-    return [filename, mod];
-  }),
-);
-
+// 🔸 Obtener el ID del restaurante desde la URL
 const { id } = Astro.params;
+
 
 export function getStaticPaths() {
   return restaurants.map(({ id }) => ({ params: { id } }));
 }
 
-var tomarPedido = false; // Cambia esto si quieres que se tome pedido
-
+var tomarPedido = false;
 const restaurant = restaurants.find((res) => res.id === id);
 const description = `Perfil y Menu de ${id}`;
+
 if (restaurant?.plan.id === 2) {
-  
-  tomarPedido = true; // Si el restaurante tiene plan de toma de pedidos, se activa
+  tomarPedido = true;
 }
 export const prerender = true;
 ---
-
 <LayoutMenu title={`Mva Foods - ${restaurant?.name}`} description={description}>
+  
   {
     restaurant ? (
       <div class="flex flex-row justify-center min-h-screen px-4 lg:px-24 bg-gradient-to-r from-orange-100 to-orange-50">
+
         <div class="w-full bg-white shadow-lg rounded-lg text-center feature-step p-4 my-6 lg:w-3/5">
           <Image
             src={restaurant.image}

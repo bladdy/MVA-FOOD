@@ -21,6 +21,7 @@ import SteakHouseIcon from "@/components/Icons/SteakHouseIcon";
 import FriesChickenIcon from "@/components/Icons/FriesChickenIcon";
 import AddIcon from "@/components/Icons/AddIcon";
 import CrossIcon from "@/components/Icons/CrossIcon"; // Para cerrar la galería
+import TipoEntregaSelector from "./TipoEntregaSelector";
 
 interface Props {
   titulo: string;
@@ -54,7 +55,7 @@ export default function MenuSection({ menu, titulo, tomaPedido }: Props) {
     setModalPedidoAbierto,
     setPedido,
   } = usePedido();
-
+  const [tipoEntrega, setTipoEntrega] = useState<"domicilio" | "recoger">("domicilio");
   const [selectedCategoria, setSelectedCategoria] = useState<Categorias>("Todas");
   const [imagenSeleccionada, setImagenSeleccionada] = useState<string | null>(null); // ⭐️ Galería
 
@@ -98,6 +99,13 @@ export default function MenuSection({ menu, titulo, tomaPedido }: Props) {
           />
         ))}
       </div>
+      {/* Take out o delivery */}
+      {tomaPedido && (
+        <TipoEntregaSelector
+          tipoEntrega={tipoEntrega}
+          setTipoEntrega={setTipoEntrega}
+        />
+      )}
 
       {/* Contenido del Menú */}
       <div className="mb-10 transition-all duration-1000 ease-in-out" key={selectedCategoria}>
@@ -179,7 +187,8 @@ export default function MenuSection({ menu, titulo, tomaPedido }: Props) {
         {modalPedidoAbierto && (
           <ModalPedido
             pedido={pedido}
-            total={total}
+            total={tipoEntrega === "domicilio" && total < 200 ? total + 20 : total}
+            envioGratis={tipoEntrega === "domicilio"}
             onClose={() => setModalPedidoAbierto(false)}
             onCantidadChange={handleCantidadChange}
           />
