@@ -27,6 +27,7 @@ interface Props {
   titulo: string;
   menu: Menu[];
   tomaPedido?: boolean;
+  mesa?: string | null;
 }
 
 const categoriaIcons: Record<Categorias, JSX.Element> = {
@@ -43,7 +44,7 @@ const categoriaIcons: Record<Categorias, JSX.Element> = {
   Pastas: <PastasIcon className="w-6 h-6" />,
 };
 
-export default function MenuSection({ menu, titulo, tomaPedido }: Props) {
+export default function MenuSection({ menu, titulo, tomaPedido, mesa }: Props) {
   const {
     pedido,
     total,
@@ -55,9 +56,14 @@ export default function MenuSection({ menu, titulo, tomaPedido }: Props) {
     setModalPedidoAbierto,
     setPedido,
   } = usePedido();
-  const [tipoEntrega, setTipoEntrega] = useState<"domicilio" | "recoger">("domicilio");
-  const [selectedCategoria, setSelectedCategoria] = useState<Categorias>("Todas");
-  const [imagenSeleccionada, setImagenSeleccionada] = useState<string | null>(null); // ⭐️ Galería
+  const [tipoEntrega, setTipoEntrega] = useState<"domicilio" | "recoger">(
+    "domicilio"
+  );
+  const [selectedCategoria, setSelectedCategoria] =
+    useState<Categorias>("Todas");
+  const [imagenSeleccionada, setImagenSeleccionada] = useState<string | null>(
+    null
+  ); // ⭐️ Galería
 
   const groupedMenu = menu.reduce(
     (acc, item) => {
@@ -85,7 +91,9 @@ export default function MenuSection({ menu, titulo, tomaPedido }: Props) {
 
   return (
     <div className="relative">
-      <h2 className="text-xl md:text-4xl font-bold text-orange-600 mb-6">{titulo}</h2>
+      <h2 className="text-xl md:text-4xl font-bold text-orange-600 mb-6">
+        {titulo}
+      </h2>
 
       {/* Botones de Categoría */}
       <div className="flex flex-wrap justify-center gap-4 mb-6">
@@ -108,7 +116,10 @@ export default function MenuSection({ menu, titulo, tomaPedido }: Props) {
       )}
 
       {/* Contenido del Menú */}
-      <div className="mb-10 transition-all duration-1000 ease-in-out" key={selectedCategoria}>
+      <div
+        className="mb-10 transition-all duration-1000 ease-in-out"
+        key={selectedCategoria}
+      >
         {(selectedCategoria === "Todas"
           ? baseCategorias.filter((cat) => groupedMenu[cat]?.length)
           : [selectedCategoria]
@@ -119,29 +130,42 @@ export default function MenuSection({ menu, titulo, tomaPedido }: Props) {
                 {categoriaIcons[categoria]}
                 {categoria}
               </div>
-              <div className="text-sm font-semibold text-orange-600">Precios</div>
+              <div className="text-sm font-semibold text-orange-600">
+                Precios
+              </div>
             </div>
             <table className="w-full text-sm text-left">
               <tbody>
                 {(groupedMenu[categoria] ?? [])
                   .sort((a, b) => a.name.localeCompare(b.name))
                   .map((item) => (
-                    <tr key={item.id} className="border-b last:border-b-0 hover:bg-orange-50 transition-colors">
+                    <tr
+                      key={item.id}
+                      className="border-b last:border-b-0 hover:bg-orange-50 transition-colors"
+                    >
                       <td className="w-1/6">
                         <img
                           src={item.imagen || "/mva-logo-rb.png"}
                           alt={item.name}
                           className="w-16 h-16 object-cover rounded cursor-pointer hover:opacity-90 transition"
-                          onClick={() => setImagenSeleccionada(item.imagen || "/mva-logo-rb.png")}
+                          onClick={() =>
+                            setImagenSeleccionada(
+                              item.imagen || "/mva-logo-rb.png"
+                            )
+                          }
                         />
                       </td>
                       <td className="py-3 px-0 w-4/6">
-                        <div className="text-base font-semibold text-orange-900">{item.name}</div>
-                        <div className="text-sm text-orange-600">{item.ingredientes}</div>
+                        <div className="text-base font-semibold text-orange-900">
+                          {item.name}
+                        </div>
+                        <div className="text-sm text-orange-600">
+                          {item.ingredientes}
+                        </div>
                       </td>
                       <td className="py-3 px-2 w-1/6 text-right font-semibold text-orange-800 whitespace-nowrap">
                         <div>${item.price.toLocaleString("es-MX")}</div>
-                        {tomaPedido && (
+                        {(tomaPedido || mesa) && (
                           <button
                             className="bg-orange-500 hover:bg-orange-600 text-white p-1 rounded-full mt-1"
                             onClick={() => setModalProducto(item)}
@@ -186,8 +210,11 @@ export default function MenuSection({ menu, titulo, tomaPedido }: Props) {
         )}
         {modalPedidoAbierto && (
           <ModalPedido
+            mesa={mesa}
             pedido={pedido}
-            total={tipoEntrega === "domicilio" && total < 200 ? total + 20 : total}
+            total={
+              tipoEntrega === "domicilio" && total < 200 ? total + 20 : total
+            }
             envioGratis={tipoEntrega === "domicilio"}
             onClose={() => setModalPedidoAbierto(false)}
             onCantidadChange={handleCantidadChange}

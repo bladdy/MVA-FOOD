@@ -7,6 +7,7 @@ import type { PedidoItem } from "@/Types/Restaurante";
 
 export default function ModalPedido({
   pedido,
+  mesa,
   total,
   onClose,
   onCantidadChange,
@@ -14,7 +15,8 @@ export default function ModalPedido({
   setComentario,
   envioGratis = true,
 }: {
-  pedido: PedidoItem[];
+  pedido: PedidoItem[];  
+  mesa?: string | null;
   total: number;
   onClose: () => void;
   onCantidadChange?: (index: number, nuevaCantidad: number) => void;
@@ -24,6 +26,7 @@ export default function ModalPedido({
 }) {
   const metaEnvioGratis = 200;
   const progreso = Math.min((total / metaEnvioGratis) * 100, 100);
+  if (mesa) envioGratis = false; // Si hay mesa, no hay envío gratis
   let progresoColor = "bg-red-500";
   if (total >= 150 && total < 200) progresoColor = "bg-yellow-500";
   if (total >= 200) progresoColor = "bg-green-500";
@@ -137,6 +140,8 @@ export default function ModalPedido({
         </div>
 
         <button className="w-full bg-orange-500 hover:bg-orange-600 text-white py-2 rounded-lg font-semibold">
+          {/*Cuando le vaya a finalizar pedido evalua si hay mesa o no, si hay mesa se le pasa directo a los meseros
+           y sino se va directo a la caja para que ejecuten la orden*/}
           Finalizar Pedido
         </button>
       </div>

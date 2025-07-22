@@ -19,7 +19,8 @@ const restaurant = restaurants.find((res) => res.id === id);
 const description = `Perfil y Menu de ${id}`;
 
 if (restaurant?.plan.id === 2) {
-  tomarPedido = true;
+  tomarPedido = false;
+  
 }
 export const prerender = true;
 ---

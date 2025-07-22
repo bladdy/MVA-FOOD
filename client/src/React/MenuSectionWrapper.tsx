@@ -42,7 +42,7 @@ const MenuSectionWrapper = ({ menu, titulo, tomaPedido }: MenuSectionWrapperProp
         menu={menu}
         titulo={titulo}
         tomaPedido={tomaPedido}
-        //mesa={mesa}  opcional: pásalo si MenuSection lo necesita
+        mesa={mesa}  //opcional: pásalo si MenuSection lo necesita
       />
     </div>
   );
