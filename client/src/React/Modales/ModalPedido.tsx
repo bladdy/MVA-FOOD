@@ -26,10 +26,10 @@ export default function ModalPedido({
 }) {
   const metaEnvioGratis = 200;
   const progreso = Math.min((total / metaEnvioGratis) * 100, 100);
-  if (mesa) envioGratis = false; // Si hay mesa, no hay envío gratis
+  if (mesa) envioGratis = false; // Si hay mesa, no hay envío Gratis
   let progresoColor = "bg-red-500";
   if (total >= 150 && total < 200) progresoColor = "bg-yellow-500";
-  if (total >= 200) progresoColor = "bg-green-500";
+  if (total >= 200) progresoColor = "bg-green-500"; 
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 px-2">
