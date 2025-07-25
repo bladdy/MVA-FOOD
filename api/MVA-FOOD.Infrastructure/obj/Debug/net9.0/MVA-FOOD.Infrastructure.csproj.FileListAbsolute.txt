@@ -14,3 +14,5 @@ C:\Proyectos\MVA-FOOD\api\MVA-FOOD.Infrastructure\obj\Debug\net9.0\MVA-FOOD.Infr
 C:\Proyectos\MVA-FOOD\api\MVA-FOOD.Infrastructure\obj\Debug\net9.0\refint\MVA-FOOD.Infrastructure.dll
 C:\Proyectos\MVA-FOOD\api\MVA-FOOD.Infrastructure\obj\Debug\net9.0\MVA-FOOD.Infrastructure.pdb
 C:\Proyectos\MVA-FOOD\api\MVA-FOOD.Infrastructure\obj\Debug\net9.0\ref\MVA-FOOD.Infrastructure.dll
+C:\Proyectos\MVA-FOOD\api\MVA-FOOD.Infrastructure\bin\Debug\net9.0\MVA-FOOD.Infrastructure.runtimeconfig.json
+C:\Proyectos\MVA-FOOD\api\MVA-FOOD.Infrastructure\obj\Debug\net9.0\MVA-FOOD.Infrastructure.genruntimeconfig.cache

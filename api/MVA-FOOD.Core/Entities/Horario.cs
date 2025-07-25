@@ -3,12 +3,13 @@ namespace MVA_FOOD.Core.Entities
 {
     public class Horario
     {
-        public int Id { get; set; }
-        public string Dia { get; set; } = null!;
-        public string Apertura { get; set; } = null!;
-        public string Cierre { get; set; } = null!;
+        public Guid Id { get; set; }
+        
+        public DayOfWeek Dia { get; set; }
+        public TimeSpan HoraApertura { get; set; }
+        public TimeSpan HoraCierre { get; set; }
 
-        public int RestauranteId { get; set; }
+        public Guid RestauranteId { get; set; }
         public Restaurante Restaurante { get; set; } = null!;
     }
 

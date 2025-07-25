@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Proyectos\\MVA-FOOD\\api\\MVA-FOOD.Api\\MVA-FOOD.API.csproj": {}
+    "C:\\Proyectos\\MVA-FOOD\\api\\MVA-FOOD.API\\MVA-FOOD.API.csproj": {}
   },
   "projects": {
-    "C:\\Proyectos\\MVA-FOOD\\api\\MVA-FOOD.Api\\MVA-FOOD.API.csproj": {
+    "C:\\Proyectos\\MVA-FOOD\\api\\MVA-FOOD.API\\MVA-FOOD.API.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Proyectos\\MVA-FOOD\\api\\MVA-FOOD.Api\\MVA-FOOD.API.csproj",
+        "projectUniqueName": "C:\\Proyectos\\MVA-FOOD\\api\\MVA-FOOD.API\\MVA-FOOD.API.csproj",
         "projectName": "MVA-FOOD.API",
-        "projectPath": "C:\\Proyectos\\MVA-FOOD\\api\\MVA-FOOD.Api\\MVA-FOOD.API.csproj",
+        "projectPath": "C:\\Proyectos\\MVA-FOOD\\api\\MVA-FOOD.API\\MVA-FOOD.API.csproj",
         "packagesPath": "C:\\Users\\bladd\\.nuget\\packages\\",
-        "outputPath": "C:\\Proyectos\\MVA-FOOD\\api\\MVA-FOOD.Api\\obj\\",
+        "outputPath": "C:\\Proyectos\\MVA-FOOD\\api\\MVA-FOOD.API\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -61,6 +61,20 @@
             "Microsoft.AspNetCore.OpenApi": {
               "target": "Package",
               "version": "[9.0.4, )"
+            },
+            "Microsoft.EntityFrameworkCore.Sqlite": {
+              "target": "Package",
+              "version": "[9.0.7, )"
+            },
+            "Microsoft.EntityFrameworkCore.Tools": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[9.0.7, )"
+            },
+            "Swashbuckle.AspNetCore": {
+              "target": "Package",
+              "version": "[9.0.3, )"
             }
           },
           "imports": [
@@ -202,6 +216,18 @@
       "frameworks": {
         "net9.0": {
           "targetAlias": "net9.0",
+          "dependencies": {
+            "Microsoft.EntityFrameworkCore.Sqlite": {
+              "target": "Package",
+              "version": "[9.0.7, )"
+            },
+            "Microsoft.EntityFrameworkCore.Tools": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[9.0.7, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",

@@ -1,18 +1,10 @@
 namespace MVA_FOOD.Core.Entities
 {
-    public enum Categoria
-{
-    Todas,
-    Entradas,
-    PlatoFuerte,
-    BurgerStreetFood,
-    SteakHouse,
-    PolloFrito,
-    Pastas,
-    Sopas,
-    Kids,
-    Bebidas,
-    Postres
-}
+    public class Categoria
+    {
+        public int Id { get; set; }
+        public string Nombre { get; set; } = string.Empty;
+        public ICollection<Menu> Menus { get; set; } = new List<Menu>();
+    }
 
 }
