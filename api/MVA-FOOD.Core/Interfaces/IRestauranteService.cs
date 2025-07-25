@@ -10,7 +10,7 @@ namespace MVA_FOOD.Core.Interfaces
     {
         Task<IEnumerable<RestauranteDto>> GetAllAsync();
         Task<RestauranteDto> GetByIdAsync(Guid id);
-        Task<RestauranteDto> CreateAsync(CreateRestauranteDto dto);
+        Task<RestauranteDto> CreateAsync(CrearRestauranteDto dto);
         Task<bool> DeleteAsync(Guid id);
         
     }

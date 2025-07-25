@@ -18,6 +18,9 @@ namespace MVA_FOOD.Infrastructure.Data
         public DbSet<Mesa> Mesas { get; set; }
         public DbSet<Horario> Horarios { get; set; }
         public DbSet<Empleado> Empleados { get; set; }
+        public DbSet<Plan> Planes { get; set; }
+        public DbSet<PlanRestaurante> PlanesRestaurantes { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -25,6 +28,12 @@ namespace MVA_FOOD.Infrastructure.Data
             modelBuilder.Entity<Restaurante>()
                 .HasMany(r => r.Amenidades)
                 .WithMany(a => a.Restaurantes);
+                
+            modelBuilder.Entity<Restaurante>()
+                .HasOne(r => r.PlanRestaurante)
+                .WithOne(pr => pr.Restaurante)
+                .HasForeignKey<PlanRestaurante>(pr => pr.RestauranteId)
+                .OnDelete(DeleteBehavior.Cascade);
         }   
 
     }

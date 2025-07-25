@@ -62,6 +62,10 @@ builder.Services.AddScoped<ICategoriaService, CategoriaService>();
 builder.Services.AddScoped<IRestauranteService, RestauranteService>();
 builder.Services.AddScoped<IMenuService, MenuService>();
 builder.Services.AddScoped<IMesaService, MesaService>();
+builder.Services.AddScoped<IHorarioService, HorarioService>();
+builder.Services.AddScoped<IEmpleadoService, EmpleadoService>();
+builder.Services.AddScoped<IPlanService, PlanService>();
+//builder.Services.AddScoped<IPlanRestauranteService, PlanRestauranteService>();
 
 // 6. Configurar autorización y endpoints
 builder.Services.AddAuthorization();

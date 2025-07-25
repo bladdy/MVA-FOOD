@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("MVA-FOOD.API")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7f3c5b22522c84f124a86880ebc666d890a4054e")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0fc60d95c57254c679104b9e9b04ab40dc492d34")]
 [assembly: System.Reflection.AssemblyProductAttribute("MVA-FOOD.API")]
 [assembly: System.Reflection.AssemblyTitleAttribute("MVA-FOOD.API")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
