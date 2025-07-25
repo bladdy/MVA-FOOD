@@ -1,0 +1,12 @@
+C:\Proyectos\MVA-FOOD\api\MVA-FOOD.Core\bin\Debug\net9.0\MVA-FOOD.Core.deps.json
+C:\Proyectos\MVA-FOOD\api\MVA-FOOD.Core\bin\Debug\net9.0\MVA-FOOD.Core.dll
+C:\Proyectos\MVA-FOOD\api\MVA-FOOD.Core\bin\Debug\net9.0\MVA-FOOD.Core.pdb
+C:\Proyectos\MVA-FOOD\api\MVA-FOOD.Core\obj\Debug\net9.0\MVA-FOOD.Core.GeneratedMSBuildEditorConfig.editorconfig
+C:\Proyectos\MVA-FOOD\api\MVA-FOOD.Core\obj\Debug\net9.0\MVA-FOOD.Core.AssemblyInfoInputs.cache
+C:\Proyectos\MVA-FOOD\api\MVA-FOOD.Core\obj\Debug\net9.0\MVA-FOOD.Core.AssemblyInfo.cs
+C:\Proyectos\MVA-FOOD\api\MVA-FOOD.Core\obj\Debug\net9.0\MVA-FOOD.Core.csproj.CoreCompileInputs.cache
+C:\Proyectos\MVA-FOOD\api\MVA-FOOD.Core\obj\Debug\net9.0\MVA-FOOD.Core.sourcelink.json
+C:\Proyectos\MVA-FOOD\api\MVA-FOOD.Core\obj\Debug\net9.0\MVA-FOOD.Core.dll
+C:\Proyectos\MVA-FOOD\api\MVA-FOOD.Core\obj\Debug\net9.0\refint\MVA-FOOD.Core.dll
+C:\Proyectos\MVA-FOOD\api\MVA-FOOD.Core\obj\Debug\net9.0\MVA-FOOD.Core.pdb
+C:\Proyectos\MVA-FOOD\api\MVA-FOOD.Core\obj\Debug\net9.0\ref\MVA-FOOD.Core.dll

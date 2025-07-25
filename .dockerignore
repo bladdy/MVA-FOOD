@@ -1,3 +1,77 @@
+#############################################
+# BACKEND - .NET 9 / ASP.NET Core
+#############################################
+# Ignorar todos los archivos y carpetas generados por .NET que no son necesarios para el build
+*.dll
+*.exe
+*.pdb
+*.cache
+*.config
+*.deps.json
+*.runtimeconfig.json
+*.xml
+*.nuget
+*.nupkg
+*.snk
+*.psess
+*.vsp
+*.vspscc
+*.vssscc
+*.csproj.user
+*.csproj.vspscc
+*.csproj.vssscc
+*.suo
+*.user
+*.tmp
+*.bak
+*.swp
+*.sln.docstates
+*.dbmdl
+*.log
+*.TestResults
+TestResults/
+**/TestResults/
+**/*.TestResults
+**/*.dbmdl
+**/*.log
+**/*.tmp
+**/*.bak
+**/*.swp
+# Compilados y temporales
+bin/
+obj/
+out/
+publish/
+wwwroot/
+
+
+
+# VS & Rider
+.vs/
+.idea/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Archivos de configuración locales y secretos
+appsettings.Development.json
+appsettings.*.json
+secrets.json
+
+# Archivos de base de datos local
+*.db
+*.sqlite
+*.sqlite3
+*.db-journal
+*.mdf
+*.ldf
+
+# EF Core
+Migrations/
+
+# Logs
+*.log
 # Evitar subir node_modules
 node_modules
 **/node_modules/

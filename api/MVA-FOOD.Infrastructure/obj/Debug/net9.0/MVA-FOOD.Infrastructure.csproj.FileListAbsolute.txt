@@ -1,0 +1,16 @@
+C:\Proyectos\MVA-FOOD\api\MVA-FOOD.Infrastructure\bin\Debug\net9.0\MVA-FOOD.Infrastructure.deps.json
+C:\Proyectos\MVA-FOOD\api\MVA-FOOD.Infrastructure\bin\Debug\net9.0\MVA-FOOD.Infrastructure.dll
+C:\Proyectos\MVA-FOOD\api\MVA-FOOD.Infrastructure\bin\Debug\net9.0\MVA-FOOD.Infrastructure.pdb
+C:\Proyectos\MVA-FOOD\api\MVA-FOOD.Infrastructure\bin\Debug\net9.0\MVA-FOOD.Core.dll
+C:\Proyectos\MVA-FOOD\api\MVA-FOOD.Infrastructure\bin\Debug\net9.0\MVA-FOOD.Core.pdb
+C:\Proyectos\MVA-FOOD\api\MVA-FOOD.Infrastructure\obj\Debug\net9.0\MVA-FOOD.Infrastructure.csproj.AssemblyReference.cache
+C:\Proyectos\MVA-FOOD\api\MVA-FOOD.Infrastructure\obj\Debug\net9.0\MVA-FOOD.Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+C:\Proyectos\MVA-FOOD\api\MVA-FOOD.Infrastructure\obj\Debug\net9.0\MVA-FOOD.Infrastructure.AssemblyInfoInputs.cache
+C:\Proyectos\MVA-FOOD\api\MVA-FOOD.Infrastructure\obj\Debug\net9.0\MVA-FOOD.Infrastructure.AssemblyInfo.cs
+C:\Proyectos\MVA-FOOD\api\MVA-FOOD.Infrastructure\obj\Debug\net9.0\MVA-FOOD.Infrastructure.csproj.CoreCompileInputs.cache
+C:\Proyectos\MVA-FOOD\api\MVA-FOOD.Infrastructure\obj\Debug\net9.0\MVA-FOOD.Infrastructure.sourcelink.json
+C:\Proyectos\MVA-FOOD\api\MVA-FOOD.Infrastructure\obj\Debug\net9.0\MVA-FOOD.1AD9B063.Up2Date
+C:\Proyectos\MVA-FOOD\api\MVA-FOOD.Infrastructure\obj\Debug\net9.0\MVA-FOOD.Infrastructure.dll
+C:\Proyectos\MVA-FOOD\api\MVA-FOOD.Infrastructure\obj\Debug\net9.0\refint\MVA-FOOD.Infrastructure.dll
+C:\Proyectos\MVA-FOOD\api\MVA-FOOD.Infrastructure\obj\Debug\net9.0\MVA-FOOD.Infrastructure.pdb
+C:\Proyectos\MVA-FOOD\api\MVA-FOOD.Infrastructure\obj\Debug\net9.0\ref\MVA-FOOD.Infrastructure.dll
