@@ -6,6 +6,12 @@ dist/
 .vscode/
 *.DS_Store
 
+bin/
+obj/
+out/
+publish/
+wwwroot/
+
 # Astro (en /client)
 client/node_modules/
 client/.astro/
@@ -13,10 +19,18 @@ client/.vercel/
 client/dist/
 
 # .NET Core (en /api)
-api/MvaFood.Api/bin/
-api/MvaFood.Api/obj/
-api/MvaFood.Api/*.db
-api/MvaFood.Api/.vs/
+api/MVA-FOOD.API/bin/
+api/MVA-FOOD.API/obj/
+api/MVA-FOOD.API/*.db
+api/MVA-FOOD.API/.vs/
+
+api/MVA-FOOD.Core/bin/
+api/MVA-FOOD.Core/obj/
+api/MVA-FOOD.Core/.vs/
+
+api/MVA-FOOD.Infrastructure/bin/
+api/MVA-FOOD.Infrastructure/obj/
+api/MVA-FOOD.Infrastructure/.vs/
 
 # Docker
 **/Dockerfile
@@ -24,3 +38,53 @@ docker-compose.override.yml
 
 # OS
 Thumbs.db
+
+# Archivos ocultos de macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Archivos ocultos de Linux
+.Trash-*
+
+# Archivos de control de Git
+.gitignore
+.gitattributes
+
+#############################################
+# BACKEND - .NET 9 / ASP.NET Core
+#############################################
+
+# Compilados y temporales
+bin/
+obj/
+out/
+publish/
+wwwroot/
+
+# VS & Rider
+.vs/
+.idea/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Archivos de configuración locales y secretos
+appsettings.Development.json
+appsettings.*.json
+secrets.json
+
+# Archivos de base de datos local
+*.db
+*.sqlite
+*.sqlite3
+*.db-journal
+*.mdf
+*.ldf
+
+# EF Core
+Migrations/
+
+# Logs
+*.log
