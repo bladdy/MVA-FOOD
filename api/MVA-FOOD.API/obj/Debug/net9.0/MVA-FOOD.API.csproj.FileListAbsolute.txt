@@ -161,3 +161,12 @@ C:\Proyectos\MVA-FOOD\api\MVA-FOOD.API\bin\Debug\net9.0\runtimes\win-arm\native\
 C:\Proyectos\MVA-FOOD\api\MVA-FOOD.API\bin\Debug\net9.0\runtimes\win-arm64\native\e_sqlite3.dll
 C:\Proyectos\MVA-FOOD\api\MVA-FOOD.API\bin\Debug\net9.0\runtimes\win-x64\native\e_sqlite3.dll
 C:\Proyectos\MVA-FOOD\api\MVA-FOOD.API\bin\Debug\net9.0\runtimes\win-x86\native\e_sqlite3.dll
+C:\Proyectos\MVA-FOOD\api\MVA-FOOD.API\bin\Debug\net9.0\BCrypt.Net-Next.dll
+C:\Proyectos\MVA-FOOD\api\MVA-FOOD.API\bin\Debug\net9.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\Proyectos\MVA-FOOD\api\MVA-FOOD.API\bin\Debug\net9.0\Microsoft.IdentityModel.Abstractions.dll
+C:\Proyectos\MVA-FOOD\api\MVA-FOOD.API\bin\Debug\net9.0\Microsoft.IdentityModel.JsonWebTokens.dll
+C:\Proyectos\MVA-FOOD\api\MVA-FOOD.API\bin\Debug\net9.0\Microsoft.IdentityModel.Logging.dll
+C:\Proyectos\MVA-FOOD\api\MVA-FOOD.API\bin\Debug\net9.0\Microsoft.IdentityModel.Protocols.dll
+C:\Proyectos\MVA-FOOD\api\MVA-FOOD.API\bin\Debug\net9.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+C:\Proyectos\MVA-FOOD\api\MVA-FOOD.API\bin\Debug\net9.0\Microsoft.IdentityModel.Tokens.dll
+C:\Proyectos\MVA-FOOD\api\MVA-FOOD.API\bin\Debug\net9.0\System.IdentityModel.Tokens.Jwt.dll

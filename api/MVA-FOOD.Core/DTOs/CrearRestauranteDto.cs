@@ -14,5 +14,6 @@ namespace MVA_FOOD.Core.DTOs
         public string PerfilImage { get; set; } = null!;
         public Guid PlanId { get; set; } // nuevo campo obligatorio
         public DateTime? FechaInicio { get; set; } // opcional, por defecto hoy
+        public Guid UsuarioId { get; set; } // 👈 nuevo campo
     }
 }

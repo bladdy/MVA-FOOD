@@ -10,8 +10,8 @@ namespace MVA_FOOD.Core.Entities
         public string Phone { get; set; }
 
         public Guid PlanRestauranteId { get; set; }
-        public PlanRestaurante PlanRestaurante { get; set; } = null!;
-
+        public PlanRestaurante PlanRestaurante { get; set; } = null!;        
+        public ICollection<Usuario> Usuarios { get; set; } = new List<Usuario>();
         public ICollection<Horario> Horario { get; set; }
         public ICollection<Amenidad> Amenidades { get; set; }
         public ICollection<Menu> Menu { get; set; }

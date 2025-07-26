@@ -84,6 +84,17 @@ namespace MVA_FOOD.Infrastructure.Services
             };
 
             _context.PlanesRestaurantes.Add(planRestaurante);
+
+
+
+            // Asignar el usuario al restaurante
+            // 🔁 Actualiza el Usuario con el RestauranteId
+            var usuario = await _context.Usuarios.FindAsync(dto.UsuarioId);
+            if (usuario != null)
+            {
+                usuario.RestauranteId = restaurante.Id;
+            }
+
             await _context.SaveChangesAsync();
 
             return new RestauranteDto
