@@ -1,10 +1,11 @@
 # Global
 node_modules/
-dist/
+*dist/
 .env
 *.log
 .vscode/
 *.DS_Store
+
 
 bin/
 obj/
@@ -13,13 +14,13 @@ publish/
 wwwroot/
 
 # Astro (en /client)
-client/node_modules/
+#client/node_modules/
+#client/dist/
 client/.astro/
 client/.vercel/
-client/dist/
 
 # .NET Core (en /api)
-api/MVA-FOOD.API/bin/
+/api/MVA-FOOD.API/bin/
 api/MVA-FOOD.API/obj/
 api/MVA-FOOD.API/*.db
 api/MVA-FOOD.API/.vs/
