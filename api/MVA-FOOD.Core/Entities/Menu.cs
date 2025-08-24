@@ -11,12 +11,12 @@ namespace MVA_FOOD.Core.Entities
         public string Nombre { get; set; } = null!;
         public string Ingredientes { get; set; } = null!;
         public decimal Precio { get; set; }
-        public Guid CategoriaId { get; set; }
-        public Categoria Categoria { get; set; } = null!;
         public string Imagen { get; set; } = null!;
 
         public Guid RestauranteId { get; set; }
         public Restaurante Restaurante { get; set; } = null!;
+        public Guid CategoriaId { get; set; }
+        public Categoria Categoria { get; set; } = null!;
     }
 
 }

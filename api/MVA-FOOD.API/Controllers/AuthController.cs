@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using MVA_FOOD.Core.DTOs;
 using MVA_FOOD.Core.Entities;
@@ -37,7 +33,8 @@ namespace MVA_FOOD.API.Controllers
                 token,
                 nombre = usuario.Nombre,
                 rol = usuario.Rol,
-                restauranteId = usuario.RestauranteId // <- agregamos aquí
+                restauranteId = usuario.RestauranteId, // <- agregamos aquí
+                usuarioId = usuario.Id
             });
         }
 

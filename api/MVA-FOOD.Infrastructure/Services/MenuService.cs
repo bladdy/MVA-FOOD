@@ -34,7 +34,7 @@ namespace MVA_FOOD.Infrastructure.Services
                 }).ToListAsync();
         }
 
-        public async Task<MenuDto?> GetByIdAsync(Guid id)
+        public async Task<MenuDto> GetByIdAsync(Guid id)
         {
             var menu = await _context.Menus.Include(m => m.Categoria).FirstOrDefaultAsync(m => m.Id == id);
             if (menu == null) return null;

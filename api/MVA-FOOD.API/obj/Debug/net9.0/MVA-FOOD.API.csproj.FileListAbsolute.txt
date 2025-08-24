@@ -170,3 +170,4 @@ C:\Proyectos\MVA-FOOD\api\MVA-FOOD.API\bin\Debug\net9.0\Microsoft.IdentityModel.
 C:\Proyectos\MVA-FOOD\api\MVA-FOOD.API\bin\Debug\net9.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
 C:\Proyectos\MVA-FOOD\api\MVA-FOOD.API\bin\Debug\net9.0\Microsoft.IdentityModel.Tokens.dll
 C:\Proyectos\MVA-FOOD\api\MVA-FOOD.API\bin\Debug\net9.0\System.IdentityModel.Tokens.Jwt.dll
+C:\Proyectos\MVA-FOOD\api\MVA-FOOD.API\bin\Debug\net9.0\MVA-FOOD.API.staticwebassets.runtime.json

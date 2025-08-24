@@ -10,3 +10,4 @@ C:\Proyectos\MVA-FOOD\api\MVA-FOOD.Core\obj\Debug\net9.0\MVA-FOOD.Core.dll
 C:\Proyectos\MVA-FOOD\api\MVA-FOOD.Core\obj\Debug\net9.0\refint\MVA-FOOD.Core.dll
 C:\Proyectos\MVA-FOOD\api\MVA-FOOD.Core\obj\Debug\net9.0\MVA-FOOD.Core.pdb
 C:\Proyectos\MVA-FOOD\api\MVA-FOOD.Core\obj\Debug\net9.0\ref\MVA-FOOD.Core.dll
+C:\Proyectos\MVA-FOOD\api\MVA-FOOD.Core\obj\Debug\net9.0\MVA-FOOD.Core.csproj.AssemblyReference.cache

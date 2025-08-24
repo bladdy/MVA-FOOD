@@ -4,7 +4,11 @@
     <TargetFramework>net9.0</TargetFramework>
     <RootNamespace>MVA_FOOD.Core</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>disable</Nullable>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Hosting.Abstractions" Version="2.3.0" />
+  </ItemGroup>
 
 </Project>

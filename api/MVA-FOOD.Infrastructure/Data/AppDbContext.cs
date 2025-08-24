@@ -35,10 +35,18 @@ namespace MVA_FOOD.Infrastructure.Data
                 .WithMany(a => a.Restaurantes);
 
             modelBuilder.Entity<Restaurante>()
+                .HasIndex(r => r.Name).IsUnique();
+                
+            modelBuilder.Entity<Restaurante>()
                 .HasOne(r => r.PlanRestaurante)
                 .WithOne(pr => pr.Restaurante)
                 .HasForeignKey<PlanRestaurante>(pr => pr.RestauranteId)
                 .OnDelete(DeleteBehavior.Cascade);
+                
+            modelBuilder.Entity<Menu>()
+                .HasOne(m => m.Categoria)
+                .WithMany(c => c.Menus)
+                .HasForeignKey(m => m.CategoriaId);
         }   
 
     }

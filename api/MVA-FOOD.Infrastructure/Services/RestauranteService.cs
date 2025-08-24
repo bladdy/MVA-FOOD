@@ -1,12 +1,16 @@
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using MVA_FOOD.Core.DTOs;
 using MVA_FOOD.Core.Entities;
+using MVA_FOOD.Core.Enums;
 using MVA_FOOD.Core.Interfaces;
 using MVA_FOOD.Infrastructure.Data;
+using MVA_FOOD.Infrastructure.Helpers;
 
 namespace MVA_FOOD.Infrastructure.Services
 {
@@ -53,60 +57,78 @@ namespace MVA_FOOD.Infrastructure.Services
 
         public async Task<RestauranteDto> CreateAsync(CrearRestauranteDto dto)
         {
-            var restaurante = new Restaurante
+            await using var transaction = await _context.Database.BeginTransactionAsync();
+
+            try
             {
-                Name = dto.Nombre,
-                Direccion = dto.Direccion,
-                Phone = dto.Telefono,
-                Image = dto.Image,
-                PerfilImage = dto.PerfilImage,
-                PlanRestauranteId = dto.PlanId
-            };
+                // crear el restaurante
+                var restaurante = new Restaurante
+                {
+                    Name = dto.Nombre,
+                    Direccion = dto.Direccion,
+                    Phone = dto.Telefono,
+                    Image = dto.Image != null ? await ImagenesHelpers.GuardarImagenAsync(dto.Image, Imagenes.Background.ToString()) : null!,
+                    PerfilImage = dto.PerfilImage != null ? await ImagenesHelpers.GuardarImagenAsync(dto.PerfilImage, Imagenes.Profile.ToString()) : null!,
+                    PlanRestauranteId = dto.PlanId
+                };
 
-            _context.Restaurantes.Add(restaurante);
-            await _context.SaveChangesAsync();
+                _context.Restaurantes.Add(restaurante);
+                await _context.SaveChangesAsync();
 
-            // buscar el plan
-            var plan = await _context.Planes.FindAsync(dto.PlanId);
-            if (plan == null)
-                throw new Exception("Plan no encontrado");
+                // buscar el plan
+                var plan = await _context.Planes.FindAsync(dto.PlanId);
+                if (plan == null)
+                    throw new ArgumentException("El plan especificado no existe.");
 
-            var fechaInicio = DateTime.UtcNow;
-            var fechaFin = fechaInicio.AddMonths(1); // ejemplo, 1 mes de duración
+                var fechaInicio = DateTime.UtcNow;
+                var fechaFin = fechaInicio.AddMonths(1);
 
-            var planRestaurante = new PlanRestaurante
-            {
-                RestauranteId = restaurante.Id,
-                PlanId = plan.Id,
-                FechaInicio = fechaInicio,
-                FechaFin = fechaFin,
-                Pagado = false
-            };
+                var planRestaurante = new PlanRestaurante
+                {
+                    RestauranteId = restaurante.Id,
+                    PlanId = plan.Id,
+                    FechaInicio = fechaInicio,
+                    FechaFin = fechaFin,
+                    Pagado = false
+                };
 
-            _context.PlanesRestaurantes.Add(planRestaurante);
+                _context.PlanesRestaurantes.Add(planRestaurante);
 
+                // asignar el usuario al restaurante
+                var usuario = await _context.Usuarios.FindAsync(dto.UsuarioId);
+                if (usuario == null)
+                    throw new ArgumentException("El usuario especificado no existe.");
 
-
-            // Asignar el usuario al restaurante
-            // 🔁 Actualiza el Usuario con el RestauranteId
-            var usuario = await _context.Usuarios.FindAsync(dto.UsuarioId);
-            if (usuario != null)
-            {
                 usuario.RestauranteId = restaurante.Id;
+
+                await _context.SaveChangesAsync();
+
+                // ✅ confirmar transacción
+                await transaction.CommitAsync();
+
+                return new RestauranteDto
+                {
+                    Id = restaurante.Id,
+                    Name = restaurante.Name,
+                    Image = restaurante.Image,
+                    PerfilImage = restaurante.PerfilImage,
+                    Direccion = restaurante.Direccion,
+                    Phone = restaurante.Phone,
+                    PlanId = dto.PlanId
+                };
+            }
+            catch (DbUpdateException)
+            {
+                await transaction.RollbackAsync();
+
+                throw;
+
+            }
+            finally
+            {
+                await transaction.DisposeAsync();
             }
 
-            await _context.SaveChangesAsync();
-
-            return new RestauranteDto
-            {
-                Id = restaurante.Id,
-                Name = restaurante.Name,
-                Image = restaurante.Image,
-                PerfilImage = restaurante.PerfilImage,
-                Direccion = restaurante.Direccion,
-                Phone = restaurante.Phone,
-                PlanId = dto.PlanId
-            };
         }
 
         public async Task<bool> DeleteAsync(Guid id)

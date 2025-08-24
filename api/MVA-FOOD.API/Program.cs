@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using MVA_FOOD.API.Middleware;
 using MVA_FOOD.Core.Interfaces;
 using MVA_FOOD.Infrastructure.Data;
 using MVA_FOOD.Infrastructure.Services;
@@ -110,7 +111,7 @@ if (app.Environment.IsDevelopment())
         options.RoutePrefix = string.Empty;
     });
 }
-
+app.UseMiddleware<ExceptionMiddleware>();
 app.UseHttpsRedirection();
 app.UseCors("AllowAll");
 

@@ -1,12 +1,20 @@
 {
   "Version": 1,
-  "Hash": "Rjikz9C9gUQ6YMSGlExwyOy5YzLx8HEHtzkOAb21CQc=",
+  "Hash": "UHrNnDDaloRWUBAc2L/xM4dr9QLMSsWKWzptWn+2Efg=",
   "Source": "MVA-FOOD.API",
   "BasePath": "_content/MVA-FOOD.API",
   "Mode": "Default",
   "ManifestType": "Build",
   "ReferencedProjectsConfiguration": [],
-  "DiscoveryPatterns": [],
+  "DiscoveryPatterns": [
+    {
+      "Name": "MVA-FOOD.API\\wwwroot",
+      "Source": "MVA-FOOD.API",
+      "ContentRoot": "C:\\Proyectos\\MVA-FOOD\\api\\MVA-FOOD.API\\wwwroot\\",
+      "BasePath": "_content/MVA-FOOD.API",
+      "Pattern": "**"
+    }
+  ],
   "Assets": [],
   "Endpoints": []
 }

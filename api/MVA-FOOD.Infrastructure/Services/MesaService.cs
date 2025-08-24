@@ -29,7 +29,7 @@ namespace MVA_FOOD.Infrastructure.Services
                 }).ToListAsync();
         }
 
-        public async Task<MesaDto?> GetByIdAsync(Guid id)
+        public async Task<MesaDto> GetByIdAsync(Guid id)
         {
             var mesa = await _context.Mesas.Include(m => m.Restaurante).FirstOrDefaultAsync(m => m.Id == id);
             if (mesa == null) return null;

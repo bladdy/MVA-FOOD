@@ -30,7 +30,7 @@ namespace MVA_FOOD.Infrastructure.Services
                 }).ToListAsync();
         }
 
-        public async Task<HorarioDto?> GetByIdAsync(Guid id)
+        public async Task<HorarioDto> GetByIdAsync(Guid id)
         {
             var horario = await _context.Horarios.Include(h => h.Restaurante).FirstOrDefaultAsync(h => h.Id == id);
             if (horario == null) return null;

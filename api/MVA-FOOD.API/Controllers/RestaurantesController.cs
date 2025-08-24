@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using MVA_FOOD.API.Errors;
 using MVA_FOOD.Core.DTOs;
 using MVA_FOOD.Core.Interfaces;
 
@@ -10,7 +12,7 @@ namespace MVA_FOOD.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class RestaurantesController : ControllerBase
+    public class RestaurantesController : BaseApiController
     {
         private readonly IRestauranteService _service;
 
@@ -35,10 +37,11 @@ namespace MVA_FOOD.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(CrearRestauranteDto dto)
+        public async Task<ActionResult<RestauranteDto>> Create(CrearRestauranteDto dto)
         {
-            var result = await _service.CreateAsync(dto);
-            return Ok(result);
+            var result = await _service.CreateAsync(dto);                
+            if (result == null) return BadRequest("No se pudo crear el restaurante.");
+            return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);            
         }
 
         [HttpDelete("{id}")]

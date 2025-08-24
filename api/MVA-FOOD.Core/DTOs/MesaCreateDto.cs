@@ -8,8 +8,7 @@ namespace MVA_FOOD.Core.DTOs
     public class MesaCreateDto
     {
         
-        public string Codigo { get; set; } = string.Empty;
-        
+        public string Codigo { get; set; } = string.Empty;        
         public int Numero { get; set; }
         public int Capacidad { get; set; }
         public bool EstaOcupada { get; set; }
