@@ -25,24 +25,25 @@ namespace MVA_FOOD.Infrastructure.Data
         public DbSet<Pedido> Pedidos { get; set; }
         public DbSet<PedidoItem> PedidoItems { get; set; }
         public DbSet<Usuario> Usuarios { get; set; }
+        public DbSet<AmenidadRestaurantes> AmenidadRestaurantes { get; set; }
+        public DbSet<CategoriaRestaurantes> CategoriaRestaurantes { get; set; }
+        
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<Restaurante>()
-                .HasMany(r => r.Amenidades)
-                .WithMany(a => a.Restaurantes);
+
 
             modelBuilder.Entity<Restaurante>()
                 .HasIndex(r => r.Name).IsUnique();
-                
+
             modelBuilder.Entity<Restaurante>()
                 .HasOne(r => r.PlanRestaurante)
                 .WithOne(pr => pr.Restaurante)
                 .HasForeignKey<PlanRestaurante>(pr => pr.RestauranteId)
                 .OnDelete(DeleteBehavior.Cascade);
-                
+
             modelBuilder.Entity<Menu>()
                 .HasOne(m => m.Categoria)
                 .WithMany(c => c.Menus)

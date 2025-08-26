@@ -3,16 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace MVA_FOOD.Core.Entities
+namespace MVA_FOOD.Core.DTOs
 {
-    public class PlanRestaurante
+    public class PlanRestauranteDto
     {
         public Guid Id { get; set; }
+        public string Nombre { get; set; } = null!;
+        public decimal Precio { get; set; }
 
-        public Guid RestauranteId { get; set; }
-        public Restaurante Restaurante { get; set; } = null!;
-        public Guid PlanId { get; set; }
-        public Plan Plan { get; set; } = null!;
+        // otros campos relevantes
         public DateTime FechaInicio { get; set; }
         public DateTime FechaFin { get; set; }
         public DateTime FechaPago { get; set; }

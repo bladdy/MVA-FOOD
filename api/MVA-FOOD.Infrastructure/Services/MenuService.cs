@@ -61,13 +61,15 @@ namespace MVA_FOOD.Infrastructure.Services
                 Nombre = dto.Nombre,
                 Ingredientes = dto.Ingredientes,
                 Precio = dto.Precio,
-                CategoriaId = dto.CategoriaId
+                CategoriaId = dto.CategoriaId,
+                RestauranteId = dto.RestauranteId
             };
 
             _context.Menus.Add(menu);
             await _context.SaveChangesAsync();
 
             var categoria = await _context.Categorias.FindAsync(dto.CategoriaId);
+            var restaurante = await _context.Restaurantes.FindAsync(dto.RestauranteId);
 
             return new MenuDto
             {
@@ -75,6 +77,16 @@ namespace MVA_FOOD.Infrastructure.Services
                 Nombre = menu.Nombre,
                 Ingredientes = menu.Ingredientes,
                 Precio = menu.Precio,
+                RestauranteId = menu.RestauranteId,
+                Restaurante = restaurante != null ? new RestauranteDto
+                {
+                    Id = restaurante.Id,
+                    Name = restaurante.Name,
+                    Image = restaurante.Image,
+                    PerfilImage = restaurante.PerfilImage,
+                    Direccion = restaurante.Direccion,
+                    Phone = restaurante.Phone,
+                } : null,
                 CategoriaId = menu.CategoriaId,
                 Categoria = categoria != null ? new CategoriaDto
                 {

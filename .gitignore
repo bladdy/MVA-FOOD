@@ -20,7 +20,7 @@ client/.astro/
 client/.vercel/
 
 # .NET Core (en /api)
-/api/MVA-FOOD.API/bin/
+api/MVA-FOOD.API/bin/
 api/MVA-FOOD.API/obj/
 api/MVA-FOOD.API/*.db
 api/MVA-FOOD.API/.vs/

@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "UHrNnDDaloRWUBAc2L/xM4dr9QLMSsWKWzptWn+2Efg=",
+  "Hash": "DUqAEU5ZisuZhpWhDkruiwbg/zOY/bvFUYht+5oA440=",
   "Source": "MVA-FOOD.API",
   "BasePath": "_content/MVA-FOOD.API",
   "Mode": "Default",
@@ -15,6 +15,626 @@
       "Pattern": "**"
     }
   ],
-  "Assets": [],
-  "Endpoints": []
+  "Assets": [
+    {
+      "Identity": "C:\\Proyectos\\MVA-FOOD\\api\\MVA-FOOD.API\\wwwroot\\uploads\\Background\\09118739-1302-43e7-a732-2398c8263377.png",
+      "SourceId": "MVA-FOOD.API",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Proyectos\\MVA-FOOD\\api\\MVA-FOOD.API\\wwwroot\\",
+      "BasePath": "_content/MVA-FOOD.API",
+      "RelativePath": "uploads/Background/09118739-1302-43e7-a732-2398c8263377#[.{fingerprint}]?.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "m32w5dpkxi",
+      "Integrity": "ots/Z+q1ppg7Tz+fxl5hJOns5kwuBTqNDNNquOw41Nw=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\uploads\\Background\\09118739-1302-43e7-a732-2398c8263377.png"
+    },
+    {
+      "Identity": "C:\\Proyectos\\MVA-FOOD\\api\\MVA-FOOD.API\\wwwroot\\uploads\\Background\\2cfdda60-313c-4bba-955a-fcf37de000e5.png",
+      "SourceId": "MVA-FOOD.API",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Proyectos\\MVA-FOOD\\api\\MVA-FOOD.API\\wwwroot\\",
+      "BasePath": "_content/MVA-FOOD.API",
+      "RelativePath": "uploads/Background/2cfdda60-313c-4bba-955a-fcf37de000e5#[.{fingerprint}]?.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "yj0uxm4u3r",
+      "Integrity": "TvejUtX/uZhU9A5RbwkNDmSAPcz/k3HqqpKA6ItjzRc=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\uploads\\Background\\2cfdda60-313c-4bba-955a-fcf37de000e5.png"
+    },
+    {
+      "Identity": "C:\\Proyectos\\MVA-FOOD\\api\\MVA-FOOD.API\\wwwroot\\uploads\\Background\\6c00d3eb-c4db-4ca5-ae8f-5f01d2d65a06.png",
+      "SourceId": "MVA-FOOD.API",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Proyectos\\MVA-FOOD\\api\\MVA-FOOD.API\\wwwroot\\",
+      "BasePath": "_content/MVA-FOOD.API",
+      "RelativePath": "uploads/Background/6c00d3eb-c4db-4ca5-ae8f-5f01d2d65a06#[.{fingerprint}]?.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "7k0y2isyz4",
+      "Integrity": "qb6XVtHyCILA5aCt4FV0v1nSDBOGzpk0OREvGpExHok=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\uploads\\Background\\6c00d3eb-c4db-4ca5-ae8f-5f01d2d65a06.png"
+    },
+    {
+      "Identity": "C:\\Proyectos\\MVA-FOOD\\api\\MVA-FOOD.API\\wwwroot\\uploads\\Profile\\5316af81-2ca7-4296-9c3f-9a05628d2ae0.png",
+      "SourceId": "MVA-FOOD.API",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Proyectos\\MVA-FOOD\\api\\MVA-FOOD.API\\wwwroot\\",
+      "BasePath": "_content/MVA-FOOD.API",
+      "RelativePath": "uploads/Profile/5316af81-2ca7-4296-9c3f-9a05628d2ae0#[.{fingerprint}]?.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "yj0uxm4u3r",
+      "Integrity": "TvejUtX/uZhU9A5RbwkNDmSAPcz/k3HqqpKA6ItjzRc=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\uploads\\Profile\\5316af81-2ca7-4296-9c3f-9a05628d2ae0.png"
+    },
+    {
+      "Identity": "C:\\Proyectos\\MVA-FOOD\\api\\MVA-FOOD.API\\wwwroot\\uploads\\Profile\\699ca6be-5ad1-44de-b0bd-194a65dc1824.png",
+      "SourceId": "MVA-FOOD.API",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Proyectos\\MVA-FOOD\\api\\MVA-FOOD.API\\wwwroot\\",
+      "BasePath": "_content/MVA-FOOD.API",
+      "RelativePath": "uploads/Profile/699ca6be-5ad1-44de-b0bd-194a65dc1824#[.{fingerprint}]?.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "6vr5zooxaq",
+      "Integrity": "Uj8m/otTQ20vNcITMEL1Wry1d+rh6vYY8RVt0JkgToI=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\uploads\\Profile\\699ca6be-5ad1-44de-b0bd-194a65dc1824.png"
+    },
+    {
+      "Identity": "C:\\Proyectos\\MVA-FOOD\\api\\MVA-FOOD.API\\wwwroot\\uploads\\Profile\\e65f3704-ca17-4d21-a181-96e51a5e7683.png",
+      "SourceId": "MVA-FOOD.API",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Proyectos\\MVA-FOOD\\api\\MVA-FOOD.API\\wwwroot\\",
+      "BasePath": "_content/MVA-FOOD.API",
+      "RelativePath": "uploads/Profile/e65f3704-ca17-4d21-a181-96e51a5e7683#[.{fingerprint}]?.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "yj0uxm4u3r",
+      "Integrity": "TvejUtX/uZhU9A5RbwkNDmSAPcz/k3HqqpKA6ItjzRc=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\uploads\\Profile\\e65f3704-ca17-4d21-a181-96e51a5e7683.png"
+    }
+  ],
+  "Endpoints": [
+    {
+      "Route": "uploads/Background/09118739-1302-43e7-a732-2398c8263377.m32w5dpkxi.png",
+      "AssetFile": "C:\\Proyectos\\MVA-FOOD\\api\\MVA-FOOD.API\\wwwroot\\uploads\\Background\\09118739-1302-43e7-a732-2398c8263377.png",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "2977286"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/png"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"ots/Z+q1ppg7Tz+fxl5hJOns5kwuBTqNDNNquOw41Nw=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Mon, 25 Aug 2025 19:43:57 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "m32w5dpkxi"
+        },
+        {
+          "Name": "label",
+          "Value": "uploads/Background/09118739-1302-43e7-a732-2398c8263377.png"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-ots/Z+q1ppg7Tz+fxl5hJOns5kwuBTqNDNNquOw41Nw="
+        }
+      ]
+    },
+    {
+      "Route": "uploads/Background/09118739-1302-43e7-a732-2398c8263377.png",
+      "AssetFile": "C:\\Proyectos\\MVA-FOOD\\api\\MVA-FOOD.API\\wwwroot\\uploads\\Background\\09118739-1302-43e7-a732-2398c8263377.png",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "2977286"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/png"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"ots/Z+q1ppg7Tz+fxl5hJOns5kwuBTqNDNNquOw41Nw=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Mon, 25 Aug 2025 19:43:57 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=3600, must-revalidate"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-ots/Z+q1ppg7Tz+fxl5hJOns5kwuBTqNDNNquOw41Nw="
+        }
+      ]
+    },
+    {
+      "Route": "uploads/Background/2cfdda60-313c-4bba-955a-fcf37de000e5.png",
+      "AssetFile": "C:\\Proyectos\\MVA-FOOD\\api\\MVA-FOOD.API\\wwwroot\\uploads\\Background\\2cfdda60-313c-4bba-955a-fcf37de000e5.png",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "2897053"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/png"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"TvejUtX/uZhU9A5RbwkNDmSAPcz/k3HqqpKA6ItjzRc=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sun, 24 Aug 2025 20:55:52 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=3600, must-revalidate"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-TvejUtX/uZhU9A5RbwkNDmSAPcz/k3HqqpKA6ItjzRc="
+        }
+      ]
+    },
+    {
+      "Route": "uploads/Background/2cfdda60-313c-4bba-955a-fcf37de000e5.yj0uxm4u3r.png",
+      "AssetFile": "C:\\Proyectos\\MVA-FOOD\\api\\MVA-FOOD.API\\wwwroot\\uploads\\Background\\2cfdda60-313c-4bba-955a-fcf37de000e5.png",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "2897053"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/png"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"TvejUtX/uZhU9A5RbwkNDmSAPcz/k3HqqpKA6ItjzRc=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sun, 24 Aug 2025 20:55:52 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "yj0uxm4u3r"
+        },
+        {
+          "Name": "label",
+          "Value": "uploads/Background/2cfdda60-313c-4bba-955a-fcf37de000e5.png"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-TvejUtX/uZhU9A5RbwkNDmSAPcz/k3HqqpKA6ItjzRc="
+        }
+      ]
+    },
+    {
+      "Route": "uploads/Background/6c00d3eb-c4db-4ca5-ae8f-5f01d2d65a06.7k0y2isyz4.png",
+      "AssetFile": "C:\\Proyectos\\MVA-FOOD\\api\\MVA-FOOD.API\\wwwroot\\uploads\\Background\\6c00d3eb-c4db-4ca5-ae8f-5f01d2d65a06.png",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "1957308"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/png"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"qb6XVtHyCILA5aCt4FV0v1nSDBOGzpk0OREvGpExHok=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Mon, 25 Aug 2025 20:15:05 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "7k0y2isyz4"
+        },
+        {
+          "Name": "label",
+          "Value": "uploads/Background/6c00d3eb-c4db-4ca5-ae8f-5f01d2d65a06.png"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-qb6XVtHyCILA5aCt4FV0v1nSDBOGzpk0OREvGpExHok="
+        }
+      ]
+    },
+    {
+      "Route": "uploads/Background/6c00d3eb-c4db-4ca5-ae8f-5f01d2d65a06.png",
+      "AssetFile": "C:\\Proyectos\\MVA-FOOD\\api\\MVA-FOOD.API\\wwwroot\\uploads\\Background\\6c00d3eb-c4db-4ca5-ae8f-5f01d2d65a06.png",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "1957308"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/png"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"qb6XVtHyCILA5aCt4FV0v1nSDBOGzpk0OREvGpExHok=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Mon, 25 Aug 2025 20:15:05 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=3600, must-revalidate"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-qb6XVtHyCILA5aCt4FV0v1nSDBOGzpk0OREvGpExHok="
+        }
+      ]
+    },
+    {
+      "Route": "uploads/Profile/5316af81-2ca7-4296-9c3f-9a05628d2ae0.png",
+      "AssetFile": "C:\\Proyectos\\MVA-FOOD\\api\\MVA-FOOD.API\\wwwroot\\uploads\\Profile\\5316af81-2ca7-4296-9c3f-9a05628d2ae0.png",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "2897053"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/png"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"TvejUtX/uZhU9A5RbwkNDmSAPcz/k3HqqpKA6ItjzRc=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Mon, 25 Aug 2025 20:15:05 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=3600, must-revalidate"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-TvejUtX/uZhU9A5RbwkNDmSAPcz/k3HqqpKA6ItjzRc="
+        }
+      ]
+    },
+    {
+      "Route": "uploads/Profile/5316af81-2ca7-4296-9c3f-9a05628d2ae0.yj0uxm4u3r.png",
+      "AssetFile": "C:\\Proyectos\\MVA-FOOD\\api\\MVA-FOOD.API\\wwwroot\\uploads\\Profile\\5316af81-2ca7-4296-9c3f-9a05628d2ae0.png",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "2897053"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/png"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"TvejUtX/uZhU9A5RbwkNDmSAPcz/k3HqqpKA6ItjzRc=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Mon, 25 Aug 2025 20:15:05 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "yj0uxm4u3r"
+        },
+        {
+          "Name": "label",
+          "Value": "uploads/Profile/5316af81-2ca7-4296-9c3f-9a05628d2ae0.png"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-TvejUtX/uZhU9A5RbwkNDmSAPcz/k3HqqpKA6ItjzRc="
+        }
+      ]
+    },
+    {
+      "Route": "uploads/Profile/699ca6be-5ad1-44de-b0bd-194a65dc1824.6vr5zooxaq.png",
+      "AssetFile": "C:\\Proyectos\\MVA-FOOD\\api\\MVA-FOOD.API\\wwwroot\\uploads\\Profile\\699ca6be-5ad1-44de-b0bd-194a65dc1824.png",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "1849930"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/png"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"Uj8m/otTQ20vNcITMEL1Wry1d+rh6vYY8RVt0JkgToI=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sun, 24 Aug 2025 20:55:52 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "6vr5zooxaq"
+        },
+        {
+          "Name": "label",
+          "Value": "uploads/Profile/699ca6be-5ad1-44de-b0bd-194a65dc1824.png"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-Uj8m/otTQ20vNcITMEL1Wry1d+rh6vYY8RVt0JkgToI="
+        }
+      ]
+    },
+    {
+      "Route": "uploads/Profile/699ca6be-5ad1-44de-b0bd-194a65dc1824.png",
+      "AssetFile": "C:\\Proyectos\\MVA-FOOD\\api\\MVA-FOOD.API\\wwwroot\\uploads\\Profile\\699ca6be-5ad1-44de-b0bd-194a65dc1824.png",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "1849930"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/png"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"Uj8m/otTQ20vNcITMEL1Wry1d+rh6vYY8RVt0JkgToI=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sun, 24 Aug 2025 20:55:52 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=3600, must-revalidate"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-Uj8m/otTQ20vNcITMEL1Wry1d+rh6vYY8RVt0JkgToI="
+        }
+      ]
+    },
+    {
+      "Route": "uploads/Profile/e65f3704-ca17-4d21-a181-96e51a5e7683.png",
+      "AssetFile": "C:\\Proyectos\\MVA-FOOD\\api\\MVA-FOOD.API\\wwwroot\\uploads\\Profile\\e65f3704-ca17-4d21-a181-96e51a5e7683.png",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "2897053"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/png"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"TvejUtX/uZhU9A5RbwkNDmSAPcz/k3HqqpKA6ItjzRc=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Mon, 25 Aug 2025 19:43:57 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=3600, must-revalidate"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-TvejUtX/uZhU9A5RbwkNDmSAPcz/k3HqqpKA6ItjzRc="
+        }
+      ]
+    },
+    {
+      "Route": "uploads/Profile/e65f3704-ca17-4d21-a181-96e51a5e7683.yj0uxm4u3r.png",
+      "AssetFile": "C:\\Proyectos\\MVA-FOOD\\api\\MVA-FOOD.API\\wwwroot\\uploads\\Profile\\e65f3704-ca17-4d21-a181-96e51a5e7683.png",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "2897053"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/png"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"TvejUtX/uZhU9A5RbwkNDmSAPcz/k3HqqpKA6ItjzRc=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Mon, 25 Aug 2025 19:43:57 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "yj0uxm4u3r"
+        },
+        {
+          "Name": "label",
+          "Value": "uploads/Profile/e65f3704-ca17-4d21-a181-96e51a5e7683.png"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-TvejUtX/uZhU9A5RbwkNDmSAPcz/k3HqqpKA6ItjzRc="
+        }
+      ]
+    }
+  ]
 }

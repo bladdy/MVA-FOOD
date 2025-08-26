@@ -11,6 +11,7 @@ namespace MVA_FOOD.Core.DTOs
         public string Ingredientes { get; set; } = string.Empty;
         public decimal Precio { get; set; }
         public Guid CategoriaId { get; set; }
+        public Guid RestauranteId { get; set; }
         
     }
 }
