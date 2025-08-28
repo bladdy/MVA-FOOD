@@ -1,5 +1,5 @@
 // components/RestaurantsList.jsx
-import RestauranteCard from './RestauranteCard';
+import RestauranteCard from './RestauranteCard.tsx';
 
 type Restaurante = {
   id: string | number;

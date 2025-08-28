@@ -1,5 +1,5 @@
-import FoodIcon from "@/components/Icons/FoodIcon";
-import LocationIcon from "@/components/Icons/LocationIcon";
+import FoodIcon from "@/components/Icons/FoodIcon.tsx";
+import LocationIcon from "@/components/Icons/LocationIcon.tsx";
 
 // components/RestauranteCard.jsx
 type RestauranteCardProps = {

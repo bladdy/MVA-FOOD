@@ -3,7 +3,7 @@
 
 import { useState } from "react";
 
-import { restaurants as allRestaurants } from "@/consts/restaurantes";
+import { restaurants as allRestaurants } from "@/consts/restaurantes.ts";
 import RestaurantSearch from "./RestaurantSearch.tsx";
 import RestaurantsList from "./RestaurantsList.tsx";
 import RestaurantePaginator from "./RestaurantePaginator.tsx"; // importar paginador

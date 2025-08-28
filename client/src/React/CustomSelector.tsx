@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import ArrowDIcon from "../components/Icons/ArrowDIcon";
-import SearchIcon from "@/components/Icons/SearchIcon";
+import ArrowDIcon from "../components/Icons/ArrowDIcon.tsx";
+import SearchIcon from "@/components/Icons/SearchIcon.tsx";
 
 // CustomSelector.tsx
 

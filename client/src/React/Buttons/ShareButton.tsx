@@ -1,4 +1,4 @@
-import ShareIcon from "@/components/Icons/ShareIcon";
+import ShareIcon from "@/components/Icons/ShareIcon.tsx";
 import React from "react";
  // Asegúrate de que este SVG existe
 

@@ -1,27 +1,27 @@
 import { useState, type JSX } from "react";
-import type { Menu, Categorias } from "@/Types/Restaurante";
+import type { Menu, Categorias } from "@/Types/Restaurante.ts";
 
-import { usePedido } from "@/React/hooks/usePedido";
-import ModalProducto from "@/React/Modales/ModalProducto";
-import ModalPedido from "@/React/Modales/ModalPedido";
-import BotonVerPedido from "@/React/Buttons/BotonVerPedido";
+import { usePedido } from "@/React/hooks/usePedido.ts";
+import ModalProducto from "@/React/Modales/ModalProducto.tsx";
+import ModalPedido from "@/React/Modales/ModalPedido.tsx";
+import BotonVerPedido from "@/React/Buttons/BotonVerPedido.tsx";
 
-import FoodIcon from "@/components/Icons/FoodIcon";
-import { categoriaOrden as baseCategorias } from "@/consts/categorias";
-import CategoriaButton from "./Buttons/CategoriaButton";
-import EntradasIcon from "@/components/Icons/EntradasIcon";
-import PostresIcon from "@/components/Icons/PostresIcon";
-import BebidasIcon from "@/components/Icons/BebidasIcon";
-import KidsIcon from "@/components/Icons/KidsIcon";
-import SopasIcon from "@/components/Icons/SopasIcon";
-import BurgersIcon from "@/components/Icons/BurgersIcon";
-import AllCategoryIcon from "@/components/Icons/AllCategoryIcon";
-import PastasIcon from "@/components/Icons/PastasIcon";
-import SteakHouseIcon from "@/components/Icons/SteakHouseIcon";
-import FriesChickenIcon from "@/components/Icons/FriesChickenIcon";
-import AddIcon from "@/components/Icons/AddIcon";
-import CrossIcon from "@/components/Icons/CrossIcon"; // Para cerrar la galería
-import TipoEntregaSelector from "./TipoEntregaSelector";
+import FoodIcon from "@/components/Icons/FoodIcon.tsx";
+import { categoriaOrden as baseCategorias } from "@/consts/categorias.ts";
+import CategoriaButton from "./Buttons/CategoriaButton.tsx";
+import EntradasIcon from "@/components/Icons/EntradasIcon.tsx";
+import PostresIcon from "@/components/Icons/PostresIcon.tsx";
+import BebidasIcon from "@/components/Icons/BebidasIcon.tsx";
+import KidsIcon from "@/components/Icons/KidsIcon.tsx";
+import SopasIcon from "@/components/Icons/SopasIcon.tsx";
+import BurgersIcon from "@/components/Icons/BurgersIcon.tsx";
+import AllCategoryIcon from "@/components/Icons/AllCategoryIcon.tsx";
+import PastasIcon from "@/components/Icons/PastasIcon.tsx";
+import SteakHouseIcon from "@/components/Icons/SteakHouseIcon.tsx";
+import FriesChickenIcon from "@/components/Icons/FriesChickenIcon.tsx";
+import AddIcon from "@/components/Icons/AddIcon.tsx";
+import CrossIcon from "@/components/Icons/CrossIcon.tsx"; // Para cerrar la galería
+import TipoEntregaSelector from "./TipoEntregaSelector.tsx";
 
 interface Props {
   titulo: string;
@@ -80,7 +80,7 @@ export default function MenuSection({ menu, titulo, tomaPedido, mesa }: Props) {
 
   const categoriasDisponibles = [
     "Todas",
-    ...baseCategorias.filter((cat) => groupedMenu[cat]?.length > 0),
+    ...baseCategorias.filter((cat) => groupedMenu[cat as Categorias]?.length > 0),
   ] as Categorias[];
 
   const handleCantidadChange = (index: number, nuevaCantidad: number) => {
@@ -125,13 +125,13 @@ export default function MenuSection({ menu, titulo, tomaPedido, mesa }: Props) {
         key={selectedCategoria}
       >
         {(selectedCategoria === "Todas"
-          ? baseCategorias.filter((cat) => groupedMenu[cat]?.length)
+          ? baseCategorias.filter((cat) => groupedMenu[cat as Categorias]?.length)
           : [selectedCategoria]
         ).map((categoria) => (
           <div key={categoria} className="mb-8 animate-fade-in">
             <div className="flex items-center justify-between border-b border-orange-200 pb-1 mb-2">
               <div className="flex items-center gap-2 text-xl font-semibold text-orange-700">
-                {categoriaIcons[categoria]}
+                {categoriaIcons[categoria as keyof typeof categoriaIcons]}
                 {categoria}
               </div>
               <div className="text-sm font-semibold text-orange-600">
@@ -140,7 +140,7 @@ export default function MenuSection({ menu, titulo, tomaPedido, mesa }: Props) {
             </div>
             <table className="w-full text-sm text-left">
               <tbody>
-                {(groupedMenu[categoria] ?? [])
+                {(groupedMenu[categoria as Categorias] ?? [])
                   .sort((a, b) => a.name.localeCompare(b.name))
                   .map((item) => (
                     <tr

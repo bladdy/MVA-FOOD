@@ -1,9 +1,9 @@
-import AddIcon from "@/components/Icons/AddIcon";
-import CheckIcon from "@/components/Icons/CheckIcon";
-import CrossIcon from "@/components/Icons/CrossIcon";
-import MinusIcon from "@/components/Icons/MinusIcon";
-import TrashIcon from "@/components/Icons/TrashIcon";
-import type { PedidoItem } from "@/Types/Restaurante";
+import AddIcon from "@/components/Icons/AddIcon.tsx";
+import CheckIcon from "@/components/Icons/CheckIcon.tsx";
+import CrossIcon from "@/components/Icons/CrossIcon.tsx";
+import MinusIcon from "@/components/Icons/MinusIcon.tsx";
+import TrashIcon from "@/components/Icons/TrashIcon.tsx";
+import type { PedidoItem } from "@/Types/Restaurante.ts";
 
 export default function ModalPedido({
   pedido,

@@ -9,23 +9,31 @@ export default function QRCodeWithLogo({ url }: QRCodeWithLogoProps) {
   const qrRef = useRef(null);
 
   // Crear instancia de QR
-  const qrCode = useRef(
-    new QRCodeStyling({
-      width: 300,
-      height: 300,
-      data: url,
-      image: "/mva-logo-rb.png", // Debe estar en /public/
-      dotsOptions: {
-        color: "#000",
-        type: "rounded"
-      },
-      imageOptions: {
-        crossOrigin: "anonymous",
-        margin: 5,
-        imageSize: 0.3 // Tamaño del logo dentro del QR
-      }
-    })
-  );
+  const qrCode = useRef<any>(null);
+
+  useEffect(() => {
+    if (!qrCode.current) {
+      qrCode.current = new (QRCodeStyling as any)({
+        width: 300,
+        height: 300,
+        data: url,
+        image: "/mva-logo-rb.png", // Debe estar en /public/
+        dotsOptions: {
+          color: "#000",
+          type: "rounded"
+        },
+        imageOptions: {
+          crossOrigin: "anonymous",
+          margin: 5,
+          imageSize: 0.3 // Tamaño del logo dentro del QR
+        }
+      });
+    }
+    qrCode.current.update({ data: url });
+    if (qrRef.current) {
+      qrCode.current.append(qrRef.current);
+    }
+  }, [url]);
 
   useEffect(() => {
     qrCode.current.update({ data: url });

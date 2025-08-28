@@ -1,4 +1,4 @@
-import type { Variante } from "@/Types/Restaurante";
+import type { Variante } from "@/Types/Restaurante.ts";
 
 export const variantesPorCategoria: Record<string, Variante[]> = {
   "Burger & Street Food": [

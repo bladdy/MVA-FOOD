@@ -1,4 +1,4 @@
-import type { Categorias } from "@/Types/Restaurante";
+import type { Categorias } from "@/Types/Restaurante.ts";
 
 export const categoriaOrden: Categorias[] = [
   "Entradas",

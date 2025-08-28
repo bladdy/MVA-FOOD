@@ -1,5 +1,5 @@
-import ArrowLIcon from "@/components/Icons/ArrowLIcon";
-import ArrowRIcon from "@/components/Icons/ArrowRIcon";
+import ArrowLIcon from "@/components/Icons/ArrowLIcon.tsx";
+import ArrowRIcon from "@/components/Icons/ArrowRIcon.tsx";
 
 // components/RestaurantePaginator.tsx
 interface PaginatorProps {

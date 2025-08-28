@@ -1,6 +1,6 @@
 // hooks/usePedido.ts
 import { useState } from "react";
-import type { Menu, PedidoItem } from "@/Types/Restaurante";
+import type { Menu, PedidoItem } from "@/Types/Restaurante.ts";
 interface UsePedidoHook {
   pedido: PedidoItem[];
   setPedido: React.Dispatch<React.SetStateAction<PedidoItem[]>>;

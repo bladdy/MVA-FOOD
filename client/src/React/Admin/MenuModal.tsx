@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import type { Menu } from "@/Types/Restaurante";
+import type { Menu } from "@/Types/Restaurante.ts";
 
 interface MenuModalProps {
   isOpen: boolean;

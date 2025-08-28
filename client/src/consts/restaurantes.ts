@@ -1,4 +1,4 @@
-import type { Restaurante } from "@/Types/Restaurante";
+import type { Restaurante } from "@/Types/Restaurante.ts";
 
 export const restaurants : Restaurante[] = [
   {

@@ -1,6 +1,6 @@
-import type { Menu, Variante } from "@/Types/Restaurante";
-import CrossIcon from "@/components/Icons/CrossIcon";
-import { variantesPorCategoria } from "@/consts/variantes";
+import type { Menu, Variante } from "@/Types/Restaurante.ts";
+import CrossIcon from "@/components/Icons/CrossIcon.tsx";
+import { variantesPorCategoria } from "@/consts/variantes.ts";
 import { useState } from "react";
 
 export default function ModalProducto({

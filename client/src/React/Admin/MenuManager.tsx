@@ -1,9 +1,9 @@
 // components/MenuManager.tsx
 import { useState } from "react";
-import MenuButton from "./MenuButton";
-import MenuTable from "./MenuTable";
-import MenuModal from "./MenuModal";
-import type { Menu } from "@/Types/Restaurante";
+import MenuButton from "./MenuButton.tsx";
+import MenuTable from "./MenuTable.tsx";
+import MenuModal from "./MenuModal.tsx";
+import type { Menu } from "@/Types/Restaurante.ts";
 
 interface MenuManagerProps {
   initialMenus?: Menu[];

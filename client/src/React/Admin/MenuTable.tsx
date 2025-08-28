@@ -1,9 +1,9 @@
 import React from "react";
 import Pencil from "@assets/svg/pencil.svg";
 import Trash from "@assets/svg/trash.svg";
-import type { Menu } from "@/Types/Restaurante";
-import TrashIcon from "@/components/Icons/TrashIcon";
-import PencilIcon from "@/components/Icons/PencilIcon";
+import type { Menu } from "@/Types/Restaurante.ts";
+import TrashIcon from "@/components/Icons/TrashIcon.tsx";
+import PencilIcon from "@/components/Icons/PencilIcon.tsx";
 
 interface MenuTableProps {
   items: Menu[];

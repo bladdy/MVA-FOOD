@@ -1,6 +1,6 @@
 // components/RestaurantSearch.jsx
 import { useState, useEffect } from 'react';
-import CustomSelector from './CustomSelector';
+import CustomSelector from './CustomSelector.tsx';
 
 interface Filters {
   name: string;
