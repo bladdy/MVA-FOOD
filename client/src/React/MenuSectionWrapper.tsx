@@ -1,6 +1,6 @@
 // src/React/MenuSectionWrapper.jsx
 import { useEffect, useState } from "react";
-import MenuSection from "./MenuSection";
+import MenuSection from "./MenuSection.tsx";
 
 interface MenuSectionWrapperProps {
   menu: any; // Puedes reemplazar 'any' con el tipo correcto si lo conoces

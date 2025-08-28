@@ -32,6 +32,10 @@ interface Props {
 
 const categoriaIcons: Record<Categorias, JSX.Element> = {
   Todas: <AllCategoryIcon className="w-6 h-6" />,
+  Pizza: <FoodIcon className="w-6 h-6" />,
+  Ensaladas: <FoodIcon className="w-6 h-6" />,
+  Mariscos: <FoodIcon className="w-6 h-6" />,
+  Pescados: <FoodIcon className="w-6 h-6" />,
   Entradas: <EntradasIcon className="w-6 h-6" />,
   "Plato Fuerte": <FoodIcon className="w-6 h-6" />,
   "Burger & Street Food": <BurgersIcon className="w-6 h-6" />,
