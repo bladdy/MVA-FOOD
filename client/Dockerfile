@@ -16,4 +16,4 @@ RUN pnpm run build
 EXPOSE 4321
 
 # Ejecutar el servidor Node generado por Astro
-CMD ["node", "dist/server/index.mjs"]
+CMD ["node", "dist/server/entry.mjs"]

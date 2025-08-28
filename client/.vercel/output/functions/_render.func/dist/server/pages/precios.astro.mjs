@@ -1,6 +1,6 @@
-/* empty css                                           */
+/* empty css                               */
 import { c as createComponent, f as renderComponent, e as renderTemplate, m as maybeRenderHead } from '../chunks/astro/server_cUBcAsSp.mjs';
-import { $ as $$Layout } from '../chunks/Layout_BQDkqvWR.mjs';
+import { $ as $$Layout } from '../chunks/Layout_BTBz5APd.mjs';
 export { renderers } from '../renderers.mjs';
 
 const $$Precios = createComponent(($$result, $$props, $$slots) => {

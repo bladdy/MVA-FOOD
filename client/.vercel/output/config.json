@@ -24,6 +24,26 @@
 			"dest": "_render"
 		},
 		{
+			"src": "^/admin/405/?$",
+			"dest": "_render"
+		},
+		{
+			"src": "^/admin/configuracion/?$",
+			"dest": "_render"
+		},
+		{
+			"src": "^/admin/dashboard/?$",
+			"dest": "_render"
+		},
+		{
+			"src": "^/admin/platos/?$",
+			"dest": "_render"
+		},
+		{
+			"src": "^/admin/variantes/?$",
+			"dest": "_render"
+		},
+		{
 			"src": "^/api/contact/?$",
 			"dest": "_render"
 		},
@@ -40,6 +60,14 @@
 			"dest": "_render"
 		},
 		{
+			"src": "^/cotizacion/?$",
+			"dest": "_render"
+		},
+		{
+			"src": "^/hospital/?$",
+			"dest": "_render"
+		},
+		{
 			"src": "^/politica-privacidad/?$",
 			"dest": "_render"
 		},
@@ -53,6 +81,10 @@
 		},
 		{
 			"src": "^/registrarse/?$",
+			"dest": "_render"
+		},
+		{
+			"src": "^/renta/?$",
 			"dest": "_render"
 		},
 		{

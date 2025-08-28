@@ -16,8 +16,8 @@ services:
       - api
   api:
     build:
-      context: .
-      dockerfile: ./api/MvaFood.Api/Dockerfile
+      context: ./api    
+      dockerfile: Dockerfile
     container_name: api-container
     ports:
       - "5000:5000"

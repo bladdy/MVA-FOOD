@@ -1,7 +1,7 @@
-/* empty css                                           */
+/* empty css                               */
 import { c as createComponent, f as renderComponent, e as renderTemplate, m as maybeRenderHead } from '../chunks/astro/server_cUBcAsSp.mjs';
-import { $ as $$LayoutMenu } from '../chunks/LayoutMenu_BhacjAoq.mjs';
-import { F as Facebook, I as Instagram } from '../chunks/brand-instagram_CoiFrTpF.mjs';
+import { $ as $$LayoutMenu } from '../chunks/LayoutMenu_CiMTJCqa.mjs';
+import { F as Facebook, I as Instagram } from '../chunks/brand-instagram_Dm-M_HPd.mjs';
 import { M as Mail } from '../chunks/mail_Bj6DY9qK.mjs';
 import { W as WhatsApp } from '../chunks/brand-whatsapp_B-FKqor_.mjs';
 /* empty css                                   */
