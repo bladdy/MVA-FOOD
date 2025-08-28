@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("MVA-FOOD.Infrastructure")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f028d6e84275e872de98e48e590643f0fbde18cf")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+46b6299a0175e1f73a60552d904dc5e4ca437410")]
 [assembly: System.Reflection.AssemblyProductAttribute("MVA-FOOD.Infrastructure")]
 [assembly: System.Reflection.AssemblyTitleAttribute("MVA-FOOD.Infrastructure")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

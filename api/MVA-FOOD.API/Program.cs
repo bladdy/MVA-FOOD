@@ -101,6 +101,15 @@ builder.Services.AddEndpointsApiExplorer();
 
 var app = builder.Build();
 
+// -----------------------------
+// Aplicar migraciones automáticamente
+// -----------------------------
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    db.Database.Migrate(); // Esto crea la DB y aplica migraciones si no existe
+}
+
 // 8. Configurar middleware
 if (app.Environment.IsDevelopment())
 {
@@ -111,6 +120,7 @@ if (app.Environment.IsDevelopment())
         options.RoutePrefix = string.Empty;
     });
 }
+
 app.UseMiddleware<ExceptionMiddleware>();
 app.UseHttpsRedirection();
 app.UseCors("AllowAll");
