@@ -42,7 +42,7 @@ export const restaurants : Restaurante[] = [
         ingredientes: "Carne de res, lechuga, tomate, queso cheddar, pan de hamburguesa, salsa especial",
         price: 180,
         categoria: "Burger & Street Food",
-        imagen: ""
+        imagen: "/mva-logo-rb.png"
       },
       // Steak agregado al menú
       {
@@ -51,7 +51,7 @@ export const restaurants : Restaurante[] = [
         ingredientes: "Bistec de res a la parrilla, papas fritas, ensalada",
         price: 350,
         categoria: "Steak House",
-      imagen: ""      },
+      imagen: "/mva-logo-rb.png"      },
       // Pollo Frito agregado al menú
       {
         id: "burger-pollofrito-1",
@@ -59,7 +59,7 @@ export const restaurants : Restaurante[] = [
         ingredientes: "Piezas de pollo empanizadas y fritas, papas fritas",
         price: 220,
         categoria: "Pollo Frito",
-        imagen: ""
+        imagen: "/mva-logo-rb.png"
       },
       {
         id: "burger-10",
@@ -67,7 +67,7 @@ export const restaurants : Restaurante[] = [
         ingredientes: "Pasta fettuccine, salsa Alfredo, queso parmesano, crema, mantequilla",
         price: 160,
         categoria: "Pastas",
-        imagen: ""
+        imagen: "/mva-logo-rb.png"
       },
       {
         id: "burger-2",
@@ -75,7 +75,7 @@ export const restaurants : Restaurante[] = [
         ingredientes: "Carne de res, cebolla caramelizada, queso cheddar, tocino, salsa BBQ, pan de hamburguesa",
         price: 210,
         categoria: "Burger & Street Food",
-        imagen: ""
+        imagen: "/mva-logo-rb.png"
       },
       {
         id: "burger-3",
@@ -83,7 +83,7 @@ export const restaurants : Restaurante[] = [
         ingredientes: "Papas, sal",
         price: 80,
         categoria: "Entradas",
-        imagen: ""
+        imagen: "/mva-logo-rb.png"
       },
       {
         id: "burger-4",
@@ -91,7 +91,7 @@ export const restaurants : Restaurante[] = [
         ingredientes: "Bebida gaseosa a elección",
         price: 50,
         categoria: "Bebidas",
-        imagen: ""
+        imagen: "/mva-logo-rb.png"
       },
       {
         id: "burger-5",
@@ -99,7 +99,7 @@ export const restaurants : Restaurante[] = [
         ingredientes: "Pechuga de pollo empanizada",
         price: 120,
         categoria: "Kids",
-        imagen: ""
+        imagen: "/mva-logo-rb.png"
       },
       {
         id: "burger-6",
@@ -107,7 +107,7 @@ export const restaurants : Restaurante[] = [
         ingredientes: "Pollo, fideos, zanahoria, apio, cebolla",
         price: 90,
         categoria: "Sopas",
-        imagen: ""
+        imagen: "/mva-logo-rb.png"
       },
       {
         id: "burger-7",
@@ -115,7 +115,7 @@ export const restaurants : Restaurante[] = [
         ingredientes: "Brownie de chocolate, helado de vainilla, sirope de chocolate",
         price: 100,
         categoria: "Postres",
-        imagen: ""
+        imagen: "/mva-logo-rb.png"
       },
       {
         id: "burger-8",
@@ -123,7 +123,7 @@ export const restaurants : Restaurante[] = [
         ingredientes: "Lechuga, pollo a la plancha, crutones, queso parmesano, aderezo César",
         price: 130,
         categoria: "Entradas",
-        imagen: ""
+        imagen: "/mva-logo-rb.png"
       },
       {
         id: "burger-9",
@@ -131,7 +131,7 @@ export const restaurants : Restaurante[] = [
         ingredientes: "Mini hamburguesa de res, pan, queso cheddar",
         price: 90,
         categoria: "Kids",
-        imagen: ""
+        imagen: "/mva-logo-rb.png"
       }
     ]
   },
@@ -175,7 +175,7 @@ export const restaurants : Restaurante[] = [
         ingredientes: "2 piezas de pollo, papas fritas, refresco",
         price: 220,
         categoria: "Plato Fuerte",
-        imagen: ""
+        imagen: "/mva-logo-rb.png"
       },
       {
         id: "kfc-2",
@@ -183,7 +183,7 @@ export const restaurants : Restaurante[] = [
         ingredientes: "Tiras de pechuga de pollo empanizadas",
         price: 150,
         categoria: "Entradas",
-        imagen: ""
+        imagen: "/mva-logo-rb.png"
       },
       {
         id: "kfc-3",
@@ -191,7 +191,7 @@ export const restaurants : Restaurante[] = [
         ingredientes: "Papas, sal",
         price: 80,
         categoria: "Entradas",
-        imagen: ""
+        imagen: "/mva-logo-rb.png"
       },
       {
         id: "kfc-4",
@@ -199,7 +199,7 @@ export const restaurants : Restaurante[] = [
         ingredientes: "Bebida gaseosa a elección",
         price: 50,
         categoria: "Bebidas",
-        imagen: ""
+        imagen: "/mva-logo-rb.png"
       },
       {
         id: "kfc-5",
@@ -207,7 +207,7 @@ export const restaurants : Restaurante[] = [
         ingredientes: "Helado de vainilla, sirope de chocolate",
         price: 70,
         categoria: "Postres",
-        imagen: ""
+        imagen: "/mva-logo-rb.png"
       },
       {
         id: "kfc-6",
@@ -215,7 +215,7 @@ export const restaurants : Restaurante[] = [
         ingredientes: "Pollo, vegetales, especias picantes",
         price: 95,
         categoria: "Sopas",
-        imagen: ""
+        imagen: "/mva-logo-rb.png"
       },
       {
         id: "kfc-7",
@@ -223,7 +223,7 @@ export const restaurants : Restaurante[] = [
         ingredientes: "1 pieza de pollo, papas fritas, jugo",
         price: 110,
         categoria: "Kids",
-        imagen: ""
+        imagen: "/mva-logo-rb.png"
       },
       {
         id: "kfc-8",
@@ -231,7 +231,7 @@ export const restaurants : Restaurante[] = [
         ingredientes: "Repollo, zanahoria, aderezo especial",
         price: 60,
         categoria: "Entradas",
-        imagen: ""
+        imagen: "/mva-logo-rb.png"
       },
       {
         id: "kfc-9",
@@ -239,7 +239,7 @@ export const restaurants : Restaurante[] = [
         ingredientes: "Masa crujiente, relleno de manzana",
         price: 75,
         categoria: "Postres",
-        imagen: ""
+        imagen: "/mva-logo-rb.png"
       }
     ]
   }

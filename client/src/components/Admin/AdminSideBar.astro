@@ -1,0 +1,139 @@
+---
+import Home from "@assets/svg/home.svg";
+import Food from "@assets/svg/tools-kitchen-3.svg";
+import Settings from "@assets/svg/settings.svg";
+import List from "@assets/svg/list.svg";
+import ListAdd from "@assets/svg/list-add.svg";
+
+---
+
+<aside
+  id="sidebar"
+  class="bg-gradient-to-br from-gray-800 to-gray-900 fixed inset-y-0 left-0 z-50 my-4 ml-4 h-[calc(100vh-32px)]
+  w-72 rounded-xl transform -translate-x-full opacity-0 pointer-events-none transition-all duration-300 lg:translate-x-0 lg:opacity-100 lg:pointer-events-auto flex flex-col justify-between"
+>
+  <!-- 🔹 Header con logo y botón cerrar -->
+  <div>
+    <div class="relative border-b border-white/20">
+      <div class="flex justify-between items-center">
+        <a class="flex items-center gap-2 px-8 py-6">
+          <img src="/mva-logo-rb.png" alt="MVA-FOOD" class="h-12" />
+          <h6 class="font-semibold text-white">MVA-FOOD</h6>
+        </a>
+        <div class="p-4 lg:hidden">
+          <button
+            id="sidebar-close"
+            class="p-4 text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 rounded-full"
+          >
+            ✕
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 🔹 Menú principal -->
+    <div class="m-4">
+      <ul class="flex flex-col gap-1 mb-4 text-white">
+        <li>
+          <a href="/admin/dashboard" class="flex items-center gap-4 px-4 py-3 text-white rounded-lg hover:bg-white/10">
+            <Home class="text-sm mr-2" />
+            <p class="text-base font-medium">Dashboard</p>
+          </a>
+
+          <!-- Dropdown Menus -->
+          <div class="relative">
+            <button
+              id="menu-toggle"
+              class="flex items-center gap-4 px-4 py-3 w-full text-white rounded-lg hover:bg-white/10 focus:outline-none"
+            >
+              <List class="text-sm mr-2" />
+              <p class="text-base font-medium">Menus</p>
+              <svg
+                class="ml-auto h-4 w-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+            <ul
+              id="menu-dropdown"
+              class="hidden flex-col mt-1 text-white"
+            >
+              <li>
+                <a href="/admin/menus/platos" class="flex items-center px-4 py-2 text-sm rounded-lg hover:bg-white/10">
+                  <Food class="text-sm mr-2" />
+                  Platos
+                </a>
+              </li>
+              <li>
+                <a href="/admin/menus/variantes" class="flex items-center px-4 py-2 text-sm rounded-lg hover:bg-white/10">
+                  <ListAdd class="text-sm mr-2" />
+                  Variantes
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <a href="/admin/configuracion" class="flex items-center gap-4 px-4 py-3 text-white rounded-lg hover:bg-white/10">
+            <Settings class="text-sm mr-2" />
+            <p class="text-base font-medium">Configuración</p>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 🔹 Botón Cerrar sesión solo en móviles -->
+  <div class="m-4">
+    <a
+      href="/"
+      class="flex sm:hidden items-center gap-2 px-4 py-3 text-white font-bold rounded-lg hover:bg-white/10"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+        class="h-6 w-6" viewBox="0 0 24 24">
+        <path fill-rule="evenodd"
+          d="M18.685 19.097A9.723 9.723 0 0021.75 12c0-5.385-4.365-9.75-9.75-9.75S2.25 6.615 2.25 12a9.723 9.723 0 003.065 7.097A9.716 9.716 0 0012 21.75a9.716 9.716 0 006.685-2.653zm-12.54-1.285A7.486 7.486 0 0112 15a7.486 7.486 0 015.855 2.812A8.224 8.224 0 0112 20.25a8.224 8.224 0 01-5.855-2.438zM15.75 9a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z"
+          clip-rule="evenodd"></path>
+      </svg>
+      Cerrar sesión
+    </a>
+  </div>
+</aside>
+
+<!-- 🔹 Scripts -->
+<script>
+  const sidebar = document.getElementById("sidebar");
+  const openBtn = document.getElementById("sidebar-open");
+  const closeBtn = document.getElementById("sidebar-close");
+
+  openBtn?.addEventListener("click", () => {
+    if (sidebar) {
+      sidebar.classList.remove("-translate-x-full", "opacity-0", "pointer-events-none");
+      sidebar.classList.add("translate-x-0", "opacity-100", "pointer-events-auto");
+    }
+  });
+
+  closeBtn?.addEventListener("click", () => {
+    if (sidebar) {
+      sidebar.classList.remove("translate-x-0", "opacity-100", "pointer-events-auto");
+      sidebar.classList.add("-translate-x-full", "opacity-0", "pointer-events-none");
+    }
+  });
+
+  // Dropdown Menus
+  const toggleBtn = document.getElementById("menu-toggle");
+  const dropdown = document.getElementById("menu-dropdown");
+
+  toggleBtn?.addEventListener("click", () => {
+    dropdown?.classList.toggle("hidden");
+  });
+
+  document.addEventListener("click", (e) => {
+    const target = e.target as Node;
+    if (!toggleBtn?.contains(target) && !dropdown?.contains(target)) {
+      dropdown?.classList.add("hidden");
+    }
+  });
+</script>

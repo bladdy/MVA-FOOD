@@ -62,6 +62,19 @@ export const variantesPorCategoria: Record<string, Variante[]> = {
       ],
     },
   ],
+  "Bebidas": [
+    {
+      id: "tipo-refresco",
+      name: "Tipo de refresco",
+      obligatorio: true,
+      maxSeleccion: 1,
+      opciones: [
+        { nombre: "Cola" },
+        { nombre: "Naranja" },
+        { nombre: "Limón" },
+      ],
+    },
+  ],
   "Steak House": [
     {
       id: "punto-carne",
