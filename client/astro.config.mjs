@@ -10,8 +10,8 @@ import node from '@astrojs/node';
 export default defineConfig({
   integrations: [tailwind(), react()],
   output: 'server',
-  adapter: node({ mode: 'standalone' }), // Use this for docker production with Node.js
-  //adapter: vercel(), // Use this for deployment on Vercel
+  //adapter: node({ mode: 'standalone' }), // Use this for docker production with Node.js
+  adapter: vercel(), // Use this for deployment on Vercel
   vite: {
     plugins: [svgr()],
     resolve: {
