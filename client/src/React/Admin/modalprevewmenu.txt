@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import type { Menu } from "@/Types/Restaurante.ts";
 import type { Variante } from "@/Types/Restaurante.ts";
-import { variantesPorCategoria } from "@/consts/variantes.ts";
 
 interface MenuModalProps {
   isOpen: boolean;
@@ -27,9 +26,8 @@ const MenuModal: React.FC<MenuModalProps> = ({
   initialData,
 }) => {
   const [form, setForm] = useState<Menu>(initialForm);
-  const [variantesFiltradas, setVariantesFiltradas] = useState<Variante[]>([]);
+  const [savedData, setSavedData] = useState<Menu | null>(null); // 🔹 para mostrar JSON guardado
 
-  // 🔹 Cargar datos iniciales
   useEffect(() => {
     if (initialData) {
       setForm(initialData);
@@ -37,15 +35,6 @@ const MenuModal: React.FC<MenuModalProps> = ({
       setForm(initialForm);
     }
   }, [initialData, isOpen]);
-
-  // 🔹 Filtrar variantes por categoría
-  useEffect(() => {
-    if (form.categoria && variantesPorCategoria[form.categoria]) {
-      setVariantesFiltradas(variantesPorCategoria[form.categoria]);
-    } else {
-      setVariantesFiltradas([]);
-    }
-  }, [form.categoria]);
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -77,14 +66,6 @@ const MenuModal: React.FC<MenuModalProps> = ({
     setForm({ ...form, variantes: [...(form.variantes || []), nuevaVariante] });
   };
 
-  const handleAgregarExistente = (id: string) => {
-    if (!id) return;
-    const variante = variantesFiltradas.find((v) => v.id === id);
-    if (variante && !form.variantes?.some((v) => v.id === variante.id)) {
-      setForm({ ...form, variantes: [...(form.variantes || []), variante] });
-    }
-  };
-
   const handleVarianteChange = (
     index: number,
     key: keyof Variante,
@@ -113,36 +94,22 @@ const MenuModal: React.FC<MenuModalProps> = ({
     setForm({ ...form, variantes: updated });
   };
 
-  // 🔹 Eliminar variante completa
-  const handleEliminarVariante = (index: number) => {
-    const updated = [...(form.variantes || [])];
-    updated.splice(index, 1);
-    setForm({ ...form, variantes: updated });
-  };
-
-  // 🔹 Eliminar opción de una variante
-  const handleEliminarOpcion = (varianteIndex: number, opcionIndex: number) => {
-    const updated = [...(form.variantes || [])];
-    updated[varianteIndex].opciones.splice(opcionIndex, 1);
-    setForm({ ...form, variantes: updated });
-  };
-
   const handleClose = () => {
-    setForm(initialForm);
+    setForm(initialForm); // 🔹 reset form
+    setSavedData(null); // 🔹 limpiar JSON guardado
     onClose();
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSave({ ...form, id: initialData?.id || Date.now().toString() });
-    setForm(initialForm);
-    onClose();
+    const data = { ...form, id: initialData?.id || Date.now().toString() };
+
+    onSave(data);
+    setSavedData(data); // 🔹 mostrar JSON guardado
+    setForm(initialForm); // 🔹 limpiar form
   };
 
   if (!isOpen) return null;
-
-  // 🔹 Obtener lista de categorías desde el objeto variantesPorCategoria
-  const categoriasDisponibles = Object.keys(variantesPorCategoria);
 
   return (
     <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50 overflow-y-auto">
@@ -158,6 +125,8 @@ const MenuModal: React.FC<MenuModalProps> = ({
             ✕
           </button>
         </div>
+
+        {/* 🔹 Formulario */}
         <form className="space-y-4" onSubmit={handleSubmit}>
           {/* Nombre */}
           <div>
@@ -206,19 +175,13 @@ const MenuModal: React.FC<MenuModalProps> = ({
             <label className="block text-sm font-medium text-gray-700">
               Categoría
             </label>
-            <select
+            <input
               name="categoria"
+              type="text"
               value={form.categoria}
               onChange={handleChange}
               className="mt-1 block w-full border rounded-md p-2 text-sm"
-            >
-              <option value="Todas">Todas</option>
-              {categoriasDisponibles.map((cat) => (
-                <option key={cat} value={cat}>
-                  {cat}
-                </option>
-              ))}
-            </select>
+            />
           </div>
 
           {/* Imagen */}
@@ -247,66 +210,32 @@ const MenuModal: React.FC<MenuModalProps> = ({
               <label className="block text-sm font-medium text-gray-700">
                 Variantes (Opcional)
               </label>
-              <div className="flex gap-2">
-                <button
-                  type="button"
-                  onClick={handleAddVariante}
-                  className="text-xs px-2 py-1 bg-orange-500 text-white rounded-md"
-                >
-                  + Nueva
-                </button>
-                <select
-                  onChange={(e) => handleAgregarExistente(e.target.value)}
-                  className="text-xs border rounded-md p-1"
-                >
-                  <option value="">+ Existente</option>
-                  {variantesFiltradas.map((v) => (
-                    <option key={v.id} value={v.id}>
-                      {v.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
-
-            {form.variantes?.map((v, index) => (
-              <div
-                key={v.id}
-                className="border p-2 mt-2 rounded-md relative bg-gray-50"
+              <button
+                type="button"
+                onClick={handleAddVariante}
+                className="text-xs px-2 py-1 bg-orange-500 text-white rounded-md"
               >
-                {/* Botón eliminar variante */}
-                <div className="flex flex-row justify-center items-center gap-2 w-full">                   
-
-                  <input
-                    type="text"
-                    value={v.name}
-                    onChange={(e) =>
-                      handleVarianteChange(index, "name", e.target.value)
-                    }
-                    className="w-full border rounded-md p-1 text-sm mb-2"
-                    placeholder="Nombre de la variante"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => handleEliminarVariante(index)}
-                    className=" text-red-500 hover:text-red-700 text-sm p-1 mb-2"
-                    title="Eliminar variante"
-                  >
-                    ✕
-                  </button>
-
-                </div>
+                + Agregar Variante
+              </button>
+            </div>
+            {form.variantes?.map((v, index) => (
+              <div key={v.id} className="border p-2 mt-2 rounded-md">
+                <input
+                  type="text"
+                  value={v.name}
+                  onChange={(e) =>
+                    handleVarianteChange(index, "name", e.target.value)
+                  }
+                  className="w-full border rounded-md p-1 text-sm mb-2"
+                  placeholder="Nombre de la variante"
+                />
 
                 <label className="flex items-center text-xs gap-2">
                   <input
                     type="checkbox"
                     checked={v.obligatorio}
                     onChange={(e) =>
-                      handleVarianteChange(
-                        index,
-                        "obligatorio",
-                        e.target.checked
-                      )
+                      handleVarianteChange(index, "obligatorio", e.target.checked)
                     }
                   />
                   Obligatorio
@@ -341,17 +270,12 @@ const MenuModal: React.FC<MenuModalProps> = ({
                     </button>
                   </div>
                   {v.opciones.map((op, opIndex) => (
-                    <div key={opIndex} className="flex gap-2 mt-2 relative">
+                    <div key={opIndex} className="flex gap-2 mt-2">
                       <input
                         type="text"
                         value={op.nombre}
                         onChange={(e) =>
-                          handleOpcionChange(
-                            index,
-                            opIndex,
-                            "nombre",
-                            e.target.value
-                          )
+                          handleOpcionChange(index, opIndex, "nombre", e.target.value)
                         }
                         className="flex-1 border rounded-md p-1 text-sm"
                         placeholder="Nombre"
@@ -360,25 +284,11 @@ const MenuModal: React.FC<MenuModalProps> = ({
                         type="number"
                         value={op.precio}
                         onChange={(e) =>
-                          handleOpcionChange(
-                            index,
-                            opIndex,
-                            "precio",
-                            e.target.value
-                          )
+                          handleOpcionChange(index, opIndex, "precio", e.target.value)
                         }
                         className="w-24 border rounded-md p-1 text-sm"
                         placeholder="Precio"
                       />
-                      {/* Botón eliminar opción */}
-                      <button
-                        type="button"
-                        onClick={() => handleEliminarOpcion(index, opIndex)}
-                        className="text-red-500 hover:text-red-700 text-xs"
-                        title="Eliminar opción"
-                      >
-                        ✕
-                      </button>
                     </div>
                   ))}
                 </div>
@@ -403,6 +313,22 @@ const MenuModal: React.FC<MenuModalProps> = ({
             </button>
           </div>
         </form>
+
+        {/* 🔹 JSON mostrado dentro del modal */}
+        {savedData && (
+          <div className="mt-6 p-4 border rounded bg-gray-100 relative">
+            <button
+              onClick={() => setSavedData(null)}
+              className="absolute top-2 right-2 text-red-600 font-bold"
+            >
+              ✕
+            </button>
+            <h3 className="font-semibold mb-2 text-gray-700">Guardado:</h3>
+            <pre className="text-xs bg-white p-2 rounded border max-h-60 overflow-y-auto">
+              {JSON.stringify(savedData, null, 2)}
+            </pre>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -32,7 +32,8 @@ export interface Menu {
   ingredientes: string;
   price: number;
   categoria: Categorias;
-  imagen: string;
+  imagen: string;  
+  variantes?: Variante[]; // <- aquí añadimos las variantes
 }
 
 export interface Plan {
