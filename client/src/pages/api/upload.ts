@@ -1,4 +1,4 @@
-import type { APIRoute } from "astro";
+/*import type { APIRoute } from "astro";
 import { uploadToFtp } from "@/lib/ftpService";
 import path from "path";
 import fs from "fs/promises";
@@ -29,4 +29,4 @@ export const POST: APIRoute = async ({ request }) => {
   } finally {
     await fs.unlink(tempPath);
   }
-};
+};*/

@@ -186,39 +186,42 @@ const MenuModal: React.FC<MenuModalProps> = ({
             />
           </div>
 
-          {/* Precio */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Precio
-            </label>
-            <input
-              name="price"
-              type="number"
-              step="0.01"
-              value={form.price}
-              onChange={handleChange}
-              className="mt-1 block w-full border rounded-md p-2 text-sm"
-            />
-          </div>
+          <div className="grid grid-cols-3 gap-4">
+            {/* Categoría */}
+            <div className="col-span-2">
+              <label className="block text-sm font-medium text-gray-700">
+                Categoría
+              </label>
+              <select
+                name="categoria"
+                value={form.categoria}
+                onChange={handleChange}
+                className="mt-1 block w-full border rounded-md p-2 text-sm"
+              >
+                <option value="Todas">Todas</option>
+                {categoriasDisponibles.map((cat) => (
+                  <option key={cat} value={cat}>
+                    {cat}
+                  </option>
+                ))}
+              </select>
+            </div>
+            {/* Precio */}
+            <div className="col-span-1">
+              <label className="block text-sm font-medium text-gray-700">
+                Precio
+              </label>
+              <input
+                name="price"
+                type="number"
+                step="0.01"
+                value={form.price}
+                onChange={handleChange}
+                className="mt-1 block w-full border rounded-md p-2 text-sm"
+              />
+            </div>
 
-          {/* Categoría */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Categoría
-            </label>
-            <select
-              name="categoria"
-              value={form.categoria}
-              onChange={handleChange}
-              className="mt-1 block w-full border rounded-md p-2 text-sm"
-            >
-              <option value="Todas">Todas</option>
-              {categoriasDisponibles.map((cat) => (
-                <option key={cat} value={cat}>
-                  {cat}
-                </option>
-              ))}
-            </select>
+            
           </div>
 
           {/* Imagen */}
@@ -275,8 +278,7 @@ const MenuModal: React.FC<MenuModalProps> = ({
                 className="border p-2 mt-2 rounded-md relative bg-gray-50"
               >
                 {/* Botón eliminar variante */}
-                <div className="flex flex-row justify-center items-center gap-2 w-full">                   
-
+                <div className="flex flex-row justify-center items-center gap-2 w-full">
                   <input
                     type="text"
                     value={v.name}
@@ -294,7 +296,6 @@ const MenuModal: React.FC<MenuModalProps> = ({
                   >
                     ✕
                   </button>
-
                 </div>
 
                 <label className="flex items-center text-xs gap-2">
@@ -313,7 +314,9 @@ const MenuModal: React.FC<MenuModalProps> = ({
                 </label>
 
                 <div className="mt-2">
-                  <label className="text-xs text-gray-600">Máx. selección</label>
+                  <label className="text-xs text-gray-600">
+                    Máx. selección
+                  </label>
                   <input
                     type="number"
                     value={v.maxSeleccion}

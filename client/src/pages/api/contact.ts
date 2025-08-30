@@ -1,5 +1,5 @@
 // src/pages/api/contact.ts (o .js)
-export const prerender = false;
+/*export const prerender = false;
 // Asegúrate de que este archivo no se prerenderice
 import nodemailer from "nodemailer";
 
@@ -79,4 +79,4 @@ export async function POST({ request }: { request: Request }) {
       { status: 500, headers: { "Content-Type": "application/json" } }
     );
   }
-}
+}*/
