@@ -1,7 +1,9 @@
+// src/components/MenuModal.tsx
 import React, { useState, useEffect } from "react";
 import type { Menu } from "@/Types/Restaurante.ts";
 import type { Variante } from "@/Types/Restaurante.ts";
 import { variantesPorCategoria } from "@/consts/variantes.ts";
+import { menuService } from "@/Services/menuService.ts";
 
 interface MenuModalProps {
   isOpen: boolean;
@@ -17,6 +19,7 @@ const initialForm: Menu = {
   price: 0,
   categoria: "Todas",
   imagen: "",
+  restauranteId: "3fa85f64-5717-4562-b3fc-2c963f66afa6", // Temporal, hasta implementar autenticación
   variantes: [],
 };
 
@@ -132,11 +135,25 @@ const MenuModal: React.FC<MenuModalProps> = ({
     onClose();
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  // 🔹 Conexión con el servicio API
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    onSave({ ...form, id: initialData?.id || Date.now().toString() });
-    setForm(initialForm);
-    onClose();
+    try {
+      if (initialData) {
+        // Editar
+        const updated = await menuService.update(initialData.id, form);
+        onSave(updated);
+      } else {
+        // Crear
+        const created = await menuService.create(form);
+        onSave(created);
+      }
+      setForm(initialForm);
+      onClose();
+    } catch (error) {
+      console.error(error);
+      alert("Hubo un error al guardar el menú");
+    }
   };
 
   if (!isOpen) return null;
@@ -158,254 +175,254 @@ const MenuModal: React.FC<MenuModalProps> = ({
             ✕
           </button>
         </div>
-        <form className="space-y-4" onSubmit={handleSubmit}>
-          {/* Nombre */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Nombre
-            </label>
-            <input
-              name="name"
-              type="text"
-              value={form.name}
-              onChange={handleChange}
-              className="mt-1 block w-full border rounded-md p-2 text-sm"
-            />
-          </div>
-
-          {/* Ingredientes */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Ingredientes
-            </label>
-            <textarea
-              name="ingredientes"
-              value={form.ingredientes}
-              onChange={handleChange}
-              className="mt-1 block w-full border rounded-md p-2 text-sm"
-            />
-          </div>
-
-          <div className="grid grid-cols-3 gap-4">
-            {/* Categoría */}
-            <div className="col-span-2">
+        <div className="max-h-[80vh] overflow-y-auto p-4">
+          <form className="space-y-4" onSubmit={handleSubmit}>
+            {/* Nombre */}
+            <div>
               <label className="block text-sm font-medium text-gray-700">
-                Categoría
-              </label>
-              <select
-                name="categoria"
-                value={form.categoria}
-                onChange={handleChange}
-                className="mt-1 block w-full border rounded-md p-2 text-sm"
-              >
-                <option value="Todas">Todas</option>
-                {categoriasDisponibles.map((cat) => (
-                  <option key={cat} value={cat}>
-                    {cat}
-                  </option>
-                ))}
-              </select>
-            </div>
-            {/* Precio */}
-            <div className="col-span-1">
-              <label className="block text-sm font-medium text-gray-700">
-                Precio
+                Nombre
               </label>
               <input
-                name="price"
-                type="number"
-                step="0.01"
-                value={form.price}
+                name="name"
+                type="text"
+                value={form.name}
                 onChange={handleChange}
                 className="mt-1 block w-full border rounded-md p-2 text-sm"
               />
             </div>
 
-            
-          </div>
-
-          {/* Imagen */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Imagen
-            </label>
-            <input
-              name="imagen"
-              type="file"
-              onChange={handleChange}
-              className="mt-1 block w-full border rounded-md p-2 text-sm"
-            />
-            {form.imagen && (
-              <img
-                src={form.imagen}
-                alt="preview"
-                className="mt-2 h-16 w-16 object-cover rounded-md"
-              />
-            )}
-          </div>
-
-          {/* Variantes */}
-          <div>
-            <div className="flex justify-between items-center">
+            {/* Ingredientes */}
+            <div>
               <label className="block text-sm font-medium text-gray-700">
-                Variantes (Opcional)
+                Ingredientes
               </label>
-              <div className="flex gap-2">
-                <button
-                  type="button"
-                  onClick={handleAddVariante}
-                  className="text-xs px-2 py-1 bg-orange-500 text-white rounded-md"
-                >
-                  + Nueva
-                </button>
+              <textarea
+                name="ingredientes"
+                value={form.ingredientes}
+                onChange={handleChange}
+                className="mt-1 block w-full border rounded-md p-2 text-sm"
+              />
+            </div>
+
+            <div className="grid grid-cols-3 gap-4">
+              {/* Categoría */}
+              <div className="col-span-2">
+                <label className="block text-sm font-medium text-gray-700">
+                  Categoría
+                </label>
                 <select
-                  onChange={(e) => handleAgregarExistente(e.target.value)}
-                  className="text-xs border rounded-md p-1"
+                  name="categoria"
+                  value={form.categoria}
+                  onChange={handleChange}
+                  className="mt-1 block w-full border rounded-md p-2 text-sm"
                 >
-                  <option value="">+ Existente</option>
-                  {variantesFiltradas.map((v) => (
-                    <option key={v.id} value={v.id}>
-                      {v.name}
+                  <option value="Todas">Todas</option>
+                  {categoriasDisponibles.map((cat) => (
+                    <option key={cat} value={cat}>
+                      {cat}
                     </option>
                   ))}
                 </select>
               </div>
+              {/* Precio */}
+              <div className="col-span-1">
+                <label className="block text-sm font-medium text-gray-700">
+                  Precio
+                </label>
+                <input
+                  name="price"
+                  type="number"
+                  step="0.01"
+                  value={form.price}
+                  onChange={handleChange}
+                  className="mt-1 block w-full border rounded-md p-2 text-sm"
+                />
+              </div>
             </div>
 
-            {form.variantes?.map((v, index) => (
-              <div
-                key={v.id}
-                className="border p-2 mt-2 rounded-md relative bg-gray-50"
-              >
-                {/* Botón eliminar variante */}
-                <div className="flex flex-row justify-center items-center gap-2 w-full">
-                  <input
-                    type="text"
-                    value={v.name}
-                    onChange={(e) =>
-                      handleVarianteChange(index, "name", e.target.value)
-                    }
-                    className="w-full border rounded-md p-1 text-sm mb-2"
-                    placeholder="Nombre de la variante"
-                  />
+            {/* Imagen */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700">
+                Imagen
+              </label>
+              <input
+                name="imagen"
+                type="file"
+                onChange={handleChange}
+                className="mt-1 block w-full border rounded-md p-2 text-sm"
+              />
+              {form.imagen && (
+                <img
+                  src={form.imagen}
+                  alt="preview"
+                  className="mt-2 h-16 w-16 object-cover rounded-md"
+                />
+              )}
+            </div>
+
+            {/* Variantes */}
+            <div>
+              <div className="flex justify-between items-center">
+                <label className="block text-sm font-medium text-gray-700">
+                  Variantes (Opcional)
+                </label>
+                <div className="flex gap-2">
                   <button
                     type="button"
-                    onClick={() => handleEliminarVariante(index)}
-                    className=" text-red-500 hover:text-red-700 text-sm p-1 mb-2"
-                    title="Eliminar variante"
+                    onClick={handleAddVariante}
+                    className="text-xs px-2 py-1 bg-orange-500 text-white rounded-md"
                   >
-                    ✕
+                    + Nueva
                   </button>
-                </div>
-
-                <label className="flex items-center text-xs gap-2">
-                  <input
-                    type="checkbox"
-                    checked={v.obligatorio}
-                    onChange={(e) =>
-                      handleVarianteChange(
-                        index,
-                        "obligatorio",
-                        e.target.checked
-                      )
-                    }
-                  />
-                  Obligatorio
-                </label>
-
-                <div className="mt-2">
-                  <label className="text-xs text-gray-600">
-                    Máx. selección
-                  </label>
-                  <input
-                    type="number"
-                    value={v.maxSeleccion}
-                    onChange={(e) =>
-                      handleVarianteChange(
-                        index,
-                        "maxSeleccion",
-                        parseInt(e.target.value)
-                      )
-                    }
-                    className="mt-1 block w-20 border rounded-md p-1 text-sm"
-                  />
-                </div>
-
-                {/* Opciones */}
-                <div className="mt-3">
-                  <div className="flex justify-between items-center">
-                    <span className="text-xs font-medium">Opciones</span>
-                    <button
-                      type="button"
-                      onClick={() => handleAddOpcion(index)}
-                      className="text-xs px-2 py-1 bg-blue-500 text-white rounded-md"
-                    >
-                      + Agregar Opción
-                    </button>
-                  </div>
-                  {v.opciones.map((op, opIndex) => (
-                    <div key={opIndex} className="flex gap-2 mt-2 relative">
-                      <input
-                        type="text"
-                        value={op.nombre}
-                        onChange={(e) =>
-                          handleOpcionChange(
-                            index,
-                            opIndex,
-                            "nombre",
-                            e.target.value
-                          )
-                        }
-                        className="flex-1 border rounded-md p-1 text-sm"
-                        placeholder="Nombre"
-                      />
-                      <input
-                        type="number"
-                        value={op.precio}
-                        onChange={(e) =>
-                          handleOpcionChange(
-                            index,
-                            opIndex,
-                            "precio",
-                            e.target.value
-                          )
-                        }
-                        className="w-24 border rounded-md p-1 text-sm"
-                        placeholder="Precio"
-                      />
-                      {/* Botón eliminar opción */}
-                      <button
-                        type="button"
-                        onClick={() => handleEliminarOpcion(index, opIndex)}
-                        className="text-red-500 hover:text-red-700 text-xs"
-                        title="Eliminar opción"
-                      >
-                        ✕
-                      </button>
-                    </div>
-                  ))}
+                  <select
+                    onChange={(e) => handleAgregarExistente(e.target.value)}
+                    className="text-xs border rounded-md p-1"
+                  >
+                    <option value="">+ Existente</option>
+                    {variantesFiltradas.map((v) => (
+                      <option key={v.id} value={v.id}>
+                        {v.name}
+                      </option>
+                    ))}
+                  </select>
                 </div>
               </div>
-            ))}
-          </div>
 
-          {/* Botones */}
-          <div className="flex justify-end gap-3 mt-6">
-            <button
-              type="button"
-              onClick={handleClose}
-              className="px-4 py-2 text-sm text-gray-600 hover:text-gray-800"
-            >
-              Cancelar
-            </button>
-            <button
-              type="submit"
-              className="px-4 py-2 text-sm text-white bg-orange-600 rounded-md hover:bg-orange-700"
-            >
-              Guardar
-            </button>
-          </div>
-        </form>
+              {form.variantes?.map((v, index) => (
+                <div
+                  key={v.id}
+                  className="border p-2 mt-2 rounded-md relative bg-gray-50"
+                >
+                  {/* Botón eliminar variante */}
+                  <div className="flex flex-row justify-center items-center gap-2 w-full">
+                    <input
+                      type="text"
+                      value={v.name}
+                      onChange={(e) =>
+                        handleVarianteChange(index, "name", e.target.value)
+                      }
+                      className="w-full border rounded-md p-1 text-sm mb-2"
+                      placeholder="Nombre de la variante"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => handleEliminarVariante(index)}
+                      className=" text-red-500 hover:text-red-700 text-sm p-1 mb-2"
+                      title="Eliminar variante"
+                    >
+                      ✕
+                    </button>
+                  </div>
+
+                  <label className="flex items-center text-xs gap-2">
+                    <input
+                      type="checkbox"
+                      checked={v.obligatorio}
+                      onChange={(e) =>
+                        handleVarianteChange(
+                          index,
+                          "obligatorio",
+                          e.target.checked
+                        )
+                      }
+                    />
+                    Obligatorio
+                  </label>
+
+                  <div className="mt-2">
+                    <label className="text-xs text-gray-600">
+                      Máx. selección
+                    </label>
+                    <input
+                      type="number"
+                      value={v.maxSeleccion}
+                      onChange={(e) =>
+                        handleVarianteChange(
+                          index,
+                          "maxSeleccion",
+                          parseInt(e.target.value)
+                        )
+                      }
+                      className="mt-1 block w-20 border rounded-md p-1 text-sm"
+                    />
+                  </div>
+
+                  {/* Opciones */}
+                  <div className="mt-3">
+                    <div className="flex justify-between items-center">
+                      <span className="text-xs font-medium">Opciones</span>
+                      <button
+                        type="button"
+                        onClick={() => handleAddOpcion(index)}
+                        className="text-xs px-2 py-1 bg-blue-500 text-white rounded-md"
+                      >
+                        + Agregar Opción
+                      </button>
+                    </div>
+                    {v.opciones.map((op, opIndex) => (
+                      <div key={opIndex} className="flex gap-2 mt-2 relative">
+                        <input
+                          type="text"
+                          value={op.nombre}
+                          onChange={(e) =>
+                            handleOpcionChange(
+                              index,
+                              opIndex,
+                              "nombre",
+                              e.target.value
+                            )
+                          }
+                          className="flex-1 border rounded-md p-1 text-sm"
+                          placeholder="Nombre"
+                        />
+                        <input
+                          type="number"
+                          value={op.precio}
+                          onChange={(e) =>
+                            handleOpcionChange(
+                              index,
+                              opIndex,
+                              "precio",
+                              e.target.value
+                            )
+                          }
+                          className="w-24 border rounded-md p-1 text-sm"
+                          placeholder="Precio"
+                        />
+                        {/* Botón eliminar opción */}
+                        <button
+                          type="button"
+                          onClick={() => handleEliminarOpcion(index, opIndex)}
+                          className="text-red-500 hover:text-red-700 text-xs"
+                          title="Eliminar opción"
+                        >
+                          ✕
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Botones */}
+            <div className="flex justify-end gap-3 mt-6">
+              <button
+                type="button"
+                onClick={handleClose}
+                className="px-4 py-2 text-sm text-gray-600 hover:text-gray-800"
+              >
+                Cancelar
+              </button>
+              <button
+                type="submit"
+                className="px-4 py-2 text-sm text-white bg-orange-600 rounded-md hover:bg-orange-700"
+              >
+                Guardar
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   );

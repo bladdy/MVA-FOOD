@@ -32,6 +32,7 @@ export interface Menu {
   ingredientes: string;
   price: number;
   categoria: Categorias;
+  restauranteId: string;
   imagen: string;  
   variantes?: Variante[]; // <- aquí añadimos las variantes
 }

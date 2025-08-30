@@ -1,7 +1,7 @@
 // src/services/menuService.ts
 import type { Menu } from "@/Types/Restaurante.ts";
 
-const API_URL = import.meta.env.VITE_API_URL;
+const API_URL = "http://localhost:5147/api"; //import.meta.env.VITE_API_URL;
 
 export const menuService = {
   async getAll(): Promise<Menu[]> {
@@ -10,7 +10,8 @@ export const menuService = {
     return res.json();
   },
 
-  async create(data: Menu): Promise<Menu> {
+  async create(data: Menu): Promise<Menu> {// Temporal, hasta implementar autenticación
+    console.log(data);
     const res = await fetch(`${API_URL}/Menu`, {
       method: "POST",
       headers: {

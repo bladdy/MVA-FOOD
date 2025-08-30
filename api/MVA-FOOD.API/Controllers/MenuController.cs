@@ -31,8 +31,9 @@ namespace MVA_FOOD.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] MenuCreateDto dto)
+        public async Task<IActionResult> Create(MenuCreateDto dto)
         {
+            Console.WriteLine("Creating menu with DTO: " + dto);
             var menu = await _service.CreateAsync(dto);
             return CreatedAtAction(nameof(Get), new { id = menu.Id }, menu);
         }

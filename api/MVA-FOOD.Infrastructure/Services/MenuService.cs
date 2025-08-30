@@ -56,6 +56,8 @@ namespace MVA_FOOD.Infrastructure.Services
 
         public async Task<MenuDto> CreateAsync(MenuCreateDto dto)
         {
+            //Agregar las variantes y las opciones de la variantes
+            //Agregar la logica de la imagen
             var menu = new Menu
             {
                 Nombre = dto.Nombre,

@@ -24,6 +24,7 @@ export default defineConfig({
         '@layouts': '/src/layouts',
         '@consts': '/src/consts',
         '@React': '/src/components/React',
+        '@Api': '/src/Services',
       },
     },
   },

@@ -17,11 +17,12 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 // 2. Configurar CORS
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAll", policy =>
+    options.AddPolicy("AllowFrontend", policy =>
     {
-        policy.AllowAnyOrigin()
+        policy.WithOrigins("http://localhost:4321") // tu app
               .AllowAnyHeader()
-              .AllowAnyMethod();
+              .AllowAnyMethod()
+              .AllowCredentials(); // ⚠️ solo si usas cookies o credenciales
     });
 });
 
@@ -123,9 +124,11 @@ if (app.Environment.IsDevelopment())
 
 app.UseMiddleware<ExceptionMiddleware>();
 app.UseHttpsRedirection();
-app.UseCors("AllowAll");
 
-app.UseAuthentication();  // <- Importante: antes de Authorization
+// Usa la policy nueva (no AllowAll)
+app.UseCors("AllowFrontend");
+
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.UseStaticFiles();
