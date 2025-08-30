@@ -1,4 +1,6 @@
+using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using MVA_FOOD.Core.DTOs;
 using MVA_FOOD.Core.Interfaces;
 
@@ -31,11 +33,26 @@ namespace MVA_FOOD.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(MenuCreateDto dto)
+        public async Task<IActionResult> Create([FromForm]MenuCreateDto dto)
         {
-            Console.WriteLine("Creating menu with DTO: " + dto);
-            var menu = await _service.CreateAsync(dto);
-            return CreatedAtAction(nameof(Get), new { id = menu.Id }, menu);
+            // Deserializar variantes desde el FormData
+            if (Request.Form.TryGetValue("Variantes", out var variantesString) 
+                && !string.IsNullOrWhiteSpace(variantesString))
+            {
+                dto.Variantes = JsonSerializer.Deserialize<List<VarianteDto>>(variantesString!);
+            }
+
+            // Ahora dto.Variantes contiene todos los datos correctamente
+            Console.WriteLine("===== VARIANTES DETECTADAS =====");
+            foreach (var v in dto.Variantes)
+            {
+                Console.WriteLine($"Variante: {v.Name}, Opciones: {v.Opciones?.Count}");
+            }
+            Console.WriteLine("=============================");
+            //Modificar el servicio
+            /*var menu = await _service.CreateAsync(dto);
+            return CreatedAtAction(nameof(Get), new { id = menu.Id }, menu);*/
+            return Ok();
         }
 
         [HttpPut("{id}")]

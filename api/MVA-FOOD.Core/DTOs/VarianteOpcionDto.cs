@@ -8,6 +8,6 @@ namespace MVA_FOOD.Core.DTOs
     public class VarianteOpcionDto
     {
         public string Nombre { get; set; } = null!;
-        public decimal? Precio { get; set; }
+        public decimal Precio { get; set; }
     }
 }

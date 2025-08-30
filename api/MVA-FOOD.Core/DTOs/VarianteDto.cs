@@ -11,7 +11,6 @@ namespace MVA_FOOD.Core.DTOs
         public string Name { get; set; } = null!;
         public bool Obligatorio { get; set; }
         public int? MaxSeleccion { get; set; }
-
         public List<VarianteOpcionDto> Opciones { get; set; } = new();
     }
 }

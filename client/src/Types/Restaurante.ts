@@ -1,3 +1,35 @@
+// src/Types/Restaurante.ts
+
+export interface VarianteOpcionCreate {
+  nombre: string;
+  precio: number;
+}
+
+export interface VarianteCreate {
+  id: string;
+  name: string;
+  obligatorio: boolean;
+  maxSeleccion: number;
+  opciones: VarianteOpcionCreate[];
+}
+
+export interface MenuCreate {
+  nombre: string;
+  ingredientes: string;
+  precio: number;
+  categoriaId: string; // Solo enviamos el id al backend
+  restauranteId: string;
+  image: File | null;
+  variantes: VarianteCreate[];
+}
+
+// Interface para Categoria recibida del API
+export interface Categoria {
+  id: string;
+  nombre: string;
+}
+
+
 export interface Horario {
   dia: string;
   apertura: string;

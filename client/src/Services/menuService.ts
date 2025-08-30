@@ -1,44 +1,76 @@
-// src/services/menuService.ts
-import type { Menu } from "@/Types/Restaurante.ts";
+import type { MenuCreate, Categoria } from "@/Types/Restaurante.ts";
 
-const API_URL = "http://localhost:5147/api"; //import.meta.env.VITE_API_URL;
+const API_URL = "http://localhost:5147/api";
 
 export const menuService = {
-  async getAll(): Promise<Menu[]> {
-    const res = await fetch(`${API_URL}/Menu`);
-    if (!res.ok) throw new Error("Error al obtener los menús");
-    return res.json();
-  },
+  async create(menu: MenuCreate) {
+    const formData = new FormData();
+    formData.append("Nombre", menu.nombre);
+    formData.append("Ingredientes", menu.ingredientes);
+    formData.append("Precio", menu.precio.toString());
+    formData.append("CategoriaId", menu.categoriaId);
+    formData.append("RestauranteId", menu.restauranteId);
 
-  async create(data: Menu): Promise<Menu> {// Temporal, hasta implementar autenticación
-    console.log(data);
+    if (menu.image) formData.append("Image", menu.image);
+
+    // Convertimos las variantes a las propiedades exactas que espera el backend
+    const variantesBackend = menu.variantes.map(v => ({
+      Id: v.id,
+      Name: v.name,
+      Obligatorio: v.obligatorio,
+      MaxSeleccion: v.maxSeleccion,
+      Opciones: v.opciones.map(op => ({
+        Nombre: op.nombre,
+        Precio: op.precio,
+      })),
+    }));
+
+    formData.append("Variantes", JSON.stringify(variantesBackend));
+
     const res = await fetch(`${API_URL}/Menu`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
+      body: formData,
     });
-    if (!res.ok) throw new Error("Error al crear menú");
-    return res.json();
+
+    const data = await res.json();
+    return data;
   },
 
-  async update(id: string, data: Menu): Promise<Menu> {
+  async update(id: string, menu: MenuCreate) {
+    const formData = new FormData();
+    formData.append("Nombre", menu.nombre);
+    formData.append("Ingredientes", menu.ingredientes);
+    formData.append("Precio", menu.precio.toString());
+    formData.append("CategoriaId", menu.categoriaId);
+    formData.append("RestauranteId", menu.restauranteId);
+
+    if (menu.image) formData.append("Image", menu.image);
+
+    const variantesBackend = menu.variantes.map(v => ({
+      Id: v.id,
+      Name: v.name,
+      Obligatorio: v.obligatorio,
+      MaxSeleccion: v.maxSeleccion,
+      Opciones: v.opciones.map(op => ({
+        Nombre: op.nombre,
+        Precio: op.precio,
+      })),
+    }));
+
+    formData.append("Variantes", JSON.stringify(variantesBackend));
+
     const res = await fetch(`${API_URL}/Menu/${id}`, {
       method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
+      body: formData,
     });
-    if (!res.ok) throw new Error("Error al actualizar menú");
-    return res.json();
+
+    const data = await res.json();
+    return data;
   },
 
-  async remove(id: string): Promise<void> {
-    const res = await fetch(`${API_URL}/Menu/${id}`, {
-      method: "DELETE",
-    });
-    if (!res.ok) throw new Error("Error al eliminar menú");
+  async getCategorias(): Promise<Categoria[]> {
+    const res = await fetch(`${API_URL}/Categoria`);
+    const data = await res.json();
+    return data;
   },
 };
