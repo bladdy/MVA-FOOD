@@ -7,7 +7,7 @@ namespace MVA_FOOD.Core.DTOs
 {
     public class VarianteDto
     {
-        public string Id { get; set; } = null!;
+        public Guid Id { get; set; }
         public string Name { get; set; } = null!;
         public bool Obligatorio { get; set; }
         public int? MaxSeleccion { get; set; }

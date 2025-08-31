@@ -1,4 +1,4 @@
-import type { MenuCreate, Categoria } from "@/Types/Restaurante.ts";
+import type { MenuCreate, Categoria, Menu  } from "@/Types/Restaurante.ts";
 
 const API_URL = "http://localhost:5147/api";
 
@@ -25,7 +25,14 @@ export const menuService = {
       })),
     }));
 
-    formData.append("Variantes", JSON.stringify(variantesBackend));
+    // acá serializamos solo las variantes
+    variantesBackend.forEach((v, i) => {
+      formData.append(`Variantes[${i}].Name`, v.Name);
+      v.Opciones.forEach((o, j) => {
+        formData.append(`Variantes[${i}].Opciones[${j}].Nombre`, o.Nombre);
+        formData.append(`Variantes[${i}].Opciones[${j}].Precio`, o.Precio.toString());
+      });
+    });
 
     const res = await fetch(`${API_URL}/Menu`, {
       method: "POST",
@@ -72,5 +79,10 @@ export const menuService = {
     const res = await fetch(`${API_URL}/Categoria`);
     const data = await res.json();
     return data;
+  },
+  // Nuevo método para obtener todos los menús
+  async getMenus(): Promise<Menu[]> {
+    const res = await fetch(`${API_URL}/Menu`);
+    return res.json();
   },
 };

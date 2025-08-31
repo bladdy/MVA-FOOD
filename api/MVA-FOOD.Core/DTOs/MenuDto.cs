@@ -17,5 +17,6 @@ namespace MVA_FOOD.Core.DTOs
 
         public Guid RestauranteId { get; set; }
         public RestauranteDto Restaurante { get; set; } = null!;
+        public List<VarianteDto> Variantes { get; set; } = new();
     }
 }

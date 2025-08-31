@@ -17,6 +17,7 @@ namespace MVA_FOOD.Core.Entities
         public Restaurante Restaurante { get; set; } = null!;
         public Guid CategoriaId { get; set; }
         public Categoria Categoria { get; set; } = null!;
+        public ICollection<Variante> Variantes { get; set; } = new List<Variante>();
     }
 
 }

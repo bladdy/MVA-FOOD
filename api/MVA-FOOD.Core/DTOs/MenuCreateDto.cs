@@ -14,7 +14,7 @@ namespace MVA_FOOD.Core.DTOs
         public Guid CategoriaId { get; set; }
         public Guid RestauranteId { get; set; }
         public IFormFile Image { get; set; } = null!;
-        public List<VarianteDto> Variantes { get; set; } = new();
+        public List<VarianteDto> Variantes { get; set; }
 
     }
 }

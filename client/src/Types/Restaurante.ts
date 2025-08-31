@@ -19,7 +19,7 @@ export interface MenuCreate {
   precio: number;
   categoriaId: string; // Solo enviamos el id al backend
   restauranteId: string;
-  image: File | null;
+  image: File | null; // archivo nuevo a subir
   variantes: VarianteCreate[];
 }
 
@@ -27,13 +27,6 @@ export interface MenuCreate {
 export interface Categoria {
   id: string;
   nombre: string;
-}
-
-
-export interface Horario {
-  dia: string;
-  apertura: string;
-  cierre: string;
 }
 
 export interface Restaurante {
@@ -50,23 +43,27 @@ export interface Restaurante {
   menu: Menu[];
 }
 
-export interface PedidoItem {
-  producto: Menu;
-  cantidad: number;
-  notas?: string;
-}
-
-
 export interface Menu {
-  // Define the properties of Menu here, for example:
   id: string;
-  name: string;
+  nombre: string;
   ingredientes: string;
-  price: number;
-  categoria: Categorias;
+  precio: number;
+  categoriaId: string; // Agregado para compatibilidad
+  categoria: Categoria;
   restauranteId: string;
   imagen: string;  
-  variantes?: Variante[]; // <- aquí añadimos las variantes
+  variantes?: Variante[];
+}
+
+export interface Variante {
+  id: string;
+  name: string;
+  obligatorio: boolean;
+  maxSeleccion?: number; 
+  opciones: {
+    nombre: string;
+    precio: number; // ahora obligatorio para cuadrar con MenuCreate
+  }[];
 }
 
 export interface Plan {
@@ -79,15 +76,10 @@ export interface Amnidades {
   name: string;
 }
 
-export interface Variante {
-  id: string;
-  name: string;
-  obligatorio: boolean;
-  maxSeleccion?: number; // si >1, es checkbox
-  opciones: {
-    nombre: string;
-    precio?: number;
-  }[];
+export interface Horario {
+  dia: string;
+  apertura: string;
+  cierre: string;
 }
 
 export type Categorias =

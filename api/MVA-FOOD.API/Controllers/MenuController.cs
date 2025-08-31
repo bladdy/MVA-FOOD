@@ -33,10 +33,13 @@ namespace MVA_FOOD.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromForm]MenuCreateDto dto)
+        public async Task<ActionResult<MenuDto>> Create([FromForm]MenuCreateDto dto)
         {
+            if (dto == null)
+                return BadRequest("El objeto no se recibió.");
+            /*
             // Deserializar variantes desde el FormData
-            if (Request.Form.TryGetValue("Variantes", out var variantesString) 
+            if (Request.Form.TryGetValue("Variantes", out var variantesString)
                 && !string.IsNullOrWhiteSpace(variantesString))
             {
                 dto.Variantes = JsonSerializer.Deserialize<List<VarianteDto>>(variantesString!);
@@ -48,11 +51,11 @@ namespace MVA_FOOD.API.Controllers
             {
                 Console.WriteLine($"Variante: {v.Name}, Opciones: {v.Opciones?.Count}");
             }
-            Console.WriteLine("=============================");
+            Console.WriteLine("=============================");*/
             //Modificar el servicio
-            /*var menu = await _service.CreateAsync(dto);
-            return CreatedAtAction(nameof(Get), new { id = menu.Id }, menu);*/
-            return Ok();
+            var menu = await _service.CreateAsync(dto);
+            if (menu == null) return BadRequest("No se pudo crear el menú.");
+            return CreatedAtAction(nameof(Get), new { id = menu.Id }, menu);
         }
 
         [HttpPut("{id}")]
