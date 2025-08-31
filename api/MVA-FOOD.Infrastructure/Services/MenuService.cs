@@ -31,6 +31,7 @@ namespace MVA_FOOD.Infrastructure.Services
                     Nombre = m.Nombre,
                     Ingredientes = m.Ingredientes,
                     Precio = m.Precio,
+                    Imagen = m.Imagen,
                     RestauranteId = m.RestauranteId,
                     CategoriaId = m.CategoriaId,
                     Categoria = m.Categoria != null ? new CategoriaDto
@@ -67,6 +68,7 @@ namespace MVA_FOOD.Infrastructure.Services
                 Ingredientes = menu.Ingredientes,
                 Precio = menu.Precio,
                 CategoriaId = menu.CategoriaId,
+                Imagen = menu.Imagen,
                 Categoria = menu.Categoria != null ? new CategoriaDto
                 {
                     Id = menu.Categoria.Id,
@@ -76,15 +78,8 @@ namespace MVA_FOOD.Infrastructure.Services
         }
         public async Task<MenuDto> CreateAsync(MenuCreateDto dto)
         {
-            Console.WriteLine($"===== VARIANTES DETECTADAS ====={ dto.Variantes?.Count}");
-            foreach (var v in dto.Variantes)
-            {
-                Console.WriteLine($"Variante: {v.Name}, Opciones: {v.Opciones?.Count}");
-                foreach (var op in v.Opciones)
-                {
-                    Console.WriteLine($"  Opción: {op.Nombre}, Precio: {op.Precio}");
-                }
-            }
+            if (dto == null) throw new ArgumentNullException(nameof(dto));
+
             await using var transaction = await _context.Database.BeginTransactionAsync();
             try
             {
@@ -106,6 +101,7 @@ namespace MVA_FOOD.Infrastructure.Services
                 await _context.SaveChangesAsync(); // Guardar Menu primero para obtener Id
 
                 // 2️⃣ Mapear variantes y opciones desde dto.Variantes
+                //eSTO TIENEN QUE SER OPCIONAL
                 if (dto.Variantes != null && dto.Variantes.Any())
                 {
                     foreach (var v in dto.Variantes)
@@ -174,6 +170,7 @@ namespace MVA_FOOD.Infrastructure.Services
                     Nombre = menu.Nombre,
                     Ingredientes = menu.Ingredientes,
                     Precio = menu.Precio,
+                    Imagen = menu.Imagen,
                     RestauranteId = menu.RestauranteId,
                     Restaurante = restaurante != null ? new RestauranteDto
                     {

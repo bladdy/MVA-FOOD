@@ -51,7 +51,8 @@ export interface Menu {
   categoriaId: string; // Agregado para compatibilidad
   categoria: Categoria;
   restauranteId: string;
-  imagen: string;  
+  imagen: string;
+  ImageFullPath: string;
   variantes?: Variante[];
 }
 

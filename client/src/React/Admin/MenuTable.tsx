@@ -30,7 +30,7 @@ const MenuTable: React.FC<MenuTableProps> = ({ items, onEdit, onDelete }) => (
         {items.map((item) => (
           <tr key={item.id}>
             <td className="px-6 py-4">
-              <img src={item.imagen} alt={item.nombre} className="h-12 w-12 object-cover rounded-md" />
+              <img src={`http://localhost:5147${item.imagen}`} alt={item.nombre} className="h-12 w-12 object-cover rounded-md" />
             </td>
             <td className="px-6 py-4 text-sm text-gray-900">{item.nombre}</td>
             <td className="px-6 py-4 text-sm text-gray-500">{item.ingredientes}</td>

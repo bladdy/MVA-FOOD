@@ -13,7 +13,10 @@ namespace MVA_FOOD.Core.DTOs
         public decimal Precio { get; set; }
         public Guid CategoriaId { get; set; }
         public CategoriaDto Categoria { get; set; } = null!;
-        public string Imagen { get; set; } = null!;
+        public string Imagen { get; set; }
+        public string ImageFullPath => string.IsNullOrEmpty(Imagen)
+            ? $"http://localhost:5147/Img/noimage.png"
+            : $"http://localhost:5147{Imagen}";
 
         public Guid RestauranteId { get; set; }
         public RestauranteDto Restaurante { get; set; } = null!;
