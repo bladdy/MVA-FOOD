@@ -11,9 +11,9 @@ namespace MVA_FOOD.Core.Entities
         public string Name { get; set; } = null!;
         public bool Obligatorio { get; set; }
         public int? MaxSeleccion { get; set; }
-        public Guid MenuId { get; set; }
-        public Menu Menu { get; set; } = null!;
-
+        public Guid CategoriaId { get; set; }
+        public Categoria Categoria { get; set; } = null!;
+        public ICollection<VarianteMenus> MenuVariantes  { get; set; } = null!;
         public ICollection<VarianteOpcion> Opciones { get; set; } = new List<VarianteOpcion>();
     }
 

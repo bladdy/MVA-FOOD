@@ -1,7 +1,9 @@
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using MVA_FOOD.API.Errors;
 using MVA_FOOD.Core.DTOs;
+using MVA_FOOD.Core.Filters;
 using MVA_FOOD.Core.Interfaces;
 
 namespace MVA_FOOD.API.Controllers
@@ -18,9 +20,10 @@ namespace MVA_FOOD.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromQuery] MenuFilter filter)
         {
-            var menus = await _service.GetAllAsync();
+            var menus = await _service.GetAllAsync(filter);
+            if (menus == null || !menus.Items.Any()) return NotFound();  
             return Ok(menus);
         }
 
@@ -36,16 +39,16 @@ namespace MVA_FOOD.API.Controllers
         public async Task<ActionResult<MenuDto>> Create([FromForm]MenuCreateDto dto)
         {
             var menu = await _service.CreateAsync(dto);
-            if (menu == null) return BadRequest("No se pudo crear el menú.");
+            if (menu == null) return BadRequest(new ApiResponse(400, "No se pudo crear el menú."));
             return CreatedAtAction(nameof(Get), new { id = menu.Id }, menu);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(Guid id, [FromBody] MenuUpdateDto dto)
+        public async Task<ActionResult<MenuDto>> Update(Guid id, [FromForm] MenuUpdateDto dto)
         {
             var updated = await _service.UpdateAsync(id, dto);
-            if (!updated) return NotFound();
-            return NoContent();
+            if (updated == null) return BadRequest(new ApiResponse(400, "No se pudo actualizar el menú."));
+            return CreatedAtAction(nameof(Get), new { id = updated.Id }, updated);
         }
 
         [HttpDelete("{id}")]

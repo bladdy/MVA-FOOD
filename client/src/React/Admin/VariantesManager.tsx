@@ -1,32 +1,34 @@
 import React, { useEffect, useState } from "react";
-import type { Menu, Categoria, PagedResult, MenuFilters } from "@/Types/Restaurante.ts";
+import type { Categoria, PagedResult, Variante, VarianteFilters } from "@/Types/Restaurante.ts";
 import { menuService } from "@/Services/menuService.ts";
-import MenuTable from "./MenuTable.tsx";
-import MenuModal from "./MenuModal.tsx";
 import Pagination from "../Buttons/Pagination.tsx";
+import VariantesTable from "./VariantesTable.tsx";
+import VariantesModal from "./VariantesModal.tsx";
 
-const MenuManager: React.FC = () => {
-  const [pagedResult, setPagedResult] = useState<PagedResult<Menu> | null>(null);
+const VariantesManager: React.FC = () => {
+  const [pagedResult, setPagedResult] = useState<PagedResult<Variante> | null>(null);
   const [categorias, setCategorias] = useState<Categoria[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedMenu, setSelectedMenu] = useState<Menu | undefined>();
+  const [selectedMenu, setSelectedMenu] = useState<Variante | undefined>();
 
-  const [filters, setFilters] = useState<MenuFilters>({
+  const [filters, setFilters] = useState<VarianteFilters>({
     search: "",
     categoriaId: "",
+    obligatorio: false,
+    maxSeleccion: 1,
     pageNumber: 1,
     pageSize: 10,
-    orderBy: "nombre",
-    orderDirection: "asc",
+    orderBy: "nombre", // 🔹 inicial
+    orderDirection: "asc", // 🔹 inicial
   });
 
-  // 🔹 Cargar menús
-  const fetchMenus = async () => {
+  // 🔹 Cargar variantes con filtros + orden
+  const fetchVariantes = async () => {
     try {
-      const data = await menuService.getMenus(filters);
+      const data = await menuService.getVariantes(filters);
       setPagedResult(data);
     } catch (error) {
-      console.error("Error cargando menús:", error);
+      console.error("Error cargando variantes:", error);
     }
   };
 
@@ -45,12 +47,12 @@ const MenuManager: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    fetchMenus();
+    fetchVariantes();
   }, [filters]);
 
   // 🔹 Handlers
-  const handleEdit = (menu: Menu) => {
-    setSelectedMenu(menu);
+  const handleEdit = (variante: Variante) => {
+    setSelectedMenu(variante);
     setIsModalOpen(true);
   };
 
@@ -61,15 +63,15 @@ const MenuManager: React.FC = () => {
 
   const handleSave = async () => {
     setIsModalOpen(false);
-    await fetchMenus();
+    await fetchVariantes();
   };
 
-  const handleDelete = async (menu: Menu) => {
+  const handleDelete = async (variante: Variante) => {
     try {
-      await fetch(`http://localhost:5147/api/Menu/${menu.id}`, { method: "DELETE" });
-      await fetchMenus();
+      await fetch(`http://localhost:5147/api/Variante/${variante.id}`, { method: "DELETE" });
+      await fetchVariantes();
     } catch (error) {
-      console.error("Error eliminando menú:", error);
+      console.error("Error eliminando variante:", error);
     }
   };
 
@@ -139,21 +141,25 @@ const MenuManager: React.FC = () => {
           className="px-4 py-2 bg-orange-500 text-white rounded-md hover:bg-orange-600 ml-auto"
           onClick={handleAdd}
         >
-          + Nuevo Menú
+          + Nueva Variante
         </button>
       </div>
 
       {/* 🔹 Tabla */}
       {pagedResult && (
-        <MenuTable
+        <VariantesTable
           pagedResult={pagedResult}
           onEdit={handleEdit}
           onDelete={handleDelete}
           onSort={handleSort}
-          currentSort={{ orderBy: filters.orderBy!, orderDirection: filters.orderDirection! }}
+          currentSort={{
+            orderBy: filters.orderBy!,
+            orderDirection: filters.orderDirection!,
+          }}
         />
       )}
 
+      {/* 🔹 Paginación */}
       {pagedResult && (
         <Pagination
           currentPage={filters.pageNumber || 1}
@@ -162,10 +168,9 @@ const MenuManager: React.FC = () => {
         />
       )}
 
-
       {/* 🔹 Modal */}
       {isModalOpen && (
-        <MenuModal
+        <VariantesModal
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
           onSave={handleSave}
@@ -176,4 +181,4 @@ const MenuManager: React.FC = () => {
   );
 };
 
-export default MenuManager;
+export default VariantesManager;

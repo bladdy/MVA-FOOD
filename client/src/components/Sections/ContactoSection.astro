@@ -212,6 +212,7 @@ import WhatsApp from "@assets/svg/brand-whatsapp.svg";
         tooltip.classList.add("opacity-0");
       }, 2000);
     } catch {
+      //sweet Alert
       alert("No se pudo copiar el correo. Por favor copia manualmente.");
     }
   });
@@ -238,6 +239,7 @@ import WhatsApp from "@assets/svg/brand-whatsapp.svg";
       } else {
         const data = await response.json();
         console.error("Error response:", data);
+        //sweet Alert
         alert("Hubo un problema al enviar el mensaje.");
       }
     } catch (error) {

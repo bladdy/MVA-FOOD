@@ -1,8 +1,9 @@
 
 ---
 import LayoutAdmin from "@/layouts/LayoutAdmin.astro";
-var title = "Variantes";
+import VariantesManager from "@/React/Admin/VariantesManager";
+
 ---
-<LayoutAdmin title={title}>
-    <h1 class="text-2xl font-bold mb-4">Gestión de Variantes</h1>
+<LayoutAdmin title="Variantes">
+    <VariantesManager client:load  />
 </LayoutAdmin>

@@ -8,8 +8,8 @@ export const variantesPorCategoria: Record<string, Variante[]> = {
       obligatorio: true,
       maxSeleccion: 1,
       opciones: [
-        { nombre: "Brioche clásico" },
-        { nombre: "Integral saludable" },
+        { nombre: "Brioche clásico", precio: 5 },
+        { nombre: "Integral saludable", precio: 4 },
         { nombre: "Sin gluten", precio: 5 },
       ],
     },
@@ -19,10 +19,10 @@ export const variantesPorCategoria: Record<string, Variante[]> = {
       obligatorio: false,
       maxSeleccion: 4,
       opciones: [
-        { nombre: "Lechuga" },
-        { nombre: "Tomate" },
-        { nombre: "Queso cheddar" },
-        { nombre: "Salsa especial" },
+        { nombre: "Lechuga", precio: 0 },
+        { nombre: "Tomate", precio: 0 },
+        { nombre: "Queso cheddar", precio: 0 },
+        { nombre: "Salsa especial", precio: 0 },
       ],
     },
     {
@@ -55,9 +55,9 @@ export const variantesPorCategoria: Record<string, Variante[]> = {
       obligatorio: true,
       maxSeleccion: 1,
       opciones: [
-        { nombre: "Refresco 200ml" },
+        { nombre: "Refresco 200ml", precio: 3 },
         { nombre: "Refresco 500ml", precio: 5 },
-        { nombre: "Agua natural" },
+        { nombre: "Agua natural", precio: 2 },
         { nombre: "Té helado", precio: 6 },
       ],
     },
@@ -69,9 +69,9 @@ export const variantesPorCategoria: Record<string, Variante[]> = {
       obligatorio: true,
       maxSeleccion: 1,
       opciones: [
-        { nombre: "Cola" },
-        { nombre: "Naranja" },
-        { nombre: "Limón" },
+        { nombre: "Cola", precio: 0 },
+        { nombre: "Naranja", precio: 0 },
+        { nombre: "Limón", precio: 0 },
       ],
     },
   ],
@@ -82,9 +82,9 @@ export const variantesPorCategoria: Record<string, Variante[]> = {
       obligatorio: true,
       maxSeleccion: 1,
       opciones: [
-        { nombre: "Rojo (3/4)" },
-        { nombre: "Término medio" },
-        { nombre: "Bien cocido" },
+        { nombre: "Rojo (3/4)", precio: 0 },
+        { nombre: "Término medio", precio: 0 },
+        { nombre: "Bien cocido", precio: 0 },
       ],
     },
     {
@@ -93,9 +93,9 @@ export const variantesPorCategoria: Record<string, Variante[]> = {
       obligatorio: false,
       maxSeleccion: 1,
       opciones: [
-        { nombre: "Puré de papas" },
-        { nombre: "Verduras al vapor" },
-        { nombre: "Papas a la francesa" },
+        { nombre: "Puré de papas", precio: 0 },
+        { nombre: "Verduras al vapor", precio: 0 },
+        { nombre: "Papas a la francesa", precio: 0 },
       ],
     },
     {
@@ -106,8 +106,8 @@ export const variantesPorCategoria: Record<string, Variante[]> = {
       opciones: [
         { nombre: "Vino tinto", precio: 25 },
         { nombre: "Vino blanco", precio: 25 },
-        { nombre: "Refresco" },
-        { nombre: "Agua mineral" },
+        { nombre: "Refresco", precio: 5 },
+        { nombre: "Agua mineral", precio: 2 },
       ],
     },
     {
@@ -116,10 +116,10 @@ export const variantesPorCategoria: Record<string, Variante[]> = {
       obligatorio: false,
       maxSeleccion: 2,
       opciones: [
-        { nombre: "Chimichurri" },
-        { nombre: "Salsa BBQ" },
-        { nombre: "Pimienta negra" },
-        { nombre: "Sin salsa" },
+        { nombre: "Chimichurri", precio: 0 },
+        { nombre: "Salsa BBQ", precio: 0 },
+        { nombre: "Pimienta negra", precio: 0 },
+        { nombre: "Sin salsa", precio: 0 },
       ],
     },
   ],

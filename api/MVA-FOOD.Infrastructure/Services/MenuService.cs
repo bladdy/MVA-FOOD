@@ -4,8 +4,9 @@ using MVA_FOOD.Core.Interfaces;
 using MVA_FOOD.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using MVA_FOOD.Infrastructure.Helpers;
+using MVA_FOOD.Core.Filters;
+using MVA_FOOD.Core.Wrappers;
 using MVA_FOOD.Core.Enums;
-using System.Text.Json;
 
 namespace MVA_FOOD.Infrastructure.Services
 {
@@ -18,13 +19,45 @@ namespace MVA_FOOD.Infrastructure.Services
             _context = context;
         }
 
-        public async Task<IEnumerable<MenuDto>> GetAllAsync()
+        public async Task<PagedResult<MenuDto>> GetAllAsync(MenuFilter filter)
         {
-            return await _context.Menus
-                .Include(r => r.Restaurante)
+            var query = _context.Menus
+                .Include(m => m.VarianteMenus)
+                    .ThenInclude(mv => mv.Variante)
+                        .ThenInclude(v => v.Opciones)
+                .Include(m => m.Restaurante)
                 .Include(m => m.Categoria)
-                .Include(m => m.Variantes)
-                .ThenInclude(v => v.Opciones)
+                .AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(filter.Search))
+                query = query.Where(m => m.Nombre.Contains(filter.Search));
+
+            if (filter.RestauranteId.HasValue)
+                query = query.Where(m => m.RestauranteId == filter.RestauranteId.Value);
+
+            if (filter.CategoriaId.HasValue)
+                query = query.Where(m => m.CategoriaId == filter.CategoriaId.Value);
+
+            var orderBy = string.IsNullOrWhiteSpace(filter.OrderBy) ? "Nombre" : filter.OrderBy;
+            orderBy = orderBy switch
+            {
+                "nombre" => "Nombre",
+                "ingredientes" => "Ingredientes",
+                "precio" => "Precio",
+                "categoriaId" => "CategoriaId",
+                "restauranteId" => "RestauranteId",
+                _ => "Nombre"
+            };
+
+            query = filter.OrderDirection?.ToLower() == "desc"
+                ? query.OrderByDescending(e => EF.Property<object>(e, orderBy))
+                : query.OrderBy(e => EF.Property<object>(e, orderBy));
+
+            var totalItems = await query.CountAsync();
+
+            var items = await query
+                .Skip((filter.PageNumber - 1) * filter.PageSize)
+                .Take(filter.PageSize)
                 .Select(m => new MenuDto
                 {
                     Id = m.Id,
@@ -39,13 +72,13 @@ namespace MVA_FOOD.Infrastructure.Services
                         Id = m.Categoria.Id,
                         Nombre = m.Categoria.Nombre
                     } : null,
-                    Variantes = m.Variantes.Select(v => new VarianteDto
+                    Variantes = m.VarianteMenus.Select(mv => new VarianteDto
                     {
-                        Id = v.Id,
-                        Name = v.Name,
-                        Obligatorio = v.Obligatorio,
-                        MaxSeleccion = v.MaxSeleccion,
-                        Opciones = v.Opciones.Select(op => new VarianteOpcionDto
+                        Id = mv.VarianteId,
+                        Name = mv.Variante.Name,
+                        Obligatorio = mv.Variante.Obligatorio,
+                        MaxSeleccion = mv.Variante.MaxSeleccion,
+                        Opciones = mv.Variante.Opciones.Select(op => new VarianteOpcionDto
                         {
                             Id = op.Id,
                             Nombre = op.Nombre,
@@ -53,12 +86,27 @@ namespace MVA_FOOD.Infrastructure.Services
                         }).ToList()
                     }).ToList()
                 }).ToListAsync();
-        }
 
+            return new PagedResult<MenuDto>
+            {
+                Items = items,
+                TotalItems = totalItems,
+                PageNumber = filter.PageNumber,
+                PageSize = filter.PageSize,
+                TotalPages = (int)Math.Ceiling(totalItems / (double)filter.PageSize)
+            };
+        }
 
         public async Task<MenuDto> GetByIdAsync(Guid id)
         {
-            var menu = await _context.Menus.Include(m => m.Categoria).FirstOrDefaultAsync(m => m.Id == id);
+            var menu = await _context.Menus
+                .Include(m => m.VarianteMenus)
+                    .ThenInclude(mv => mv.Variante)
+                        .ThenInclude(v => v.Opciones)
+                .Include(m => m.Categoria)
+                .Include(m => m.Restaurante)
+                .FirstOrDefaultAsync(m => m.Id == id);
+
             if (menu == null) return null;
 
             return new MenuDto
@@ -67,13 +115,36 @@ namespace MVA_FOOD.Infrastructure.Services
                 Nombre = menu.Nombre,
                 Ingredientes = menu.Ingredientes,
                 Precio = menu.Precio,
-                CategoriaId = menu.CategoriaId,
                 Imagen = menu.Imagen,
+                RestauranteId = menu.RestauranteId,
+                Restaurante = menu.Restaurante != null ? new RestauranteDto
+                {
+                    Id = menu.Restaurante.Id,
+                    Name = menu.Restaurante.Name,
+                    Image = menu.Restaurante.Image,
+                    PerfilImage = menu.Restaurante.PerfilImage,
+                    Direccion = menu.Restaurante.Direccion,
+                    Phone = menu.Restaurante.Phone
+                } : null,
+                CategoriaId = menu.CategoriaId,
                 Categoria = menu.Categoria != null ? new CategoriaDto
                 {
                     Id = menu.Categoria.Id,
                     Nombre = menu.Categoria.Nombre
-                } : null
+                } : null,
+                Variantes = menu.VarianteMenus.Select(mv => new VarianteDto
+                {
+                    Id = mv.VarianteId,
+                    Name = mv.Variante.Name,
+                    Obligatorio = mv.Variante.Obligatorio,
+                    MaxSeleccion = mv.Variante.MaxSeleccion,
+                    Opciones = mv.Variante.Opciones.Select(op => new VarianteOpcionDto
+                    {
+                        Id = op.Id,
+                        Nombre = op.Nombre,
+                        Precio = op.Precio
+                    }).ToList()
+                }).ToList()
             };
         }
         public async Task<MenuDto> CreateAsync(MenuCreateDto dto)
@@ -83,147 +154,236 @@ namespace MVA_FOOD.Infrastructure.Services
             await using var transaction = await _context.Database.BeginTransactionAsync();
             try
             {
-                // 1️⃣ Crear la entidad Menu
+                // 1. Guardar variantes nuevas y obtener sus IDs
+                var varianteIds = new List<Guid>();
+                if (dto.Variantes != null && dto.Variantes.Any())
+                {
+                    foreach (var v in dto.Variantes)
+                    {
+                        if (v.Id == Guid.Empty)
+                        {
+                            var nuevaVariante = new Variante
+                            {
+                                Id = Guid.NewGuid(),
+                                Name = v.Name,
+                                Obligatorio = v.Obligatorio,
+                                MaxSeleccion = v.MaxSeleccion ?? 1,
+                                CategoriaId = dto.CategoriaId,
+                                Opciones = v.Opciones?.Select(op => new VarianteOpcion
+                                {
+                                    Id = Guid.NewGuid(),
+                                    Nombre = op.Nombre,
+                                    Precio = op.Precio
+                                }).ToList() ?? new List<VarianteOpcion>()
+                            };
+                            _context.Variantes.Add(nuevaVariante);
+                            varianteIds.Add(nuevaVariante.Id);
+                        }
+                        else
+                        {
+                            var existente = await _context.Variantes.FindAsync(v.Id);
+                            if (existente == null)
+                                throw new Exception($"La variante con Id {v.Id} no existe.");
+                            varianteIds.Add(v.Id);
+                        }
+                    }
+
+                    // Guardar todas las variantes nuevas de una sola vez
+                    await _context.SaveChangesAsync();
+                }
+
+                // 2. Guardar el menú
                 var menu = new Menu
                 {
                     Nombre = dto.Nombre,
                     Ingredientes = dto.Ingredientes,
                     Precio = dto.Precio,
                     CategoriaId = dto.CategoriaId,
+                    Categoria = await _context.Categorias.FindAsync(dto.CategoriaId),
                     RestauranteId = dto.RestauranteId,
                     Imagen = dto.Image != null
                         ? await ImagenesHelpers.GuardarImagenAsync(dto.Image, Imagenes.Menu.ToString())
                         : null!,
-                    Variantes = new List<Variante>()
+                    //VarianteMenus = new List<VarianteMenus>()
                 };
 
                 _context.Menus.Add(menu);
-                await _context.SaveChangesAsync(); // Guardar Menu primero para obtener Id
+                await _context.SaveChangesAsync(); // Guardar menu para tener el Id
 
-                // 2️⃣ Mapear variantes y opciones desde dto.Variantes
-                //eSTO TIENEN QUE SER OPCIONAL
-                if (dto.Variantes != null && dto.Variantes.Any())
+                // 3. Crear relaciones VarianteMenus
+                foreach (var varianteId in varianteIds)
                 {
-                    foreach (var v in dto.Variantes)
+                    _context.VarianteMenus.Add(new VarianteMenus
                     {
-                        var variante = new Variante
-                        {
-                            Id = Guid.NewGuid(),
-                            MenuId = menu.Id, // asociar variante al menú
-                            Name = v.Name,
-                            Obligatorio = v.Obligatorio,
-                            MaxSeleccion = v.MaxSeleccion ?? 1,
-                            Opciones = new List<VarianteOpcion>()
-                        };
-
-                        _context.Variantes.Add(variante);
-                        await _context.SaveChangesAsync(); // Guardar variante para obtener Id
-
-                        if (v.Opciones != null && v.Opciones.Any())
-                        {
-                            foreach (var op in v.Opciones)
-                            {
-                                var opcion = new VarianteOpcion
-                                {
-                                    Id = Guid.NewGuid(),
-                                    VarianteId = variante.Id,
-                                    Nombre = op.Nombre,
-                                    Precio = op.Precio
-                                };
-                                _context.VarianteOpciones.Add(opcion);
-                            }
-
-                            await _context.SaveChangesAsync(); // Guardar opciones
-                        }
-                    }
+                        MenuId = menu.Id,
+                        VarianteId = varianteId
+                    });
                 }
 
-                // 3️⃣ Cargar referencias
-                var categoria = await _context.Categorias.FindAsync(dto.CategoriaId);
-                var restaurante = await _context.Restaurantes.FindAsync(dto.RestauranteId);
+                await _context.SaveChangesAsync();
 
-                // 4️⃣ Mapear variantes y opciones al DTO de salida
-                var variantesDtoResult = await _context.Variantes
-                    .Where(v => v.MenuId == menu.Id)
-                    .Include(v => v.Opciones)
-                    .Select(v => new VarianteDto
-                    {
-                        Id = v.Id,
-                        Name = v.Name,
-                        Obligatorio = v.Obligatorio,
-                        MaxSeleccion = v.MaxSeleccion,
-                        Opciones = v.Opciones.Select(op => new VarianteOpcionDto
-                        {
-                            Id = op.Id,
-                            Nombre = op.Nombre,
-                            Precio = op.Precio
-                        }).ToList()
-                    }).ToListAsync();
-
-                // 5️⃣ Confirmar transacción
                 await transaction.CommitAsync();
-
-                // 6️⃣ Devolver DTO final
-                return new MenuDto
-                {
-                    Id = menu.Id,
-                    Nombre = menu.Nombre,
-                    Ingredientes = menu.Ingredientes,
-                    Precio = menu.Precio,
-                    Imagen = menu.Imagen,
-                    RestauranteId = menu.RestauranteId,
-                    Restaurante = restaurante != null ? new RestauranteDto
-                    {
-                        Id = restaurante.Id,
-                        Name = restaurante.Name,
-                        Image = restaurante.Image,
-                        PerfilImage = restaurante.PerfilImage,
-                        Direccion = restaurante.Direccion,
-                        Phone = restaurante.Phone,
-                    } : null,
-                    CategoriaId = menu.CategoriaId,
-                    Categoria = categoria != null ? new CategoriaDto
-                    {
-                        Id = categoria.Id,
-                        Nombre = categoria.Nombre
-                    } : null,
-                    Variantes = variantesDtoResult
-                };
+                return await GetByIdAsync(menu.Id);
             }
-            catch (DbUpdateException)
+            catch
             {
                 await transaction.RollbackAsync();
                 throw;
             }
-            finally
-            {
-                await transaction.DisposeAsync();
-            }
         }
-
-        public async Task<bool> UpdateAsync(Guid id, MenuUpdateDto dto)
+        public async Task<MenuDto> UpdateAsync(Guid id, MenuUpdateDto dto)
         {
-            var menu = await _context.Menus.FindAsync(id);
-            if (menu == null) return false;
+            var menu = await _context.Menus
+                .Include(m => m.VarianteMenus)
+                    .ThenInclude(mv => mv.Variante)
+                        .ThenInclude(v => v.Opciones)
+                .FirstOrDefaultAsync(m => m.Id == id);
 
-            menu.Nombre = dto.Nombre;
-            menu.Ingredientes = dto.Ingredientes;
-            menu.Precio = dto.Precio;
-            menu.CategoriaId = dto.CategoriaId;
+            if (menu == null) return null;
 
-            _context.Menus.Update(menu);
-            await _context.SaveChangesAsync();
-            return true;
+            await using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                menu.Nombre = dto.Nombre;
+                menu.Ingredientes = dto.Ingredientes;
+                menu.Precio = dto.Precio;
+                menu.CategoriaId = dto.CategoriaId;
+                menu.Imagen = await ImagenesHelpers.ActualizarImagenAsync(dto.Image, Imagenes.Menu.ToString(), menu.Imagen);
+
+                // Eliminar relaciones que ya no existen
+                var relacionesADesvincular = menu.VarianteMenus
+                    .Where(mv => !dto.Variantes.Any(v => v.Id == mv.VarianteId))
+                    .ToList();
+                _context.VarianteMenus.RemoveRange(relacionesADesvincular);
+
+                // Crear o actualizar variantes
+                foreach (var vDto in dto.Variantes)
+                {
+                    Variante variante;
+                    if (vDto.Id == Guid.Empty)
+                    {
+                        variante = new Variante
+                        {
+                            Id = Guid.NewGuid(),
+                            Name = vDto.Name,
+                            Obligatorio = vDto.Obligatorio,
+                            MaxSeleccion = vDto.MaxSeleccion ?? 1,
+                            CategoriaId = dto.CategoriaId,
+                            Opciones = vDto.Opciones?.Select(op => new VarianteOpcion
+                            {
+                                Id = Guid.NewGuid(),
+                                Nombre = op.Nombre,
+                                Precio = op.Precio
+                            }).ToList() ?? new List<VarianteOpcion>()
+                        };
+                        _context.Variantes.Add(variante);
+                        await _context.SaveChangesAsync();
+                    }
+                    else
+                    {
+                        variante = await _context.Variantes
+                            .Include(v => v.Opciones)
+                            .FirstOrDefaultAsync(v => v.Id == vDto.Id);
+
+                        if (variante == null)
+                            throw new Exception($"La variante con Id {vDto.Id} no existe.");
+
+                        variante.Name = vDto.Name;
+                        variante.Obligatorio = vDto.Obligatorio;
+                        variante.MaxSeleccion = vDto.MaxSeleccion ?? 1;
+
+                        // Opciones
+                        var opcionesAEliminar = variante.Opciones.Where(o => !vDto.Opciones.Any(x => x.Id == o.Id)).ToList();
+                        _context.VarianteOpciones.RemoveRange(opcionesAEliminar);
+
+                        foreach (var opDto in vDto.Opciones)
+                        {
+                            VarianteOpcion opcion;
+                            if (opDto.Id == Guid.Empty)
+                            {
+                                opcion = new VarianteOpcion
+                                {
+                                    Id = Guid.NewGuid(),
+                                    VarianteId = variante.Id,
+                                    Nombre = opDto.Nombre,
+                                    Precio = opDto.Precio
+                                };
+                                _context.VarianteOpciones.Add(opcion);
+                            }
+                            else
+                            {
+                                opcion = variante.Opciones.First(o => o.Id == opDto.Id);
+                                opcion.Nombre = opDto.Nombre;
+                                opcion.Precio = opDto.Precio;
+                            }
+                        }
+                    }
+
+                    if (!menu.VarianteMenus.Any(mv => mv.VarianteId == variante.Id))
+                    {
+                        _context.VarianteMenus.Add(new VarianteMenus
+                        {
+                            MenuId = menu.Id,
+                            VarianteId = variante.Id
+                        });
+                    }
+                }
+
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+                return await GetByIdAsync(menu.Id);
+            }
+            catch
+            {
+                await transaction.RollbackAsync();
+                throw;
+            }
         }
 
         public async Task<bool> DeleteAsync(Guid id)
         {
-            var menu = await _context.Menus.FindAsync(id);
-            if (menu == null) return false;
+            await using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                var menu = await _context.Menus
+                    .Include(m => m.VarianteMenus)
+                        .ThenInclude(mv => mv.Variante)
+                            .ThenInclude(v => v.Opciones)
+                    .FirstOrDefaultAsync(m => m.Id == id);
 
-            _context.Menus.Remove(menu);
-            await _context.SaveChangesAsync();
-            return true;
+                if (menu == null) return false;
+
+                // Eliminar relaciones muchos a muchos
+                if (menu.VarianteMenus.Any())
+                    _context.VarianteMenus.RemoveRange(menu.VarianteMenus);
+
+                // Eliminar variantes no usadas
+                foreach (var variante in menu.VarianteMenus.Select(mv => mv.Variante))
+                {
+                    bool estaEnOtroMenu = await _context.VarianteMenus.AnyAsync(vm => vm.VarianteId == variante.Id);
+                    if (!estaEnOtroMenu)
+                    {
+                        if (variante.Opciones.Any())
+                            _context.VarianteOpciones.RemoveRange(variante.Opciones);
+                        _context.Variantes.Remove(variante);
+                    }
+                }
+
+                var imagenActual = menu.Imagen;
+                _context.Menus.Remove(menu);
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+
+                if (!string.IsNullOrEmpty(imagenActual))
+                    await ImagenesHelpers.EliminarImagenAsync(imagenActual);
+
+                return true;
+            }
+            catch
+            {
+                await transaction.RollbackAsync();
+                return false;
+            }
         }
     }
 }

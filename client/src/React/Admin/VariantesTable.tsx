@@ -1,18 +1,17 @@
 import React from "react";
-import type { PagedResult } from "@/Types/Restaurante.ts";
-import type { Menu } from "@/Types/Restaurante.ts";
+import type { PagedResult, Variante } from "@/Types/Restaurante.ts";
 import TrashIcon from "@/components/Icons/TrashIcon.tsx";
 import PencilIcon from "@/components/Icons/PencilIcon.tsx";
 
-interface MenuTableProps {
-  pagedResult: PagedResult<Menu>;
-  onEdit: (item: Menu) => void;
-  onDelete: (item: Menu) => void;
+interface VariantesTableProps {
+  pagedResult: PagedResult<Variante>;
+  onEdit: (item: Variante) => void;
+  onDelete: (item: Variante) => void;
   onSort: (column: string) => void;
   currentSort: { orderBy: string; orderDirection: "asc" | "desc" };
 }
 
-const MenuTable: React.FC<MenuTableProps> = ({
+const VariantesTable: React.FC<VariantesTableProps> = ({
   pagedResult,
   onEdit,
   onDelete,
@@ -20,16 +19,15 @@ const MenuTable: React.FC<MenuTableProps> = ({
   currentSort,
 }) => {
   const headers = [
-    { key: "imagen", label: "Img", sortable: false },
     { key: "nombre", label: "Nombre", sortable: true },
-    { key: "ingredientes", label: "Ingredientes", sortable: true },
-    { key: "precio", label: "Precio", sortable: true },
+    { key: "maxSeleccion", label: "Máx. Selección", sortable: true },
+    { key: "obligatorio", label: "Obligatorio", sortable: true },
+    { key: "opciones", label: "Opciones", sortable: true },
     { key: "categoria", label: "Categoría", sortable: true },
-    { key: "variantes", label: "Variantes", sortable: false },
     { key: "acciones", label: "Acciones", sortable: false },
   ];
   const renderSortIcon = (key: string) => {
-    if (currentSort.orderBy !== key) return null;
+    if (currentSort.orderBy !== key) return "⇅"; // icono neutro
     return currentSort.orderDirection === "asc" ? "▲" : "▼";
   };
 
@@ -50,7 +48,7 @@ const MenuTable: React.FC<MenuTableProps> = ({
               </th>
             ))}
           </tr>
-        </thead>  
+        </thead>
 
         <tbody className="bg-white divide-y divide-gray-200">
           {pagedResult.totalItems === 0 ? (
@@ -59,29 +57,25 @@ const MenuTable: React.FC<MenuTableProps> = ({
                 colSpan={headers.length}
                 className="px-6 py-4 text-center text-gray-500 italic"
               >
-                No se encontró ningún menú con la búsqueda.
+                No se encontró ninguna variante con la búsqueda.
               </td>
             </tr>
           ) : (
-            pagedResult.items.map((item) => (
+            pagedResult.items?.map((item) => (
               <tr key={item.id}>
-                <td className="px-6 py-4">
-                  <img
-                    src={`http://localhost:5147${item.imagen}`}
-                    alt={item.nombre}
-                    className="h-12 w-12 object-cover rounded-md"
-                  />
+                <td className="px-6 py-4 text-sm text-gray-900">{item.name}</td>
+                <td className="px-6 py-4 text-sm text-gray-500">
+                  {item.maxSeleccion}
                 </td>
-                <td className="px-6 py-4 text-sm text-gray-900">{item.nombre}</td>
-                <td className="px-6 py-4 text-sm text-gray-500">{item.ingredientes}</td>
                 <td className="px-6 py-4 text-sm text-gray-900">
-                  ${item.precio.toFixed(2)}
+                  {item.obligatorio ? "Sí" : "No"}
+                </td>
+
+                <td className="px-6 py-4 text-sm text-gray-500">
+                  {item.opciones?.length}
                 </td>
                 <td className="px-6 py-4 text-sm text-gray-500">
-                  {item.categoria.nombre}
-                </td>
-                <td className="px-6 py-4 text-sm text-gray-500">
-                  {item.variantes?.length}
+                  {item.categoria?.nombre}
                 </td>
                 <td className="px-6 py-4 flex gap-3">
                   <button
@@ -108,4 +102,4 @@ const MenuTable: React.FC<MenuTableProps> = ({
   );
 };
 
-export default MenuTable;
+export default VariantesTable;

@@ -1,12 +1,8 @@
 ---
 import LayoutAdmin from "@/layouts/LayoutAdmin.astro";
 import MenuManager from "@/React/Admin/MenuManager";
-import type { Menu } from "@/Types/Restaurante";
-import { restaurants } from "@/consts/restaurantes";
-
-const initialMenus: Menu[] = restaurants[0].menu;
 ---
 
 <LayoutAdmin title="Menú">
-  <MenuManager initialMenus={initialMenus} client:load  />
+  <MenuManager client:load  />
 </LayoutAdmin>

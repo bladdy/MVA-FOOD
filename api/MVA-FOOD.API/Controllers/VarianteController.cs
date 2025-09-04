@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using MVA_FOOD.API.Errors;
 using MVA_FOOD.Core.DTOs;
+using MVA_FOOD.Core.Entities;
+using MVA_FOOD.Core.Filters;
 using MVA_FOOD.Core.Interfaces;
 
 namespace MVA_FOOD.API.Controllers
@@ -20,9 +23,10 @@ namespace MVA_FOOD.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromQuery] VarianteFilters filters)
         {
-            var variantes = await _service.GetAllAsync();
+            var variantes = await _service.GetAllAsync(filters);
+            if (variantes == null || !variantes.Items.Any()) return NotFound();
             return Ok(variantes);
         }
 
@@ -35,9 +39,17 @@ namespace MVA_FOOD.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] VarianteDto dto)
+        public async Task<ActionResult<VarianteDto>> Create([FromForm] VarianteDto dto)
         {
             var result = await _service.CreateAsync(dto);
+            if (result == null) return BadRequest(new ApiResponse(400, "No se pudo crear la variante."));
+            return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
+        }
+        [HttpPut("{id}")]
+        public async Task<ActionResult<VarianteDto>> Update(Guid id, [FromForm] VarianteDto dto)
+        {
+            var result = await _service.UpdateAsync(id, dto);
+            if (result == null) return BadRequest(new ApiResponse(400, "No se pudo actualizar la variante."));
             return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
         }
 

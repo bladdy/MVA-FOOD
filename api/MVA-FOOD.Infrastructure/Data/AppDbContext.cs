@@ -21,13 +21,14 @@ namespace MVA_FOOD.Infrastructure.Data
         public DbSet<Plan> Planes { get; set; }
         public DbSet<PlanRestaurante> PlanesRestaurantes { get; set; }
         public DbSet<Variante> Variantes { get; set; }
-        public DbSet<VarianteOpcion> VarianteOpciones { get; set; } 
+        public DbSet<VarianteOpcion> VarianteOpciones { get; set; }
         public DbSet<Pedido> Pedidos { get; set; }
         public DbSet<PedidoItem> PedidoItems { get; set; }
         public DbSet<Usuario> Usuarios { get; set; }
         public DbSet<AmenidadRestaurantes> AmenidadRestaurantes { get; set; }
         public DbSet<CategoriaRestaurantes> CategoriaRestaurantes { get; set; }
-        
+        public DbSet<VarianteMenus> VarianteMenus { get; set; }
+
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -44,11 +45,21 @@ namespace MVA_FOOD.Infrastructure.Data
                 .HasForeignKey<PlanRestaurante>(pr => pr.RestauranteId)
                 .OnDelete(DeleteBehavior.Cascade);
 
+            modelBuilder.Entity<VarianteMenus>()
+                .HasOne(vm => vm.Variante)
+                .WithMany(v => v.MenuVariantes)
+                .HasForeignKey(vm => vm.VarianteId)
+                .OnDelete(DeleteBehavior.Cascade);
+                
             modelBuilder.Entity<Menu>()
                 .HasOne(m => m.Categoria)
                 .WithMany(c => c.Menus)
-                .HasForeignKey(m => m.CategoriaId);
-        }   
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasForeignKey(m => m.CategoriaId);               
+            
+
+
+        }
 
     }
 }

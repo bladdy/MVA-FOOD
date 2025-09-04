@@ -11,6 +11,7 @@ export default function ShareButton({ title }: { title: string }) {
         url: window.location.href,
       });
     } else {
+      //sweet Alert
       alert("Tu navegador no soporta la función de compartir.");
     }
   };

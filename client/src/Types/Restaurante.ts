@@ -1,25 +1,54 @@
 // src/Types/Restaurante.ts
 
 export interface VarianteOpcionCreate {
+  id: string;
   nombre: string;
   precio: number;
+}
+export interface PagedResult<T> {
+  totalItems: number;
+  pageNumber: number;
+  pageSize: number;
+  items: T[];
+  totalPages: number;
+}
+export interface MenuFilters {
+  search?: string;
+  restauranteId?: string;
+  categoriaId?: string;
+  orderBy?: string;
+  orderDirection?: "asc" | "desc";
+  pageNumber?: number;
+  pageSize?: number;
+}
+export interface VarianteFilters {
+  search?: string;
+  categoriaId?: string;
+  obligatorio?: boolean;
+  maxSeleccion?: number;
+  orderBy?: string;
+  orderDirection?: "asc" | "desc";
+  pageNumber?: number;
+  pageSize?: number;
 }
 
 export interface VarianteCreate {
   id: string;
   name: string;
+  categoriaId?: string;
   obligatorio: boolean;
   maxSeleccion: number;
   opciones: VarianteOpcionCreate[];
 }
 
 export interface MenuCreate {
+  id: string;
   nombre: string;
   ingredientes: string;
   precio: number;
   categoriaId: string; // Solo enviamos el id al backend
   restauranteId: string;
-  image: File | null; // archivo nuevo a subir
+  imagen: File | null; // archivo nuevo a subir
   variantes: VarianteCreate[];
 }
 
@@ -59,9 +88,12 @@ export interface Menu {
 export interface Variante {
   id: string;
   name: string;
+  categoriaId: string;
+  categoria?: Categoria;
   obligatorio: boolean;
   maxSeleccion?: number; 
   opciones: {
+    id: string;
     nombre: string;
     precio: number; // ahora obligatorio para cuadrar con MenuCreate
   }[];

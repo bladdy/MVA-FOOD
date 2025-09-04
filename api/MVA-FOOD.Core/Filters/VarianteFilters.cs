@@ -5,15 +5,14 @@ using System.Threading.Tasks;
 
 namespace MVA_FOOD.Core.Filters
 {
-    public class RestauranteFilter
+    public class VarianteFilters
     {
         public string Search { get; set; } = string.Empty;
-        public Guid? TipoId { get; set; }
-        public Guid? AmenidadId { get; set; }
-        public string Ubicacion { get; set; } = string.Empty;
+        public Guid? CategoriaId { get; set; }
         public string OrderBy { get; set; } = "nombre";
         public string OrderDirection { get; set; } = "asc";
         public int PageNumber { get; set; } = 1;
         public int PageSize { get; set; } = 10;
+        
     }
 }
