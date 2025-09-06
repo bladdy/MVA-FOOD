@@ -36,7 +36,6 @@ interface BaseElement {
   w: number;
   h: number;
   rotation?: number;
-  fitToCanvas?: boolean; // <-- Agregado
 }
 
 interface TextElement extends BaseElement {
@@ -58,10 +57,6 @@ interface ImageElement extends BaseElement {
   type: "image";
   src: string;
   _img?: HTMLImageElement;
-  id: string;
-  w: number;
-  h: number;
-  fitToCanvas?: boolean;
 }
 
 type CanvasElement = TextElement | RectElement | ImageElement;
@@ -70,6 +65,7 @@ export default function FlyerEditor() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [size, setSize] = useState({ w: 1080, h: 1350 });
   const [bg, setBg] = useState(defaultBg);
+  const [bgImage, setBgImage] = useState<HTMLImageElement | null>(null);
   const [elements, setElements] = useState<CanvasElement[]>([
     {
       id: uid(),
@@ -92,6 +88,7 @@ export default function FlyerEditor() {
     id: string;
     offsetX: number;
     offsetY: number;
+    resize?: boolean;
   } | null>(null);
 
   const selected = useMemo(
@@ -108,14 +105,19 @@ export default function FlyerEditor() {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    ctx.fillStyle = bg;
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    // Fondo
+    if (bgImage) {
+      ctx.drawImage(bgImage, 0, 0, size.w, size.h);
+    } else {
+      ctx.fillStyle = bg;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+    }
 
     elements.forEach((el) => {
       ctx.save();
-      ctx.translate(el.x + (el.w || 0) / 2, el.y + (el.h || 0) / 2);
+      ctx.translate(el.x + el.w / 2, el.y + el.h / 2);
       ctx.rotate(((el.rotation || 0) * Math.PI) / 180);
-      ctx.translate(-(el.x + (el.w || 0) / 2), -(el.y + (el.h || 0) / 2));
+      ctx.translate(-(el.x + el.w / 2), -(el.y + el.h / 2));
 
       if (el.type === "rect") {
         ctx.fillStyle = el.color || "#000";
@@ -124,25 +126,21 @@ export default function FlyerEditor() {
 
       if (el.type === "text") {
         ctx.fillStyle = el.color || "#000";
-        ctx.font = `${el.fontWeight || "normal"} ${el.fontSize || 32}px ${el.fontFamily || "Arial"}`;
+        ctx.font = `${el.fontWeight || "normal"} ${el.fontSize || 32}px ${
+          el.fontFamily || "Arial"
+        }`;
         ctx.textAlign = el.align || "left";
         ctx.textBaseline = "top";
         let tx = el.x;
         if (el.align === "center") tx = el.x + el.w / 2;
         if (el.align === "right") tx = el.x + el.w;
-        wrapText(
-          ctx,
-          el.text || "",
-          tx,
-          el.y,
-          el.w,
-          (el.fontSize || 32) * 1.25
-        );
+        wrapText(ctx, el.text || "", tx, el.y, el.w, el.fontSize * 1.25);
       }
 
       if (el.type === "image" && el._img && el._img.complete) {
         ctx.drawImage(el._img, el.x, el.y, el.w, el.h);
       }
+
       ctx.restore();
 
       // Borde de selección
@@ -150,11 +148,15 @@ export default function FlyerEditor() {
         ctx.save();
         ctx.strokeStyle = "#3b82f6";
         ctx.setLineDash([6, 4]);
-        ctx.strokeRect(el.x, el.y, el.w || 0, el.h || 0);
+        ctx.strokeRect(el.x, el.y, el.w, el.h);
+
+        // handle para resizing
+        ctx.fillStyle = "#3b82f6";
+        ctx.fillRect(el.x + el.w - 18, el.y + el.h - 18, 20, 20);
+        ctx.restore();
       }
-      ctx.restore();
     });
-  }, [elements, selectedId, size, bg]);
+  }, [elements, selectedId, size, bg, bgImage]);
 
   // Eventos mouse
   function onMouseDown(e: React.MouseEvent<HTMLCanvasElement>) {
@@ -165,7 +167,12 @@ export default function FlyerEditor() {
       const el = elements[i];
       if (pointInElement(px, py, el)) {
         setSelectedId(el.id);
-        setDrag({ id: el.id, offsetX: px - el.x, offsetY: py - el.y });
+        // check handle resize
+        if (px >= el.x + el.w - 10 && py >= el.y + el.h - 10) {
+          setDrag({ id: el.id, offsetX: el.x, offsetY: el.y, resize: true });
+        } else {
+          setDrag({ id: el.id, offsetX: px - el.x, offsetY: py - el.y });
+        }
         return;
       }
     }
@@ -173,17 +180,38 @@ export default function FlyerEditor() {
   }
 
   function onMouseMove(e: React.MouseEvent<HTMLCanvasElement>) {
-    if (!drag) return;
     const rect = e.currentTarget.getBoundingClientRect();
     const px = Math.round((e.clientX - rect.left) * (size.w / rect.width));
     const py = Math.round((e.clientY - rect.top) * (size.h / rect.height));
-    setElements((els) =>
-      els.map((el) =>
-        el.id !== drag.id
-          ? el
-          : { ...el, x: px - drag.offsetX, y: py - drag.offsetY }
-      )
-    );
+
+    // Cambiar cursor si está sobre la esquina de redimensionar
+    const overHandle =
+      selected &&
+      px >= selected.x + selected.w - 20 &&
+      px <= selected.x + selected.w &&
+      py >= selected.y + selected.h - 20 &&
+      py <= selected.y + selected.h;
+
+    if (canvasRef.current) {
+      canvasRef.current.style.cursor = overHandle
+        ? "se-resize"
+        : drag
+          ? "grabbing"
+          : "grab";
+    }
+
+    // Si estamos arrastrando para mover
+    if (drag && !overHandle) {
+      setElements((els) =>
+        els.map((el) => {
+          if (el.id !== drag.id) return el;
+          if (drag.resize) {
+            return { ...el, w: px - el.x, h: py - el.y };
+          }
+          return { ...el, x: px - drag.offsetX, y: py - drag.offsetY };
+        })
+      );
+    }
   }
 
   function onMouseUp() {
@@ -191,8 +219,8 @@ export default function FlyerEditor() {
   }
 
   function pointInElement(px: number, py: number, el: CanvasElement) {
-    const x2 = el.x + (el.w || 0);
-    const y2 = el.y + (el.h || 0);
+    const x2 = el.x + el.w;
+    const y2 = el.y + el.h;
     return px >= el.x && px <= x2 && py >= el.y && py <= y2;
   }
 
@@ -284,6 +312,13 @@ export default function FlyerEditor() {
     img.src = url;
   }
 
+  function setBackgroundImage(file: File) {
+    const url = URL.createObjectURL(file);
+    const img = new Image();
+    img.onload = () => setBgImage(img);
+    img.src = url;
+  }
+
   function removeSelected() {
     if (!selectedId) return;
     setElements((els) => els.filter((e) => e.id !== selectedId));
@@ -313,62 +348,12 @@ export default function FlyerEditor() {
       return copy;
     });
   }
+
   function exportPNG() {
     if (!canvasRef.current) return;
-
-    // Crear canvas temporal
-    const tempCanvas = document.createElement("canvas");
-    tempCanvas.width = size.w;
-    tempCanvas.height = size.h;
-    const ctx = tempCanvas.getContext("2d");
-    if (!ctx) return;
-
-    // Fondo
-    ctx.fillStyle = bg;
-    ctx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
-
-    // Dibujar elementos sin bordes de selección ni guías
-    elements.forEach((el) => {
-      ctx.save();
-      ctx.translate(el.x + (el.w || 0) / 2, el.y + (el.h || 0) / 2);
-      ctx.rotate(((el.rotation || 0) * Math.PI) / 180);
-      ctx.translate(-(el.x + (el.w || 0) / 2), -(el.y + (el.h || 0) / 2));
-
-      if (el.type === "rect") {
-        ctx.fillStyle = el.color || "#000";
-        ctx.fillRect(el.x, el.y, el.w, el.h);
-      }
-
-      if (el.type === "text") {
-        ctx.fillStyle = el.color || "#000";
-        ctx.font = `${el.fontSize || 32}px ${el.fontFamily || "Arial"}`;
-        ctx.textAlign = el.align || "left";
-        ctx.textBaseline = "top";
-        let tx = el.x;
-        if (el.align === "center") tx = el.x + el.w / 2;
-        if (el.align === "right") tx = el.x + el.w;
-        wrapText(
-          ctx,
-          el.text || "",
-          tx,
-          el.y,
-          el.w,
-          (el.fontSize || 32) * 1.25
-        );
-      }
-
-      if (el.type === "image" && el._img && el._img.complete) {
-        ctx.drawImage(el._img, el.x, el.y, el.w, el.h);
-      }
-
-      // **NO dibujar ctx.strokeRect ni guías**
-      ctx.restore();
-    });
-
-    // Descargar PNG
     const link = document.createElement("a");
     link.download = "flyer.png";
-    link.href = tempCanvas.toDataURL("image/png");
+    link.href = canvasRef.current.toDataURL("image/png");
     link.click();
   }
 
@@ -376,16 +361,10 @@ export default function FlyerEditor() {
     patch: Partial<TextElement> | Partial<RectElement> | Partial<ImageElement>
   ) {
     if (!selected) return;
-    setElements((els) =>
-      els.map((e) => {
+    setElements((els: any) =>
+      els.map((e: any) => {
         if (e.id !== selected.id) return e;
-        if (e.type === "text")
-          return { ...e, ...(patch as Partial<TextElement>) };
-        if (e.type === "rect")
-          return { ...e, ...(patch as Partial<RectElement>) };
-        if (e.type === "image")
-          return { ...e, ...(patch as Partial<ImageElement>) };
-        return e;
+        return { ...e, ...patch };
       })
     );
   }
@@ -418,22 +397,30 @@ export default function FlyerEditor() {
         </div>
 
         {/* Fondo */}
-        <div className="field">
+        <div className="field flex gap-2 items-center">
           <label className="block text-sm font-medium text-gray-700 mb-1">
             Fondo:
           </label>
           <input
             type="color"
             value={bg}
-            onChange={(e) => setBg(e.target.value)}
+            onChange={(e) => {
+              setBg(e.target.value);
+              setBgImage(null);
+            }}
             className="w-12 h-8 p-1 border rounded-md cursor-pointer"
           />
-          <button
-            className="ml-2 bg-gray-200 text-gray-800 px-3 py-1 rounded-md hover:bg-gray-300 transition"
-            onClick={() => setBg(defaultBg)}
-          >
-            Reset
-          </button>
+          <label className="bg-gray-300 text-gray-800 px-2 py-1 rounded-md cursor-pointer hover:bg-gray-400">
+            Imagen Fondo
+            <input
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={(e) =>
+                e.target.files?.[0] && setBackgroundImage(e.target.files[0])
+              }
+            />
+          </label>
         </div>
 
         {/* Botones de añadir elementos */}
@@ -465,9 +452,8 @@ export default function FlyerEditor() {
             className="bg-yellow-500 text-white px-4 py-2 rounded-md hover:bg-yellow-600 cursor-pointer"
             onClick={exportPNG}
           >
-            {" "}
-            ⬇️ Exportar PNG{" "}
-          </button>{" "}
+            ⬇️ Exportar PNG
+          </button>
         </div>
 
         <hr className="my-2" />
@@ -618,7 +604,7 @@ export default function FlyerEditor() {
               <div className="field flex gap-2">
                 <div className="flex flex-col">
                   <label className="text-sm font-medium text-gray-700">
-                    Posicion (X)
+                    Posición (X)
                   </label>
                   <input
                     type="number"
@@ -632,7 +618,7 @@ export default function FlyerEditor() {
                 </div>
                 <div className="flex flex-col">
                   <label className="text-sm font-medium text-gray-700">
-                    Posicion (Y)
+                    Posición (Y)
                   </label>
                   <input
                     type="number"
