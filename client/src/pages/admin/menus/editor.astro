@@ -1,0 +1,11 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import FlyerEditor from "@/React/Editor/FlyerEditor";
+---
+
+<BaseLayout title="Editor de Flyers con Canvas">
+  <main style="max-width:1100px;margin:24px auto; padding:0 16px;">
+    <h1 class="text-orange-600 m-4 text-xl" style="margin:0 0 16px 0;">Agrega texto, formas, imágenes y exporta tu flyer como PNG.</h1>
+    <FlyerEditor client:load />
+  </main>
+</BaseLayout>

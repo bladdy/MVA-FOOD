@@ -64,7 +64,8 @@ export const varianteService = {
   },
 
   async delete(id: string): Promise<void> {
-    const res = await fetch(`${API_URL}/${id}`, { method: "DELETE" });
+    console.log("Deleting variante with id:", id);
+    const res = await fetch(`${API_URL}/variante/${id}`, { method: "DELETE" });
     if (!res.ok) throw new Error("Error al eliminar variante");
   },
 };

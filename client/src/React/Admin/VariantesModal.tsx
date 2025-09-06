@@ -1,6 +1,5 @@
 // src/components/VarianteModal.tsx
-//ToDo: Validacion del formulario antes de enviar
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import type { VarianteCreate, Categoria, Variante } from "@/Types/Restaurante.ts";
 import { varianteService } from "@/Services/varianteService.ts";
 import { menuService } from "@/Services/menuService.ts"; // solo para categorias
@@ -38,7 +37,6 @@ const VariantesModal: React.FC<VariantesModalProps> = ({
         name: initialData.name,
         categoriaId: initialData.categoriaId,
         opciones:
-        
           initialData.opciones?.map((op) => ({
             id: op.id,
             nombre: op.nombre,
@@ -81,7 +79,7 @@ const VariantesModal: React.FC<VariantesModalProps> = ({
   const handleAddOption = () => {
     setForm({
       ...form,
-      opciones: [...form.opciones, { id: "", nombre: "Nueva opción", precio: 0 }],
+      opciones: [...form.opciones, { id: "", nombre: "", precio: 0 }],
     });
   };
 
@@ -90,11 +88,27 @@ const VariantesModal: React.FC<VariantesModalProps> = ({
     setForm({ ...form, opciones });
   };
 
+  // 🔹 Validación del formulario
+  const isFormValid = useMemo(() => {
+    if (!form.name.trim()) return false;
+    if (!form.categoriaId) return false;
+    if (form.maxSeleccion < 1) return false;
+    if (!form.opciones || form.opciones.length === 0) return false;
+
+    for (const op of form.opciones) {
+      if (!op.nombre.trim()) return false;
+      if (op.precio < 0) return false;
+    }
+
+    return true;
+  }, [form]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!isFormValid) return;
+
     try {
       if (form.id) {
-        console.log("Updating variante with id:", form.id, form);
         await varianteService.update(form.id, form);
       } else {
         await varianteService.create(form);
@@ -103,7 +117,6 @@ const VariantesModal: React.FC<VariantesModalProps> = ({
       onSave();
     } catch (error) {
       console.error(error);
-      //sweet Alert
       alert("Hubo un error al guardar la variante");
     }
   };
@@ -123,20 +136,28 @@ const VariantesModal: React.FC<VariantesModalProps> = ({
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          <input
-            type="text"
-            name="name"
-            placeholder="Nombre de la variante"
+          {/* Nombre */}
+          <div>
+            <label className="block mb-1">Nombre de la variante *</label>
+            <input
+              type="text"
+              name="name"
             value={form.name}
             onChange={handleChange}
             className="w-full border rounded px-3 py-2"
+            required
           />
+          </div>
 
+          {/* Categoría */}
+          <div>
+            <label className="block mb-1">Categoría *</label>
           <select
             name="categoriaId"
             value={form.categoriaId}
             onChange={handleChange}
             className="w-full border rounded px-3 py-2"
+            required
           >
             <option value="">Seleccionar Categoría</option>
             {categorias.map((c) => (
@@ -145,7 +166,9 @@ const VariantesModal: React.FC<VariantesModalProps> = ({
               </option>
             ))}
           </select>
+          </div>
 
+          {/* Obligatorio y Máx Selección */}
           <div className="flex items-center gap-2">
             <label className="flex items-center gap-1">
               <input
@@ -156,8 +179,7 @@ const VariantesModal: React.FC<VariantesModalProps> = ({
               />
               Obligatorio
             </label>
-            <label className="ml-4">Selección Máxima:
-            </label>
+            <label className="ml-4">Selección Máxima *</label>
             <input
               type="number"
               name="maxSeleccion"
@@ -165,24 +187,32 @@ const VariantesModal: React.FC<VariantesModalProps> = ({
               onChange={handleChange}
               className="w-20 border rounded px-2 py-1"
               min={1}
+              required
             />
           </div>
 
+          {/* Opciones */}
           <div>
-            <h3 className="font-medium mb-2">Opciones</h3>
+            <h3 className="font-medium mb-2">Opciones *</h3>
             {form.opciones.map((op, i) => (
               <div key={i} className="flex gap-2 mb-2 items-center">
                 <input
                   type="text"
                   value={op.nombre}
+                  placeholder="Nombre de la opción *"
                   onChange={(e) => handleOptionChange(i, "nombre", e.target.value)}
                   className="flex-1 border rounded px-2 py-1"
+                  required
                 />
                 <input
                   type="number"
                   value={op.precio}
-                  onChange={(e) => handleOptionChange(i, "precio", parseFloat(e.target.value))}
+                  min={0}
+                  onChange={(e) =>
+                    handleOptionChange(i, "precio", parseFloat(e.target.value) || 0)
+                  }
                   className="w-24 border rounded px-2 py-1"
+                  required
                 />
                 <button
                   type="button"
@@ -202,6 +232,7 @@ const VariantesModal: React.FC<VariantesModalProps> = ({
             </button>
           </div>
 
+          {/* Botones */}
           <div className="flex justify-end gap-2 mt-4">
             <button
               type="button"
@@ -212,7 +243,12 @@ const VariantesModal: React.FC<VariantesModalProps> = ({
             </button>
             <button
               type="submit"
-              className="px-4 py-2 bg-orange-500 text-white rounded hover:bg-orange-600"
+              disabled={!isFormValid}
+              className={`px-4 py-2 rounded text-white ${
+                isFormValid
+                  ? "bg-orange-500 hover:bg-orange-600"
+                  : "bg-gray-400 cursor-not-allowed"
+              }`}
             >
               Guardar
             </button>

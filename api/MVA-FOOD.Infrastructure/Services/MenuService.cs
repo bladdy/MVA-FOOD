@@ -250,11 +250,29 @@ namespace MVA_FOOD.Infrastructure.Services
                 menu.CategoriaId = dto.CategoriaId;
                 menu.Imagen = await ImagenesHelpers.ActualizarImagenAsync(dto.Image, Imagenes.Menu.ToString(), menu.Imagen);
 
-                // Eliminar relaciones que ya no existen
-                var relacionesADesvincular = menu.VarianteMenus
-                    .Where(mv => !dto.Variantes.Any(v => v.Id == mv.VarianteId))
-                    .ToList();
-                _context.VarianteMenus.RemoveRange(relacionesADesvincular);
+                // IDs que llegan en el DTO
+                var variantesDtoIds = dto.Variantes?.Select(v => v.Id).ToList() ?? new List<Guid>();
+
+                // 🔹 Si el DTO viene vacío → eliminar TODAS las variantes relacionadas
+                if (variantesDtoIds.Count == 0)
+                {
+                    if (menu.VarianteMenus.Any())
+                    {
+                        _context.VarianteMenus.RemoveRange(menu.VarianteMenus);
+                    }
+                }
+                else
+                {
+                    // 🔹 Si trae variantes → eliminar solo las que ya no estén en el DTO
+                    var relacionesADesvincular = menu.VarianteMenus
+                        .Where(mv => !variantesDtoIds.Contains(mv.VarianteId))
+                        .ToList();
+
+                    if (relacionesADesvincular.Any())
+                    {
+                        _context.VarianteMenus.RemoveRange(relacionesADesvincular);
+                    }
+                }
 
                 // Crear o actualizar variantes
                 foreach (var vDto in dto.Variantes)

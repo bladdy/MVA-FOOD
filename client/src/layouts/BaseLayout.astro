@@ -1,0 +1,25 @@
+---
+const { title = 'Flyer Canvas App' } = Astro.props;
+---
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>{title}</title>
+    <link rel="preconnect" href="https://rsms.me/" />
+    <style>
+      /* Tailwind base en línea si no quieres CSS externo */
+      :root { color-scheme: light dark; }
+      html, body { height: 100%; }
+      body { margin: 0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Inter, Helvetica, Arial; }
+      .btn { padding: .5rem .75rem; border: 1px solid #e5e7eb; border-radius: .5rem; background: #fff; cursor: pointer; }
+      .btn:active { transform: translateY(1px); }
+      .field { display:flex; gap:.5rem; align-items:center; }
+      .panel { background:#fff; border:1px solid #e5e7eb; border-radius:.75rem; padding: .75rem; }
+      .grid { display:grid; gap:.75rem; }
+    </style>
+  </head>
+  <body style="background:#f9fafb; min-height:100vh; display:flex; flex-direction:column;">
+    <slot />
+  </body>
+</html>
