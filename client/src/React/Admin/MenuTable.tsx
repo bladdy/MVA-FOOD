@@ -26,6 +26,7 @@ const MenuTable: React.FC<MenuTableProps> = ({
     { key: "precio", label: "Precio", sortable: true },
     { key: "categoria", label: "Categoría", sortable: true },
     { key: "variantes", label: "Variantes", sortable: false },
+    { key: "activo", label: "Activo", sortable: true },
     { key: "acciones", label: "Acciones", sortable: false },
   ];
   const renderSortIcon = (key: string) => {
@@ -82,6 +83,9 @@ const MenuTable: React.FC<MenuTableProps> = ({
                 </td>
                 <td className="px-6 py-4 text-sm text-gray-500">
                   {item.variantes?.length}
+                </td>
+                <td className="px-6 py-4 text-sm text-gray-500">
+                  {item.activo ? "Sí" : "No"}
                 </td>
                 <td className="px-6 py-4 flex gap-3">
                   <button

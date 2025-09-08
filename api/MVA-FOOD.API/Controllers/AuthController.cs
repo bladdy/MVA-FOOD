@@ -28,6 +28,13 @@ namespace MVA_FOOD.API.Controllers
                 return Unauthorized("Credenciales inválidas");
 
             var token = _tokenService.GenerarToken(usuario);
+            Response.Cookies.Append("token", token, new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.Strict,
+                Path = "/"
+            });
             return Ok(new
             {
                 token,
@@ -55,6 +62,34 @@ namespace MVA_FOOD.API.Controllers
             var usuarioCreado = _usuarioService.Crear(nuevoUsuario, request.Password);
             return Ok(usuarioCreado);
         }
+
+        [HttpGet("validate-token")]
+        public IActionResult ValidateToken()
+        {
+            /*var isValid = _tokenService.ValidarToken(token);
+            if (!isValid)
+                return Unauthorized("Token inválido");*/
+
+            return Ok("Token válido");
+        }
+        [HttpPost("logout")]
+        public IActionResult Logout()
+        {
+            // Eliminar la cookie del token
+            if (Request.Cookies.ContainsKey("token"))
+            {
+                Response.Cookies.Delete("token", new CookieOptions
+                {
+                    HttpOnly = true,
+                    Secure = true,
+                    SameSite = SameSiteMode.Strict,
+                    Path = "/"
+                });
+            }
+
+            return Ok(new { message = "Logged out successfully" });
+        }
+
     }
 
 }

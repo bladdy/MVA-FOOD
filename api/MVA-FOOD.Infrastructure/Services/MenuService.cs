@@ -46,6 +46,7 @@ namespace MVA_FOOD.Infrastructure.Services
                 "precio" => "Precio",
                 "categoriaId" => "CategoriaId",
                 "restauranteId" => "RestauranteId",
+                "activo" => "Activo",
                 _ => "Nombre"
             };
 
@@ -65,6 +66,7 @@ namespace MVA_FOOD.Infrastructure.Services
                     Ingredientes = m.Ingredientes,
                     Precio = m.Precio,
                     Imagen = m.Imagen,
+                    Activo = m.Activo,
                     RestauranteId = m.RestauranteId,
                     CategoriaId = m.CategoriaId,
                     Categoria = m.Categoria != null ? new CategoriaDto
@@ -115,6 +117,7 @@ namespace MVA_FOOD.Infrastructure.Services
                 Nombre = menu.Nombre,
                 Ingredientes = menu.Ingredientes,
                 Precio = menu.Precio,
+                Activo = menu.Activo,
                 Imagen = menu.Imagen,
                 RestauranteId = menu.RestauranteId,
                 Restaurante = menu.Restaurante != null ? new RestauranteDto
@@ -198,12 +201,13 @@ namespace MVA_FOOD.Infrastructure.Services
                     Nombre = dto.Nombre,
                     Ingredientes = dto.Ingredientes,
                     Precio = dto.Precio,
+                    Activo = dto.Activo,
                     CategoriaId = dto.CategoriaId,
                     Categoria = await _context.Categorias.FindAsync(dto.CategoriaId),
                     RestauranteId = dto.RestauranteId,
                     Imagen = dto.Image != null
                         ? await ImagenesHelpers.GuardarImagenAsync(dto.Image, Imagenes.Menu.ToString())
-                        : null!,
+                        : "/Img/noimage.png",
                     //VarianteMenus = new List<VarianteMenus>()
                 };
 
@@ -247,6 +251,7 @@ namespace MVA_FOOD.Infrastructure.Services
                 menu.Nombre = dto.Nombre;
                 menu.Ingredientes = dto.Ingredientes;
                 menu.Precio = dto.Precio;
+                menu.Activo = dto.Activo;
                 menu.CategoriaId = dto.CategoriaId;
                 menu.Imagen = await ImagenesHelpers.ActualizarImagenAsync(dto.Image, Imagenes.Menu.ToString(), menu.Imagen);
 

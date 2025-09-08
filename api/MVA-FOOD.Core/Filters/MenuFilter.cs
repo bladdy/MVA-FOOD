@@ -10,6 +10,7 @@ namespace MVA_FOOD.Core.Filters
         public string Search { get; set; } = string.Empty;
         public Guid? RestauranteId { get; set; }
         public Guid? CategoriaId { get; set; }
+        public bool? Activo { get; set; } = true;
         public string OrderBy { get; set; } = "nombre";
         public string OrderDirection { get; set; } = "asc";
         public int PageNumber { get; set; } = 1;

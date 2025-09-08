@@ -8,6 +8,7 @@ export const menuService = {
     formData.append("Nombre", menu.nombre);
     formData.append("Ingredientes", menu.ingredientes);
     formData.append("Precio", menu.precio.toString());
+    formData.append("Activo", String(menu.activo));
     formData.append("CategoriaId", menu.categoriaId);
     formData.append("RestauranteId", menu.restauranteId);
 
@@ -50,6 +51,7 @@ export const menuService = {
     formData.append("Nombre", menu.nombre);
     formData.append("Ingredientes", menu.ingredientes);
     formData.append("Precio", menu.precio.toString());
+    formData.append("Activo", String(menu.activo));
     formData.append("CategoriaId", menu.categoriaId);
     formData.append("RestauranteId", menu.restauranteId);
 
@@ -108,6 +110,7 @@ export const menuService = {
     if (filters.search) params.append("search", filters.search);
     if (filters.restauranteId) params.append("restauranteId", filters.restauranteId);
     if (filters.categoriaId) params.append("categoriaId", filters.categoriaId);
+    if (filters.activo !== undefined) params.append("activo", String(filters.activo));
     if (filters.orderBy) params.append("orderBy", filters.orderBy);
     if (filters.orderDirection) params.append("orderDirection", filters.orderDirection);
     if (filters.pageNumber) params.append("pageNumber", filters.pageNumber.toString());

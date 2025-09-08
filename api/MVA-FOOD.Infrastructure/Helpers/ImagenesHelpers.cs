@@ -52,7 +52,7 @@ namespace MVA_FOOD.Infrastructure.Helpers
             if (!string.IsNullOrEmpty(imagenActual))
             {
                 var rutaAnterior = Path.Combine(webRootPath, imagenActual.TrimStart('/').Replace("/", Path.DirectorySeparatorChar.ToString()));
-                if (File.Exists(rutaAnterior))
+                if (File.Exists(rutaAnterior) && !string.IsNullOrEmpty(imagenActual) && !imagenActual.EndsWith("noimage.png"))
                     File.Delete(rutaAnterior);
             }
 

@@ -1,0 +1,12 @@
+---
+import LayoutLogin from "@/layouts/LayoutLogin.astro";
+import LoginForm from "@/React/Auth/LoginForm";
+---
+
+<LayoutLogin title="Login">
+    <div class="min-h-screen flex flex-col justify-center items-center bg-gray-100">
+        <LoginForm client:load />
+
+    </div>
+
+</LayoutLogin>

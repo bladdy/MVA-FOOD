@@ -9,7 +9,7 @@ import node from '@astrojs/node';
 // https://astro.build/config
 export default defineConfig({
   integrations: [tailwind(), react()],
-  //output: 'server',
+  output: 'server',
   //adapter: node({ mode: 'standalone' }), // Use this for docker production with Node.js
   adapter: vercel(), // Use this for deployment on Vercel
   vite: {
@@ -31,6 +31,7 @@ export default defineConfig({
   server: {
     host: true,
     port: 4321,
+
   },
   devToolbar: {
     // Disable the developer toolbar

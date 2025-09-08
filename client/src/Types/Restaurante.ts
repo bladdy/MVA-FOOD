@@ -15,6 +15,7 @@ export interface PagedResult<T> {
 export interface MenuFilters {
   search?: string;
   restauranteId?: string;
+  activo?: boolean;
   categoriaId?: string;
   orderBy?: string;
   orderDirection?: "asc" | "desc";
@@ -46,6 +47,7 @@ export interface MenuCreate {
   nombre: string;
   ingredientes: string;
   precio: number;
+  activo: boolean;
   categoriaId: string; // Solo enviamos el id al backend
   restauranteId: string;
   imagen: File | null; // archivo nuevo a subir
@@ -77,6 +79,7 @@ export interface Menu {
   nombre: string;
   ingredientes: string;
   precio: number;
+  activo: boolean;
   categoriaId: string; // Agregado para compatibilidad
   categoria: Categoria;
   restauranteId: string;

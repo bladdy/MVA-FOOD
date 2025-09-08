@@ -20,6 +20,7 @@ const initialForm: MenuCreate = {
   id: "",
   nombre: "",
   ingredientes: "",
+  activo: true,
   precio: 0,
   categoriaId: "",
   restauranteId: "987C7605-3F17-4547-8806-ED5157666892",
@@ -87,6 +88,7 @@ const MenuModal: React.FC<MenuModalProps> = ({
       nombre: initialData.nombre,
       ingredientes: initialData.ingredientes,
       precio: initialData.precio,
+      activo: (initialData as Menu).activo ?? true,
       categoriaId: initialData.categoriaId,
       restauranteId: initialData.restauranteId,
       imagen: null,
@@ -287,6 +289,18 @@ const MenuModal: React.FC<MenuModalProps> = ({
                 <label className="block text-sm font-medium text-gray-700">Precio *</label>
                 <input name="precio" type="number" step="0.01" value={form.precio} onChange={handleChange} className="mt-1 block w-full border rounded-md p-2 text-sm" />
               </div>
+            </div>
+            {/* Activo */}
+            <div>
+              <label className="flex items-center gap-2 text-sm font-medium text-gray-700">
+                <input
+                  name="activo"
+                  type="checkbox"
+                  checked={form.activo}
+                  onChange={e => setForm({ ...form, activo: e.target.checked })}
+                />
+                Activo
+              </label>
             </div>
 
             {/* Imagen */}
