@@ -45,7 +45,21 @@ builder.Services.AddAuthentication(options =>
         ValidAudience = config["Jwt:Audience"],
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["Jwt:Key"]!))
     };
+
+    // 🔹 Capturar token desde cookie "token"
+    options.Events = new JwtBearerEvents
+    {
+        OnMessageReceived = context =>
+        {
+            if (context.Request.Cookies.ContainsKey("token"))
+            {
+                context.Token = context.Request.Cookies["token"];
+            }
+            return Task.CompletedTask;
+        }
+    };
 });
+
 
 // 4. Configurar Swagger (OpenAPI)
 builder.Services.AddSwaggerGen(options =>

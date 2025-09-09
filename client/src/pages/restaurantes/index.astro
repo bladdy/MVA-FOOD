@@ -1,12 +1,12 @@
 ---
 import Layout from "@/layouts/Layout.astro";
-import RestaurantSearchWrapper from "@/React/RestaurantSearchWrapper";
+import RestaurantSearchWrapper from "@/React/RestaurantSearchWrapper.tsx";
 
 export const prerender = true;
 ---
 
 <Layout title="Mva Foods - Restaurantes" description="Encuentra los mejores restaurantes cerca de ti">
   <div class="py-20 min-h-screen">
-    <RestaurantSearchWrapper client:only />
+    <RestaurantSearchWrapper client:load />
   </div>
 </Layout>

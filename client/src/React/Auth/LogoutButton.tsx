@@ -15,8 +15,8 @@ const LogoutButton: React.FC<LogoutButtonProps> = ({ isSide}) => {
       onClick={handleLogout}
       className={
         isSide
-          ? "hidden lg:flex items-center gap-1 px-4 py-2 text-orange-600 font-bold rounded-lg hover:bg-gray-100 transition"
-          : "flex items-center gap-1 px-4 py-2 text-orange-600 font-bold rounded-lg hover:bg-gray-100 transition"
+          ? "hidden lg:flex items-center gap-1 px-4 py-2 text-orange-600 font-bold rounded-lg hover:scale-110 transition"
+          : "lg:hidden flex items-center gap-1 px-4 py-2 text-orange-600 font-bold rounded-lg hover:scale-110 transition"
       }
     >
       <svg

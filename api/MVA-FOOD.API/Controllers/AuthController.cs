@@ -1,3 +1,6 @@
+using System.Threading.Tasks;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MVA_FOOD.Core.DTOs;
 using MVA_FOOD.Core.Entities;
@@ -64,14 +67,18 @@ namespace MVA_FOOD.API.Controllers
         }
 
         [HttpGet("validate-token")]
-        public IActionResult ValidateToken()
+        public IActionResult ValidateToken([FromQuery] string token)
         {
-            /*var isValid = _tokenService.ValidarToken(token);
+            if (string.IsNullOrEmpty(token))
+                return Unauthorized("Token no proporcionado");
+
+            var isValid = _tokenService.ValidarToken(token);
             if (!isValid)
-                return Unauthorized("Token inválido");*/
+                return Unauthorized("Token inválido");
 
             return Ok("Token válido");
         }
+
         [HttpPost("logout")]
         public IActionResult Logout()
         {
@@ -88,6 +95,22 @@ namespace MVA_FOOD.API.Controllers
             }
 
             return Ok(new { message = "Logged out successfully" });
+        }
+        [HttpGet("get-current-user")]
+        [Authorize]
+        public IActionResult getCurrentUser()
+        {
+            /*var request = await _usuarioService.GetCurrentUser(User);
+            Console.Write("USUARIO:" +User.Claims);
+            if (request == null) return Unauthorized("Usuario no autenticado");
+            return Ok(request);*/
+
+            var usuarioId = User.Claims.FirstOrDefault(c => c.Type == "usuarioId")?.Value;
+            var nombre = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
+            var rol = User.Claims.FirstOrDefault(c => c.Type == "rol")?.Value;
+            var restauranteId = User.Claims.FirstOrDefault(c => c.Type == "restauranteId")?.Value;
+
+            return Ok(new { usuarioId, nombre, rol, restauranteId });
         }
 
     }

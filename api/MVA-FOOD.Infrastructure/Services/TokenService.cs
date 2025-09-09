@@ -49,9 +49,11 @@ namespace MVA_FOOD.Infrastructure.Services
         {
             var claims = new[]
             {
-            new Claim(ClaimTypes.Name, usuario.UsuarioNombre),
-            new Claim(ClaimTypes.Role, usuario.Rol)
-        };
+                new Claim("usuarioId", usuario.Id.ToString()),
+                new Claim(ClaimTypes.Name, usuario.Nombre),
+                new Claim("rol", usuario.Rol),
+                new Claim("restauranteId", usuario.RestauranteId?.ToString() ?? "")
+            };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]!));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);

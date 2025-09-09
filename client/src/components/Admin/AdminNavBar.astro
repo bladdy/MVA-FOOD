@@ -1,5 +1,9 @@
 ---
+import { UserProvider } from "@/context/UserContext";
 import LogoutButton from "@/React/Auth/LogoutButton";
+import UserName from "@/React/Auth/UserName";
+import UserSection from "@/React/Auth/UserSection";
+
 
 const breadcrumb = Astro.url.pathname
   .split('/')
@@ -42,9 +46,10 @@ const breadcrumb = Astro.url.pathname
         {breadcrumb[1] ? breadcrumb[1].name : "Dashboard"}
       </h6>
     </div>
+    
 
-    <!-- 🔹 Botón cerrar sesión -->
-    <LogoutButton client:load isSide={true}/>
+     <!-- React: user info + logout -->
+    <UserSection client:load />
     
   </div>
 </nav>

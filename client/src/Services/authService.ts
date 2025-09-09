@@ -39,10 +39,9 @@ export const login = async (data: LoginData): Promise<LoginResponse> => {
 
 export const validateToken = async (token?: string): Promise<boolean> => {
   try {
-    const res = await fetch(`${API_URL}/validate-token`, {
+    const res = await fetch(`${API_URL}/validate-token?token=${token}`, {
       method: "GET",
-      headers: token ? { Authorization: `Bearer ${token}` } : {},
-      credentials: "include", // 👈 importante para enviar cookies al backend
+      credentials: "include",
     });
     return res.ok;
   } catch (err) {
@@ -56,5 +55,10 @@ export const logout = async () => {
     credentials: "include", // importante para que envíe la cookie al backend
   });  // Redirigir al login
   window.location.href = "/login";
+};
+export const getCurrentUser = async () => {
+  const res = await fetch(`${API_URL}/get-current-user`, {method: "GET", credentials: "include" });
+  if (!res.ok) throw new Error("No se pudo obtener el usuario");
+  return res.json(); // { usuarioId, nombre, rol, restauranteId }
 };
 

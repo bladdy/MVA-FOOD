@@ -31,17 +31,15 @@ interface Props {
 	</head>
 	<body class="bg-white">
 		<div class="max-h-screen">
-			<AdminSideBar/>
-			<div class="p-4 lg:ml-80">
-				<AdminNavBar/>
-				<div class="h-[calc(100vh-182px)] px-4 py-6 overflow-y-auto">
-				  <slot />
-				</div>
-				<AdminFooter/>
-			</div>
-
+        <AdminSideBar/>
+        <div class="p-4 lg:ml-80">
+          <AdminNavBar/>
+          <div class="h-[calc(100vh-182px)] px-4 py-6 overflow-y-auto">
+            <slot />
+          </div>
+          <AdminFooter/>
+        </div>
 		</div>
-		
 	</body>
 </html>
 

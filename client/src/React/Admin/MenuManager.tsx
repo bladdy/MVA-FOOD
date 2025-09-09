@@ -4,6 +4,7 @@ import { menuService } from "@/Services/menuService.ts";
 import MenuTable from "./MenuTable.tsx";
 import MenuModal from "./MenuModal.tsx";
 import Pagination from "../Buttons/Pagination.tsx";
+import { useUser } from "@/context/UserContext.tsx";
 
 const MenuManager: React.FC = () => {
   const [pagedResult, setPagedResult] = useState<PagedResult<Menu> | null>(null);
@@ -11,9 +12,11 @@ const MenuManager: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedMenu, setSelectedMenu] = useState<Menu | undefined>();
 
+  const { user } = useUser(); 
   const [filters, setFilters] = useState<MenuFilters>({
     search: "",
     categoriaId: "",
+    restauranteId: user ? user.restauranteId : "",
     pageNumber: 1,
     pageSize: 10,
     orderBy: "nombre",
@@ -169,6 +172,7 @@ const MenuManager: React.FC = () => {
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
           onSave={handleSave}
+          restauranteId= {user?.restauranteId}
           initialData={selectedMenu || undefined}
         />
       )}

@@ -22,6 +22,7 @@ namespace MVA_FOOD.API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll([FromQuery] MenuFilter filter)
         {
+            if (string.IsNullOrEmpty(filter.RestauranteId.ToString())) return NotFound();
             var menus = await _service.GetAllAsync(filter);
             if (menus == null || !menus.Items.Any()) return NotFound();  
             return Ok(menus);

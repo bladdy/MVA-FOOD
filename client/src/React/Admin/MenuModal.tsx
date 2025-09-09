@@ -14,6 +14,7 @@ interface MenuModalProps {
   onClose: () => void;
   onSave: (item: any) => void;
   initialData?: MenuCreate | Menu;
+  restauranteId?: string;
 }
 
 const initialForm: MenuCreate = {
@@ -23,7 +24,7 @@ const initialForm: MenuCreate = {
   activo: true,
   precio: 0,
   categoriaId: "",
-  restauranteId: "987C7605-3F17-4547-8806-ED5157666892",
+  restauranteId: "",
   imagen: null,
   variantes: [],
 };
@@ -32,6 +33,8 @@ const MenuModal: React.FC<MenuModalProps> = ({
   isOpen,
   onClose,
   onSave,
+  restauranteId,
+
   initialData,
 }) => {
   const [filters, setFilters] = useState<VarianteFilters>({
@@ -78,7 +81,10 @@ const MenuModal: React.FC<MenuModalProps> = ({
   // 🔹 Cargar datos iniciales
   useEffect(() => {
     if (!initialData) {
-      setForm(initialForm);
+      setForm({
+      ...initialForm,
+      restauranteId: restauranteId ?? "" // <<--- asignamos el restauranteId de las props
+      });
       setOriginalImage(null);
       return;
     }
@@ -90,7 +96,7 @@ const MenuModal: React.FC<MenuModalProps> = ({
       precio: initialData.precio,
       activo: (initialData as Menu).activo ?? true,
       categoriaId: initialData.categoriaId,
-      restauranteId: initialData.restauranteId,
+      restauranteId: initialData.restauranteId ?? restauranteId ?? "", // <<--- fallback
       imagen: null,
       variantes:
         initialData.variantes?.map((v) => ({
@@ -230,7 +236,8 @@ const MenuModal: React.FC<MenuModalProps> = ({
     if (!isFormValid) return;
 
     try {
-      const dto: MenuCreate = { ...form };
+      const dto: MenuCreate = { ...form, restauranteId: restauranteId ?? form.restauranteId }; // <<--- asegurar
+
       if (!form.imagen) delete (dto as any).imagen;
 
       if (initialData) {

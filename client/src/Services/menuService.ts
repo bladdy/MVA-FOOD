@@ -106,7 +106,6 @@ export const menuService = {
   // Nuevo método para obtener todos los menús
   async getMenus(filters: MenuFilters): Promise<PagedResult<Menu>> {
     const params = new URLSearchParams();
-
     if (filters.search) params.append("search", filters.search);
     if (filters.restauranteId) params.append("restauranteId", filters.restauranteId);
     if (filters.categoriaId) params.append("categoriaId", filters.categoriaId);
