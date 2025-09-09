@@ -3,6 +3,8 @@
 import AdminFooter from "@/components/Admin/AdminFooter.astro"
 import AdminNavBar from "@/components/Admin/AdminNavBar.astro"
 import AdminSideBar from "@/components/Admin/AdminSideBar.astro"
+//import AdminNavBar from "@/React/Admin/AdminNavBar.tsx"
+import ReactLayout from "@/React/Layout/ReactLayout.tsx"
 import "@/styles/global.css"
 interface Props {
   title: string
@@ -30,16 +32,18 @@ interface Props {
 		<link rel="stylesheet" href="/src/styles/global.css">
 	</head>
 	<body class="bg-white">
-		<div class="max-h-screen">
-        <AdminSideBar/>
-        <div class="p-4 lg:ml-80">
-          <AdminNavBar/>
-          <div class="h-[calc(100vh-182px)] px-4 py-6 overflow-y-auto">
-            <slot />
-          </div>
-          <AdminFooter/>
-        </div>
-		</div>
+		<ReactLayout client:load>
+			<div class="max-h-screen">
+			<AdminSideBar/>
+			<div class="p-4 lg:ml-80">
+			  <AdminNavBar/>
+			  <div class="h-[calc(100vh-182px)] px-4 py-6 overflow-y-auto">
+				<slot />
+			  </div>
+			  <AdminFooter/>
+			</div>
+			</div>
+		</ReactLayout>
 	</body>
 </html>
 

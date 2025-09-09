@@ -28,7 +28,6 @@ export async function uploadToFtp(localPath: string, subfolder: string, original
     // 👇 Sube el archivo
     await client.uploadFrom(localPath, newName);
 
-    console.log(`✅ Subido como ${subfolder}/${newName}`);
     return `${subfolder}/${newName}`; // ruta relativa para armar la URL
   } catch (err) {
     console.error("❌ Error al subir al FTP:", err);

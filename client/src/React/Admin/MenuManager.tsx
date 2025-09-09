@@ -7,31 +7,33 @@ import Pagination from "../Buttons/Pagination.tsx";
 import { useUser } from "@/context/UserContext.tsx";
 
 const MenuManager: React.FC = () => {
+  const { user } = useUser();
+
   const [pagedResult, setPagedResult] = useState<PagedResult<Menu> | null>(null);
   const [categorias, setCategorias] = useState<Categoria[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedMenu, setSelectedMenu] = useState<Menu | undefined>();
 
-  const { user } = useUser(); 
   const [filters, setFilters] = useState<MenuFilters>({
     search: "",
     categoriaId: "",
-    restauranteId: user ? user.restauranteId : "",
+    restauranteId: "", // Se actualizará cuando user esté disponible
     pageNumber: 1,
     pageSize: 10,
     orderBy: "nombre",
     orderDirection: "asc",
   });
 
-  // 🔹 Cargar menús
-  const fetchMenus = async () => {
-    try {
-      const data = await menuService.getMenus(filters);
-      setPagedResult(data);
-    } catch (error) {
-      console.error("Error cargando menús:", error);
+  // 🔹 Actualizar restauranteId cuando el usuario se cargue
+  useEffect(() => {
+    if (user?.restauranteId) {
+      setFilters(prev => ({
+        ...prev,
+        restauranteId: user.restauranteId,
+        pageNumber: 1,
+      }));
     }
-  };
+  }, [user]);
 
   // 🔹 Cargar categorías
   const fetchCategorias = async () => {
@@ -40,6 +42,17 @@ const MenuManager: React.FC = () => {
       setCategorias(data);
     } catch (error) {
       console.error("Error cargando categorías:", error);
+    }
+  };
+
+  // 🔹 Cargar menús
+  const fetchMenus = async () => {
+    try {
+      if (!filters.restauranteId) return; // Esperar a que se cargue restauranteId
+      const data = await menuService.getMenus(filters);
+      setPagedResult(data);
+    } catch (error) {
+      console.error("Error cargando menús:", error);
     }
   };
 
@@ -76,29 +89,24 @@ const MenuManager: React.FC = () => {
     }
   };
 
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     setFilters(prev => ({ ...prev, search: e.target.value, pageNumber: 1 }));
-  };
 
-  const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) =>
     setFilters(prev => ({ ...prev, categoriaId: e.target.value, pageNumber: 1 }));
-  };
 
-  const handlePageSizeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const handlePageSizeChange = (e: React.ChangeEvent<HTMLSelectElement>) =>
     setFilters(prev => ({ ...prev, pageSize: Number(e.target.value), pageNumber: 1 }));
-  };
 
-  const handlePageChange = (newPage: number) => {
+  const handlePageChange = (newPage: number) =>
     setFilters(prev => ({ ...prev, pageNumber: newPage }));
-  };
 
-  const handleSort = (column: string) => {
+  const handleSort = (column: string) =>
     setFilters(prev => ({
       ...prev,
       orderBy: column,
       orderDirection: prev.orderBy === column && prev.orderDirection === "asc" ? "desc" : "asc",
     }));
-  };
 
   return (
     <div>
@@ -165,14 +173,13 @@ const MenuManager: React.FC = () => {
         />
       )}
 
-
       {/* 🔹 Modal */}
       {isModalOpen && (
         <MenuModal
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
           onSave={handleSave}
-          restauranteId= {user?.restauranteId}
+          restauranteId={user?.restauranteId}
           initialData={selectedMenu || undefined}
         />
       )}

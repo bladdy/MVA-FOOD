@@ -1,5 +1,4 @@
 ---
-import { UserProvider } from "@/context/UserContext";
 import LogoutButton from "@/React/Auth/LogoutButton";
 import UserName from "@/React/Auth/UserName";
 import UserSection from "@/React/Auth/UserSection";
@@ -48,8 +47,6 @@ const breadcrumb = Astro.url.pathname
     </div>
     
 
-     <!-- React: user info + logout -->
-    <UserSection client:load />
-    
+     <UserSection client:load/>
   </div>
 </nav>

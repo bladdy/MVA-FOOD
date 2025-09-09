@@ -7,7 +7,6 @@ interface UserNameProps {
 
 const UserName: React.FC<UserNameProps> = ({ className }) => {
   const { user } = useUser();
-
   return (
     <span className={className}>
       {user ? user.nombre : "Cargando..."}

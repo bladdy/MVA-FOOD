@@ -16,7 +16,6 @@ export const onRequest = defineMiddleware(async ({ request, url }, next) => {
     }
 
     const isValid = await validateToken(token);
-    console.log(isValid)
     if (!isValid) {
       return new Response(null, {
         status: 302,
@@ -25,7 +24,6 @@ export const onRequest = defineMiddleware(async ({ request, url }, next) => {
     }
   }
 
-  console.log(token)
   // --- Redirigir login si ya está logeado ---
   if (url.pathname === "/login") {
     if (token) {

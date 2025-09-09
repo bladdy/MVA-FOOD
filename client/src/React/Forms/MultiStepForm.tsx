@@ -142,7 +142,6 @@ export default function MultiStepRestaurantForm() {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("Formulario final:", form);
   };
 
   const selectedPais = form.direccion.pais;
