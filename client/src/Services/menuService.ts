@@ -1,4 +1,4 @@
-import type { MenuCreate, Categoria, Menu, PagedResult, MenuFilters, VarianteCreate, Variante, VarianteFilters } from "@/Types/Restaurante.ts";
+import type { MenuCreate, Categoria, Menu, PagedResult, MenuFilters, VarianteCreate, Variante, VarianteFilters, Amenidad } from "@/Types/Restaurante.ts";
 
 const API_URL = "http://localhost:5147/api";
 
@@ -102,6 +102,12 @@ export const menuService = {
     const res = await fetch(`${API_URL}/Categoria`);
     const data = await res.json();
     return data;
+  },
+  // 🔹 Nuevo método: Obtener amenidades
+  async getAmenidades(): Promise<Amenidad[]> {
+    const res = await fetch(`${API_URL}/Amenidades`);
+    if (!res.ok) return [];
+    return res.json();
   },
   // Nuevo método para obtener todos los menús
   async getMenus(filters: MenuFilters): Promise<PagedResult<Menu>> {

@@ -109,15 +109,15 @@ export const prerender = true;
             </div>
             <div class="flex items-start flex-wrap gap-2">
               {//dividir los platos por categoria
-                restaurant.amnidades.map((amnidade) => {
-                  const SvgIcon = amenidadesMap[amnidade.svg];
+                restaurant.amenidades.map((amenidade) => {
+                  const SvgIcon = amenidadesMap[amenidade.svg];
                   return (
                      <div class="flex flex-col items-center w-20 text-center group">
                       {SvgIcon && (
                         <SvgIcon class="w-10 h-10 mb-1 text-orange-600 fill-current transition-transform duration-200 group-hover:scale-110" />
                       )}
                       <h2 class="text-sm font-semibold text-orange-600">
-                        {amnidade.name}
+                        {amenidade.name}
                       </h2>
                     </div>
                   );

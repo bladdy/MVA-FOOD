@@ -59,20 +59,48 @@ export interface Categoria {
   id: string;
   nombre: string;
 }
+export interface RestauranteUpdateDto {
+  id?: string
+  name: string
+  direccion: string
+  phone: string
+  perfilImage: string | File | null
+  image: string | File | null
+  amenidadIds?: string[]
+  categoriaIds?: string[]
+  horarios?: Horario[]
+  tipos?: string[]
+  plan?: string
+  horario?: string
+}
+
 
 export interface Restaurante {
-  id: string;
+  id?: string;
   name: string;
-  image: string;
-  tipos: string[];
-  perfilImage: string;
   direccion: string;
   phone: string;
-  plan: Plan;
-  horario: Horario[];
-  amnidades: Amnidades[];
-  menu: Menu[];
+  perfilImage: File | string | null;
+  image: File | string | null;
+  amnidades: string[];
+  categorias: string[];
+  horarios: Horario[];
+
+  // Campos opcionales
+  tipos?: string[];
+  plan?: string;
+  horario?: string;
+  menus?: any[];
 }
+
+
+export interface Amenidad {
+  id: string
+  svg: any
+  nombre: string
+}
+
+
 
 export interface Menu {
   id: string;

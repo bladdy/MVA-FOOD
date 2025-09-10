@@ -15,7 +15,8 @@ namespace MVA_FOOD.Core.DTOs
         public string Phone { get; set; }
         public Guid PlanId { get; set; }
         public PlanRestauranteDto PlanRestauranteDto { get; set; } = null!;
-        public ICollection<AmenidadDto> Amenidades { get; set; } = new List<AmenidadDto>();
-        public ICollection<CategoriaDto> Categorias { get; set; } = new List<CategoriaDto>();
+        public ICollection<AmenidadDto> Amenidades { get; set; } = new List<AmenidadDto>()!;
+        public ICollection<CategoriaDto> Categorias { get; set; } = new List<CategoriaDto>()!;
+        public ICollection<HorarioDto> horarioDtos { get; set; } = new List<HorarioDto>()!;
     }
 }

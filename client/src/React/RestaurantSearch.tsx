@@ -15,7 +15,7 @@ interface RestaurantSearchProps {
 
 // Función para obtener los filtros desde la URL
 function getFiltersFromURL(): Filters {
-  const params = new URLSearchParams(window.location.search);
+  const params = new URLSearchParams(window?.location.search);
   return {
     name: params.get('name') || '',
     tipo: params.get('tipo') || '',

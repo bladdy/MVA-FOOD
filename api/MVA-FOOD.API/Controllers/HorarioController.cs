@@ -34,7 +34,7 @@ namespace MVA_FOOD.API.Controllers
         public async Task<IActionResult> Create([FromBody] HorarioCreateDto dto)
         {
             var horario = await _service.CreateAsync(dto);
-            return CreatedAtAction(nameof(Get), new { id = horario.Id }, horario);
+            return CreatedAtAction(nameof(Get), new { }, horario);
         }
 
         [HttpPut("{id}")]

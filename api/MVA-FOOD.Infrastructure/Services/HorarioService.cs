@@ -21,9 +21,7 @@ namespace MVA_FOOD.Infrastructure.Services
                 .Include(h => h.Restaurante)
                 .Select(h => new HorarioDto
                 {
-                    Id = h.Id,
-                    RestauranteId = h.RestauranteId,
-                    RestauranteNombre = h.Restaurante.Name,
+                    
                     Dia = h.Dia,
                     HoraApertura = h.HoraApertura,
                     HoraCierre = h.HoraCierre
@@ -37,9 +35,7 @@ namespace MVA_FOOD.Infrastructure.Services
 
             return new HorarioDto
             {
-                Id = horario.Id,
-                RestauranteId = horario.RestauranteId,
-                RestauranteNombre = horario.Restaurante.Name,
+                
                 Dia = horario.Dia,
                 HoraApertura = horario.HoraApertura,
                 HoraCierre = horario.HoraCierre
@@ -63,9 +59,7 @@ namespace MVA_FOOD.Infrastructure.Services
 
             return new HorarioDto
             {
-                Id = horario.Id,
-                RestauranteId = horario.RestauranteId,
-                RestauranteNombre = restaurante?.Name ?? "",
+                
                 Dia = horario.Dia,
                 HoraApertura = horario.HoraApertura,
                 HoraCierre = horario.HoraCierre

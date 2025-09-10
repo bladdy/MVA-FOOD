@@ -203,7 +203,7 @@ namespace MVA_FOOD.Infrastructure.Services
                     },
                     Amenidades = r.AmenidadRestaurantes.Select(a => new AmenidadDto
                     {
-                        Id = a.Id,
+                        Id = a.Amenidad.Id,
                         Nombre = a.Amenidad.Nombre
                     }).Where(a => a.Id != Guid.Empty).ToList(),
                     Categorias = r.CategoriaRestaurantes.Select(c => new CategoriaDto
@@ -211,7 +211,16 @@ namespace MVA_FOOD.Infrastructure.Services
                         Id = c.Categoria.Id,
                         Nombre = c.Categoria.Nombre,
 
-                    }).Where(c => c.Id != Guid.Empty).ToList()
+                    }).Where(c => c.Id != Guid.Empty).ToList(),
+                    horarioDtos = r.Horario.Select( h => new HorarioDto
+                    {
+                        Id = h.Id,
+                        Dia = h.Dia,
+                        HoraApertura = h.HoraApertura,
+                        HoraCierre = h.HoraCierre
+
+                        
+                    }).Where(c => c.Id != Guid.Empty).ToList(),
                 }).FirstAsync(r => r.Id == id);
         }
 
@@ -332,6 +341,107 @@ namespace MVA_FOOD.Infrastructure.Services
             await _context.SaveChangesAsync();
             return true;
         }
+
+        public async Task<RestauranteDto> UpdateAsync(Guid id, CrearRestauranteDto dto)
+        {
+            await using var transaction = await _context.Database.BeginTransactionAsync();
+
+            try
+            {
+                var restaurante = await _context.Restaurantes
+                    .Include(r => r.AmenidadRestaurantes)
+                    .Include(r => r.CategoriaRestaurantes)
+                    .Include(r => r.Horario)
+                    .FirstOrDefaultAsync(r => r.Id == id);
+
+                if (restaurante == null)
+                    throw new ArgumentException("El restaurante no existe.");
+
+                // Actualizar datos básicos
+                restaurante.Name = dto.Nombre;
+                restaurante.Direccion = dto.Direccion;
+                restaurante.Phone = dto.Telefono;
+
+                if (dto.Image != null)
+                {
+                    restaurante.Image = await ImagenesHelpers.GuardarImagenAsync(dto.Image, Imagenes.Background.ToString());
+                }
+
+                if (dto.PerfilImage != null)
+                {
+                    restaurante.PerfilImage = await ImagenesHelpers.GuardarImagenAsync(dto.PerfilImage, Imagenes.Profile.ToString());
+                }
+
+                // Actualizar Categorías
+                var categoriasActuales = restaurante.CategoriaRestaurantes.ToList();
+                _context.CategoriaRestaurantes.RemoveRange(categoriasActuales);
+
+                foreach (var categoriaId in dto.CategoriaIds)
+                {
+                    var categoria = await _context.Categorias.FindAsync(categoriaId);
+                    if (categoria == null)
+                        throw new ArgumentException("Una de las categorías especificadas no existe.");
+
+                    _context.CategoriaRestaurantes.Add(new CategoriaRestaurantes
+                    {
+                        CategoriaId = categoria.Id,
+                        RestauranteId = restaurante.Id
+                    });
+                }
+
+                // Actualizar Amenidades
+                var amenidadesActuales = restaurante.AmenidadRestaurantes.ToList();
+                _context.AmenidadRestaurantes.RemoveRange(amenidadesActuales);
+
+                foreach (var amenidadId in dto.AmenidadIds)
+                {
+                    var amenidad = await _context.Amenidades.FindAsync(amenidadId);
+                    if (amenidad == null)
+                        throw new ArgumentException("Una de las amenidades especificadas no existe.");
+
+                    _context.AmenidadRestaurantes.Add(new AmenidadRestaurantes
+                    {
+                        AmenidadId = amenidad.Id,
+                        RestauranteId = restaurante.Id
+                    });
+                }
+
+                // Actualizar Horarios
+                var horariosActuales = restaurante.Horario.ToList();
+                _context.Horarios.RemoveRange(horariosActuales);
+
+                if (dto.Horarios != null)
+                {
+                    foreach (var h in dto.Horarios)
+                    {
+                        _context.Horarios.Add(new Horario
+                        {
+                            Id = Guid.NewGuid(),
+                            Dia = h.Dia,
+                            HoraApertura = h.HoraApertura,
+                            HoraCierre = h.HoraCierre,
+                            RestauranteId = restaurante.Id
+                        });
+                    }
+                }
+
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+
+                // Retornar DTO actualizado
+                return await GetByIdAsync(restaurante.Id);
+            }
+            catch
+            {
+                await transaction.RollbackAsync();
+                throw;
+            }
+            finally
+            {
+                await transaction.DisposeAsync();
+            }
+        }
+
     }
 
 }

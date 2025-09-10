@@ -1,49 +1,43 @@
 ---
-
-import AdminFooter from "@/components/Admin/AdminFooter.astro"
-import AdminNavBar from "@/components/Admin/AdminNavBar.astro"
-import AdminSideBar from "@/components/Admin/AdminSideBar.astro"
+import AdminFooter from "@/components/Admin/AdminFooter.astro";
+import AdminNavBar from "@/components/Admin/AdminNavBar.astro";
+import AdminSideBar from "@/components/Admin/AdminSideBar.astro";
 //import AdminNavBar from "@/React/Admin/AdminNavBar.tsx"
-import ReactLayout from "@/React/Layout/ReactLayout.tsx"
-import "@/styles/global.css"
+import ReactLayout from "@/React/Layout/ReactLayout.tsx";
+import "@/styles/global.css";
 interface Props {
-  title: string
-  description?: string
-}  
-  const {
+  title: string;
+  description?: string;
+}
+const {
   title = "Admin",
-  description = 'MVA-FOOD es una plataforma digital diseñada para restaurantes y food trucks que buscan modernizar su operación diaria mediante un sistema eficiente de gestión de menús, productos, colaboradores y promociones. Esta aplicación nace con el objetivo de simplificar la administración gastronómica y ofrecer una experiencia más fluida tanto para el personal del establecimiento como para sus clientes.',
-
-} = Astro.props
+  description = "MVA-FOOD es una plataforma digital diseñada para restaurantes y food trucks que buscan modernizar su operación diaria mediante un sistema eficiente de gestión de menús, productos, colaboradores y promociones. Esta aplicación nace con el objetivo de simplificar la administración gastronómica y ofrecer una experiencia más fluida tanto para el personal del establecimiento como para sus clientes.",
+} = Astro.props;
 ---
 
 <!doctype html>
 <html lang="es">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width" />
-		<title>{title}</title>
-		<meta property="og:title" content={title} />
-		<meta
-		name="description"
-		content={description}
-		/>
-		<link rel="icon" type="image/svg+xml" href="/mva-logo-rb.png" />
-		<link rel="stylesheet" href="/src/styles/global.css">
-	</head>
-	<body class="bg-white">
-		<ReactLayout client:load>
-			<div class="max-h-screen">
-			<AdminSideBar/>
-			<div class="p-4 lg:ml-80">
-			  <AdminNavBar/>
-			  <div class="h-[calc(100vh-182px)] px-4 py-6 overflow-y-auto">
-				<slot />
-			  </div>
-			  <AdminFooter/>
-			</div>
-			</div>
-		</ReactLayout>
-	</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>{title}</title>
+    <meta property="og:title" content={title} />
+    <meta name="description" content={description} />
+    <link rel="icon" type="image/svg+xml" href="/mva-logo-rb.png" />
+    <link rel="stylesheet" href="/src/styles/global.css" />
+  </head>
+  <body class="bg-white">
+    <ReactLayout client:load>
+      <div class="max-h-screen">
+        <AdminSideBar />
+        <div class="p-4 lg:ml-80">
+          <AdminNavBar />
+          <div class="h-[calc(100vh-182px)] px-4 py-6 overflow-y-auto">
+            <slot />
+          </div>
+          <AdminFooter />
+        </div>
+      </div>
+    </ReactLayout>
+  </body>
 </html>
-

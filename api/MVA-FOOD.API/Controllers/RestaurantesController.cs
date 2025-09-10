@@ -41,6 +41,14 @@ namespace MVA_FOOD.API.Controllers
             if (result == null) return BadRequest("No se pudo crear el restaurante.");
             return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
         }
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(Guid id, CrearRestauranteDto dto)
+        {
+            var result = await _service.UpdateAsync(id, dto);
+            if (result == null) return NotFound("Restaurante no encontrado o no se pudo actualizar.");
+            return Ok(result);
+        }
+
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)

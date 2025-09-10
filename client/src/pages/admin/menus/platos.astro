@@ -1,8 +1,9 @@
 ---
 import LayoutAdmin from "@/layouts/LayoutAdmin.astro";
-import MenuSection from "@/React/Auth/MenuSetion";
+import MenuSection from "@/React/Auth/MenuSetion.tsx";
 //ToDo: Eliminar el reload del contexto
 ---
+
 <LayoutAdmin title="Menú">
   <MenuSection client:load  />
 </LayoutAdmin>
