@@ -194,6 +194,7 @@ export default function RestauranteForm({ onSaved }: { onSaved?: () => void }) {
 
     try {
       await updateRestaurante(user.restauranteId, form);
+      //hay que ponerle un sweet alert
       alert("Restaurante actualizado correctamente");
       onSaved && onSaved();
     } catch {
@@ -206,7 +207,7 @@ export default function RestauranteForm({ onSaved }: { onSaved?: () => void }) {
       onSubmit={handleSubmit}
       className="space-y-8 p-6 bg-white rounded-lg shadow-md"
     >
-      <h2 className="text-xl font-semibold">Actualizar Restaurante</h2>
+      <h2 className="text-xl font-semibold">Perfil Restaurante</h2>
 
       {/* Información básica */}
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
