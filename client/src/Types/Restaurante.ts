@@ -141,11 +141,11 @@ export interface Amnidades {
 }
 
 export interface Horario {
+  id:string;
   dia: string;
-  apertura: string;
-  cierre: string;
+  horaApertura: string;
+  horaCierre: string;
 }
-
 export type Categorias =
     "Todas"
   | "Entradas"

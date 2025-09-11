@@ -48,8 +48,34 @@ export default function RestauranteForm({ onSaved }: { onSaved?: () => void }) {
     menuService.getAmenidades().then(setAmenidadesDisponibles);
     menuService.getCategorias().then(setCategoriasDisponibles);
   }, []);
+  const diasMap: Record<number, string> = {
+    0: "Domingo",
+    1: "Lunes",
+    2: "Martes",
+    3: "Miércoles",
+    4: "Jueves",
+    5: "Viernes",
+    6: "Sábado",
+  };
 
-  // Cargar restaurante actual
+  const diasOrden: string[] = [
+    "Lunes",
+    "Martes",
+    "Miércoles",
+    "Jueves",
+    "Viernes",
+    "Sábado",
+    "Domingo",
+  ];
+  const normalizeTime = (time: string) => {
+    if (!time) return "09:00";
+    const match = time.match(/(\d{1,2})[:.](\d{2})/);
+    if (!match) return "09:00";
+    const hours = match[1].padStart(2, "0");
+    const minutes = match[2];
+    return `${hours}:${minutes}`;
+  };
+
   useEffect(() => {
     if (user?.restauranteId) {
       Promise.all([
@@ -60,8 +86,8 @@ export default function RestauranteForm({ onSaved }: { onSaved?: () => void }) {
         setAmenidadesDisponibles(amenidades);
         setCategoriasDisponibles(categorias);
 
-        setRestaurante({
-          ...restaurante,
+        setRestaurante((prev) => ({
+          ...prev,
           id: data.id,
           name: data.name,
           direccion: data.direccion,
@@ -70,12 +96,24 @@ export default function RestauranteForm({ onSaved }: { onSaved?: () => void }) {
           image: null,
           amnidades: data.amenidades?.map((a: Amenidad) => a.id) || [],
           categorias: data.categorias?.map((c: Categoria) => c.id) || [],
-          horarios: data.horarios || [],
+          horarios: (
+            data.horarios?.map((h: Horario) => ({
+              id: h.id || "",
+              dia: typeof h.dia === "number" ? diasMap[h.dia] : h.dia,
+              horaApertura: normalizeTime(h.horaApertura),
+              horaCierre: normalizeTime(h.horaCierre),
+            })) || []
+          ).sort(
+            (a: any, b: any) =>
+              diasOrden.indexOf(a.dia) - diasOrden.indexOf(b.dia)
+          ),
+
           tipos: data.tipos || [],
           plan: data.plan || "",
           horario: data.horario || "",
           menus: data.menus || [],
-        });
+        }));
+
         setOriginalPerfilImage(data.perfilImage || null);
         setOriginalImage(data.image || null);
       });
@@ -116,7 +154,7 @@ export default function RestauranteForm({ onSaved }: { onSaved?: () => void }) {
       ...prev,
       horarios: [
         ...prev.horarios,
-        { dia: "Lunes", apertura: "09:00", cierre: "18:00" },
+        { id: "", dia: "Lunes", horaApertura: "09:00", horaCierre: "18:00" },
       ],
     }));
   };
@@ -147,9 +185,10 @@ export default function RestauranteForm({ onSaved }: { onSaved?: () => void }) {
       amnidades: restaurante.amnidades.filter((id) => !!id), // array de strings
       categorias: restaurante.categorias.filter((id) => !!id), // array de strings
       horarios: restaurante.horarios.map((h) => ({
+        id: h.id,
         dia: h.dia,
-        apertura: h.apertura,
-        cierre: h.cierre,
+        horaApertura: h.horaApertura,
+        horaCierre: h.horaCierre,
       })),
     };
 
@@ -368,17 +407,17 @@ export default function RestauranteForm({ onSaved }: { onSaved?: () => void }) {
             </select>
             <input
               type="time"
-              value={h.apertura}
+              value={h.horaApertura}
               onChange={(e) =>
-                handleHorarioChange(index, "apertura", e.target.value)
+                handleHorarioChange(index, "horaApertura", e.target.value)
               }
               className="border rounded-md p-2"
             />
             <input
               type="time"
-              value={h.cierre}
+              value={h.horaCierre}
               onChange={(e) =>
-                handleHorarioChange(index, "cierre", e.target.value)
+                handleHorarioChange(index, "horaCierre", e.target.value)
               }
               className="border rounded-md p-2"
             />

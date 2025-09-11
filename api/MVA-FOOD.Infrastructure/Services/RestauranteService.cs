@@ -212,7 +212,7 @@ namespace MVA_FOOD.Infrastructure.Services
                         Nombre = c.Categoria.Nombre,
 
                     }).Where(c => c.Id != Guid.Empty).ToList(),
-                    horarioDtos = r.Horario.Select( h => new HorarioDto
+                    Horarios = r.Horario.Select( h => new HorarioDto
                     {
                         Id = h.Id,
                         Dia = h.Dia,
