@@ -49,6 +49,7 @@ const categoriaIcons: Record<Categorias, JSX.Element> = {
 };
 
 export default function MenuSection({ menu, titulo, tomaPedido, mesa }: Props) {
+
   const {
     pedido,
     total,
@@ -60,19 +61,16 @@ export default function MenuSection({ menu, titulo, tomaPedido, mesa }: Props) {
     setModalPedidoAbierto,
     setPedido,
   } = usePedido();
-  const [tipoEntrega, setTipoEntrega] = useState<"domicilio" | "recoger">(
-    "domicilio"
-  );
-  const [selectedCategoria, setSelectedCategoria] =
-    useState<Categorias>("Todas");
-  const [imagenSeleccionada, setImagenSeleccionada] = useState<string | null>(
-    null
-  ); // ⭐️ Galería
-
+  const [tipoEntrega, setTipoEntrega] = useState<"domicilio" | "recoger">("domicilio");
+  const [selectedCategoria, setSelectedCategoria] = useState<Categorias>("Todas");
+  const [imagenSeleccionada, setImagenSeleccionada] = useState<string | null>(null);
+const API_URL = "http://localhost:5147";
+  // ✅ Corrección: asegurar que la categoría se lea como el nombre del objeto (o “Sin categoría”)
   const groupedMenu = menu.reduce(
     (acc, item) => {
-      if (!acc[item.categoria]) acc[item.categoria] = [];
-      acc[item.categoria].push(item);
+      const categoriaKey = (item.categoria?.nombre || "Sin categoría") as Categorias;
+      if (!acc[categoriaKey]) acc[categoriaKey] = [];
+      acc[categoriaKey].push(item);
       return acc;
     },
     {} as Record<Categorias, Menu[]>
@@ -82,6 +80,7 @@ export default function MenuSection({ menu, titulo, tomaPedido, mesa }: Props) {
     "Todas",
     ...baseCategorias.filter((cat) => groupedMenu[cat as Categorias]?.length > 0),
   ] as Categorias[];
+
 
   const handleCantidadChange = (index: number, nuevaCantidad: number) => {
     const nuevoPedido = [...pedido];
@@ -111,6 +110,7 @@ export default function MenuSection({ menu, titulo, tomaPedido, mesa }: Props) {
           />
         ))}
       </div>
+
       {/* Take out o delivery */}
       {tomaPedido && (
         <TipoEntregaSelector
@@ -120,10 +120,7 @@ export default function MenuSection({ menu, titulo, tomaPedido, mesa }: Props) {
       )}
 
       {/* Contenido del Menú */}
-      <div
-        className="mb-10 transition-all duration-1000 ease-in-out"
-        key={selectedCategoria}
-      >
+      <div className="mb-10 transition-all duration-1000 ease-in-out" key={selectedCategoria}>
         {(selectedCategoria === "Todas"
           ? baseCategorias.filter((cat) => groupedMenu[cat as Categorias]?.length)
           : [selectedCategoria]
@@ -134,14 +131,13 @@ export default function MenuSection({ menu, titulo, tomaPedido, mesa }: Props) {
                 {categoriaIcons[categoria as keyof typeof categoriaIcons]}
                 {categoria}
               </div>
-              <div className="text-sm font-semibold text-orange-600">
-                Precios
-              </div>
+              <div className="text-sm font-semibold text-orange-600">Precios</div>
             </div>
+
             <table className="w-full text-sm text-left">
               <tbody>
                 {(groupedMenu[categoria as Categorias] ?? [])
-                  .sort((a, b) => a.name.localeCompare(b.name))
+                  .sort((a, b) => a.nombre.localeCompare(b.nombre))
                   .map((item) => (
                     <tr
                       key={item.id}
@@ -149,26 +145,20 @@ export default function MenuSection({ menu, titulo, tomaPedido, mesa }: Props) {
                     >
                       <td className="w-1/6">
                         <img
-                          src={item.imagen || "/mva-logo-rb.png"}
-                          alt={item.name}
+                          src={`${API_URL}${item.imagen || "/mva-logo-rb.png"}`}
+                          alt={item.nombre}
                           className="w-16 h-16 object-cover rounded cursor-pointer hover:opacity-90 transition"
-                          onClick={() =>
-                            setImagenSeleccionada(
-                              item.imagen || "/mva-logo-rb.png"
-                            )
-                          }
+                          onClick={() => setImagenSeleccionada(item.imagen || "/mva-logo-rb.png")}
                         />
                       </td>
                       <td className="py-3 px-0 w-4/6">
                         <div className="text-base font-semibold text-orange-900">
-                          {item.name}
+                          {item.nombre}
                         </div>
-                        <div className="text-sm text-orange-600">
-                          {item.ingredientes}
-                        </div>
+                        <div className="text-sm text-orange-600">{item.ingredientes}</div>
                       </td>
                       <td className="py-3 px-2 w-1/6 text-right font-semibold text-orange-800 whitespace-nowrap">
-                        <div>${item.price.toLocaleString("es-MX")}</div>
+                        <div>${item.precio.toLocaleString("es-MX")}</div>
                         {(tomaPedido || mesa) && (
                           <button
                             className="bg-orange-500 hover:bg-orange-600 text-white p-1 rounded-full mt-1"
@@ -185,7 +175,7 @@ export default function MenuSection({ menu, titulo, tomaPedido, mesa }: Props) {
           </div>
         ))}
 
-        {/* Galería Modal */}
+        {/* Modal de imagen */}
         {imagenSeleccionada && (
           <div className="fixed inset-0 z-50 bg-black bg-opacity-80 flex items-center justify-center p-4">
             <div className="relative max-w-full max-h-full">
@@ -204,7 +194,7 @@ export default function MenuSection({ menu, titulo, tomaPedido, mesa }: Props) {
           </div>
         )}
 
-        {/* Modales */}
+        {/* Modales de pedido */}
         {modalProducto && (
           <ModalProducto
             producto={modalProducto}
@@ -216,16 +206,14 @@ export default function MenuSection({ menu, titulo, tomaPedido, mesa }: Props) {
           <ModalPedido
             mesa={mesa}
             pedido={pedido}
-            total={
-              tipoEntrega === "domicilio" && total < 200 ? total + 20 : total
-            }
+            total={tipoEntrega === "domicilio" && total < 200 ? total + 20 : total}
             envioGratis={tipoEntrega === "domicilio"}
             onClose={() => setModalPedidoAbierto(false)}
             onCantidadChange={handleCantidadChange}
           />
         )}
 
-        {/* Botón flotante */}
+        {/* Botón flotante de ver pedido */}
         {cantidad > 0 && (
           <BotonVerPedido
             total={total}

@@ -12,7 +12,7 @@ namespace MVA_FOOD.Core.DTOs
         public string Ingredientes { get; set; } = null!;
         public decimal Precio { get; set; }
         public Guid CategoriaId { get; set; }
-        public CategoriaDto Categoria { get; set; } = null!;
+        public CategoriaDto Categoria { get; set; } = null;
         public bool Activo { get; set; }
         public string Imagen { get; set; }
         public string ImageFullPath => string.IsNullOrEmpty(Imagen)

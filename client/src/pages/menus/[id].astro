@@ -1,28 +1,36 @@
 ---
-import { restaurants } from "@/consts/restaurantes";
+export const prerender = false;
+const API_URL = "http://localhost:5147";
+import { getRestaurante } from '@/Services/restauranteService.ts'; // ✅ Servicio para obtener restaurante
 import Food from "@/assets/svg/tools-kitchen-3.svg";
 import { Image } from "astro:assets";
 import LayoutMenu from "@/layouts/LayoutMenu.astro";
-import MenuSectionWrapper from "@/React/MenuSectionWrapper.jsx"; 
+import MenuSectionWrapper from "@/React/MenuSectionWrapper.jsx";
 import ShareButton from "@/React/Buttons/ShareButton";
 
-// 🔸 Obtener el ID del restaurante desde la URL
+// 📌 Obtener el ID del restaurante desde la URL
 const { id } = Astro.params;
 
+// 📡 Cargar dinámicamente el restaurante desde la API
+let restaurant = null;
+let tomarPedido = false;
 
-export function getStaticPaths() {
-  return restaurants.map(({ id }) => ({ params: { id } }));
+try {
+  if (typeof id === "string") {
+    restaurant = await getRestaurante(id);
+
+    // Si el restaurante tiene plan "Estándar" o "Premium" → permite pedidos
+    if (restaurant?.plan?.id === 2 || restaurant?.plan?.name === "Estándar" || restaurant?.plan?.name === "Premium") {
+      tomarPedido = true;
+    }
+  } else {
+    console.warn("⚠️ Parámetro 'id' ausente o no válido:", id);
+  }
+} catch (error) {
+  console.error("❌ Error al cargar restaurante:", error);
 }
 
-var tomarPedido = false;
-const restaurant = restaurants.find((res) => res.id === id);
-const description = `Perfil y Menu de ${id}`;
-
-if (restaurant?.plan.id === 2) {
-  tomarPedido = false;
-  
-}
-export const prerender = true;
+const description = `Perfil y menú de ${restaurant?.name ?? "Restaurante"}`;
 ---
 <LayoutMenu title={`Mva Foods - ${restaurant?.name}`} description={description}>
   
@@ -32,7 +40,7 @@ export const prerender = true;
 
         <div class="w-full bg-white shadow-lg rounded-lg text-center feature-step p-4 my-6 lg:w-3/5">
           <Image
-            src={restaurant.image}
+            src={API_URL + restaurant.image}
             alt={restaurant.name}
             title={restaurant.name}
             width="200"

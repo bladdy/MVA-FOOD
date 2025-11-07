@@ -1,9 +1,10 @@
 // src/React/MenuSectionWrapper.jsx
 import { useEffect, useState } from "react";
 import MenuSection from "./MenuSection.tsx";
+import type { Menu } from "@/Types/Restaurante.ts";
 
 interface MenuSectionWrapperProps {
-  menu: any; // Puedes reemplazar 'any' con el tipo correcto si lo conoces
+  menu: Menu[]; // arreglo de menús
   titulo: string;
   tomaPedido: boolean;
 }
@@ -11,7 +12,6 @@ interface MenuSectionWrapperProps {
 const MenuSectionWrapper = ({ menu, titulo, tomaPedido }: MenuSectionWrapperProps) => {
   const [loading, setLoading] = useState(true);
   const [mesa, setMesa] = useState<string | null>(null);
-
   useEffect(() => {
     // Leer el número de mesa de los parámetros de la URL
     const params = new URLSearchParams(window.location.search);

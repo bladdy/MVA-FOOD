@@ -37,7 +37,7 @@ namespace MVA_FOOD.Infrastructure.Services
                     .ThenInclude(cr => cr.Categoria)
                 .AsQueryable();
 
-            // ✅ Filtros dinámicos (ignorar mayúsculas/minúsculas)
+            // ✅ Filtros dinámicos
             if (!string.IsNullOrEmpty(filter.Search))
             {
                 var search = filter.Search.ToLower();
@@ -51,7 +51,7 @@ namespace MVA_FOOD.Infrastructure.Services
 
             if (filter.TipoId.HasValue)
             {
-                query = query.Where(r => r.PlanRestaurante.PlanId == filter.TipoId.Value);
+                query = query.Where(r => r.PlanRestaurante != null && r.PlanRestaurante.PlanId == filter.TipoId.Value);
             }
 
             if (filter.AmenidadId.HasValue)
@@ -64,7 +64,7 @@ namespace MVA_FOOD.Infrastructure.Services
                 query = query.Where(r => r.Direccion.Contains(filter.Ubicacion));
             }
 
-            // ✅ Ordenamiento dinámico
+            // ✅ Ordenamiento dinámico (null-safe)
             query = filter.OrderBy?.ToLower() switch
             {
                 "nombre" => filter.OrderDirection == "desc"
@@ -72,14 +72,14 @@ namespace MVA_FOOD.Infrastructure.Services
                     : query.OrderBy(r => r.Name),
 
                 "tipo" => filter.OrderDirection == "desc"
-                    ? query.OrderByDescending(r => r.PlanRestaurante.Plan.Nombre)
-                    : query.OrderBy(r => r.PlanRestaurante.Plan.Nombre),
+                    ? query.OrderByDescending(r => r.PlanRestaurante != null ? r.PlanRestaurante.Plan.Nombre : "")
+                    : query.OrderBy(r => r.PlanRestaurante != null ? r.PlanRestaurante.Plan.Nombre : ""),
 
                 "categorias" => filter.OrderDirection == "desc"
-                    ? query.OrderByDescending(r => r.CategoriaRestaurantes.FirstOrDefault().Categoria.Nombre)
-                    : query.OrderBy(r => r.CategoriaRestaurantes.FirstOrDefault().Categoria.Nombre),
+                    ? query.OrderByDescending(r => r.CategoriaRestaurantes.FirstOrDefault().Categoria.Nombre ?? "")
+                    : query.OrderBy(r => r.CategoriaRestaurantes.FirstOrDefault().Categoria.Nombre ?? ""),
 
-                _ => query.OrderBy(r => r.Name) // Default
+                _ => query.OrderBy(r => r.Name)
             };
 
             // ✅ Paginación
@@ -97,26 +97,37 @@ namespace MVA_FOOD.Infrastructure.Services
                     Direccion = r.Direccion,
                     Phone = r.Phone,
                     PlanId = r.PlanRestauranteId,
-                    PlanRestauranteDto = new PlanRestauranteDto
+
+                    PlanRestauranteDto = r.PlanRestaurante == null ? null : new PlanRestauranteDto
                     {
                         Id = r.PlanRestaurante.Id,
-                        Nombre = r.PlanRestaurante.Plan.Nombre,
-                        Precio = r.PlanRestaurante.Plan.Precio,
+                        Nombre = r.PlanRestaurante.Plan != null ? r.PlanRestaurante.Plan.Nombre : null,
+                        Precio = r.PlanRestaurante.Plan != null ? r.PlanRestaurante.Plan.Precio : 0,
                         FechaInicio = r.PlanRestaurante.FechaInicio,
                         FechaFin = r.PlanRestaurante.FechaFin,
                         FechaPago = r.PlanRestaurante.FechaPago,
                         Pagado = r.PlanRestaurante.Pagado
                     },
-                    Amenidades = r.AmenidadRestaurantes.Select(a => new AmenidadDto
-                    {
-                        Id = a.Amenidad.Id,
-                        Nombre = a.Amenidad.Nombre
-                    }).ToList(),
-                    Categorias = r.CategoriaRestaurantes.Select(c => new CategoriaDto
-                    {
-                        Id = c.Categoria.Id,
-                        Nombre = c.Categoria.Nombre,
-                    }).ToList()
+
+                    Amenidades = r.AmenidadRestaurantes != null
+                        ? r.AmenidadRestaurantes
+                            .Where(a => a.Amenidad != null)
+                            .Select(a => new AmenidadDto
+                            {
+                                Id = a.Amenidad.Id,
+                                Nombre = a.Amenidad.Nombre
+                            }).ToList()
+                        : new List<AmenidadDto>(),
+
+                    Categorias = r.CategoriaRestaurantes != null
+                        ? r.CategoriaRestaurantes
+                            .Where(c => c.Categoria != null)
+                            .Select(c => new CategoriaDto
+                            {
+                                Id = c.Categoria.Id,
+                                Nombre = c.Categoria.Nombre
+                            }).ToList()
+                        : new List<CategoriaDto>()
                 })
                 .ToListAsync();
 
@@ -179,6 +190,7 @@ namespace MVA_FOOD.Infrastructure.Services
             return await _context.Restaurantes
                 .Include(r => r.PlanRestaurante)
                 .Include(r => r.Menu)
+                .ThenInclude(m => m.Categoria)
                 .Include(r => r.Horario)
                 .Include(r => r.AmenidadRestaurantes)
                 .Include(r => r.CategoriaRestaurantes)
@@ -191,6 +203,20 @@ namespace MVA_FOOD.Infrastructure.Services
                     Direccion = r.Direccion,
                     Phone = r.Phone,
                     PlanId = r.PlanRestauranteId,
+                    Menu = r.Menu.Select(m => new MenuDto
+                    {
+                        Id = m.Id,
+                        Nombre = m.Nombre,
+                        CategoriaId = m.CategoriaId,
+                        Categoria = m.Categoria != null ? new CategoriaDto
+                        {
+                            Id = m.Categoria.Id,
+                            Nombre = m.Categoria.Nombre
+                        } : null,
+                        Ingredientes = m.Ingredientes,
+                        Precio = m.Precio,
+                        Imagen = m.Imagen
+                    }).ToList(),
                     PlanRestauranteDto = new PlanRestauranteDto
                     {
                         Id = r.PlanRestaurante.Id,
@@ -212,14 +238,14 @@ namespace MVA_FOOD.Infrastructure.Services
                         Nombre = c.Categoria.Nombre,
 
                     }).Where(c => c.Id != Guid.Empty).ToList(),
-                    Horarios = r.Horario.Select( h => new HorarioDto
+                    Horarios = r.Horario.Select(h => new HorarioDto
                     {
                         Id = h.Id,
                         Dia = h.Dia,
                         HoraApertura = h.HoraApertura,
                         HoraCierre = h.HoraCierre
 
-                        
+
                     }).Where(c => c.Id != Guid.Empty).ToList(),
                 }).FirstAsync(r => r.Id == id);
         }
@@ -376,34 +402,42 @@ namespace MVA_FOOD.Infrastructure.Services
                 var categoriasActuales = restaurante.CategoriaRestaurantes.ToList();
                 _context.CategoriaRestaurantes.RemoveRange(categoriasActuales);
 
-                foreach (var categoriaId in dto.CategoriaIds)
+                if (dto.CategoriaIds != null)
                 {
-                    var categoria = await _context.Categorias.FindAsync(categoriaId);
-                    if (categoria == null)
-                        throw new ArgumentException("Una de las categorías especificadas no existe.");
-
-                    _context.CategoriaRestaurantes.Add(new CategoriaRestaurantes
+                    foreach (var categoriaId in dto.CategoriaIds)
                     {
-                        CategoriaId = categoria.Id,
-                        RestauranteId = restaurante.Id
-                    });
+                        var categoria = await _context.Categorias.FindAsync(categoriaId);
+                        if (categoria == null)
+                            throw new ArgumentException("Una de las categorías especificadas no existe.");
+
+                        _context.CategoriaRestaurantes.Add(new CategoriaRestaurantes
+                        {
+                            CategoriaId = categoria.Id,
+                            RestauranteId = restaurante.Id
+                        });
+                    }
+
                 }
 
                 // Actualizar Amenidades
                 var amenidadesActuales = restaurante.AmenidadRestaurantes.ToList();
                 _context.AmenidadRestaurantes.RemoveRange(amenidadesActuales);
 
-                foreach (var amenidadId in dto.AmenidadIds)
+                if (dto.AmenidadIds != null)
                 {
-                    var amenidad = await _context.Amenidades.FindAsync(amenidadId);
-                    if (amenidad == null)
-                        throw new ArgumentException("Una de las amenidades especificadas no existe.");
-
-                    _context.AmenidadRestaurantes.Add(new AmenidadRestaurantes
+                    foreach (var amenidadId in dto.AmenidadIds)
                     {
-                        AmenidadId = amenidad.Id,
-                        RestauranteId = restaurante.Id
-                    });
+                        var amenidad = await _context.Amenidades.FindAsync(amenidadId);
+                        if (amenidad == null)
+                            throw new ArgumentException("Una de las amenidades especificadas no existe.");
+
+                        _context.AmenidadRestaurantes.Add(new AmenidadRestaurantes
+                        {
+                            AmenidadId = amenidad.Id,
+                            RestauranteId = restaurante.Id
+                        });
+                    }
+
                 }
 
                 // Actualizar Horarios

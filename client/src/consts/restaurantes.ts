@@ -1,246 +1,110 @@
 import type { Restaurante } from "@/Types/Restaurante.ts";
 
-export const restaurants : Restaurante[] = [
+export const restaurantes: Restaurante[] = [
   {
-    id: "demo-1",
-    name: "Demo",
-    image: "/mva-logo-rb.png",
-    tipos: ["Americana"],
-    plan: {
-      id: 2,
-      name: "PLAN GOLD"
-    },
+    id: "1",
+    name: "La Parrilla Mexicana",
+    direccion: "Av. Revolución 102, Ciudad de México",
+    phone: "+52 55 1234 5678",
     perfilImage: "/img/fast-food-3.jpg",
-    direccion: "Federico Geraldino 61, Plaza Laura, local 1 A. Piantini. Santo Domingo. Distrito Nacional.",
-    phone: "866 100 2222",
-    horario: [
-      {
-        dia: "Lunes a Viernes",
-        apertura: "11:00 AM",
-        cierre: "09:00 PM"
-      },
-      {
-        dia: "Sábado",
-        apertura: "12:00 AM",
-        cierre: "09:00 PM"
-      },
-      {
-        dia: "Domingo",
-        apertura: "12:00 PM",
-        cierre: "09:00 PM"
-      }
+    image: "/mva-logo-rb.png",
+    amenities: [
+      { id: "1", svg: "area-exterior.svg", nombre: "Mesas al aire libre" },
+      { id: "2", svg: "delivery.svg", nombre: "Estacionamiento" },
     ],
-    amnidades: [ 
-      {svg:"area-exterior.svg", name:"Area Exterior"}, 
-      {svg:"delivery.svg", name:"Delivery"},
-      {svg:"wifi.svg", name:"Wifi"}
+    categorias: ["Steak House", "Plato Fuerte"],
+    horarios: [
+      { id: "1", dia: "Martes a jueves", horaApertura: "12:00", horaCierre: "22:00" },
+      { id: "2", dia: "Viernes", horaApertura: "12:00", horaCierre: "22:00" },
+      { id: "2", dia: "Sábado", horaApertura: "12:00", horaCierre: "22:00" },
+      { id: "3", dia: "Domingo", horaApertura: "13:00", horaCierre: "20:00" },
     ],
-    menu: [
+    tipos: ["Restaurante", "Bar"],
+    plan: { id: 1, name: "Premium" },
+    horario: "12:00 PM - 10:00 PM",
+    menus: [
       {
-        id: "burger-1",
-        name: "Hamburguesa Clásica",
-        ingredientes: "Carne de res, lechuga, tomate, queso cheddar, pan de hamburguesa, salsa especial",
-        price: 180,
-        categoria: "Burger & Street Food",
-        imagen: "/mva-logo-rb.png"
+        id: "m1",
+        nombre: "Tacos al Pastor",
+        ingredientes: "Cerdo, piña, cebolla, cilantro, salsa roja",
+        precio: 95,
+        activo: true,
+        categoriaId: "1",
+        categoria: { id: "1", nombre: "Plato Fuerte" },
+        restauranteId: "1",
+        imagen: "/images/menus/tacos-al-pastor.jpg",
+        ImageFullPath: "/images/menus/tacos-al-pastor.jpg",
       },
-      // Steak agregado al menú
-      {
-        id: "burger-steak-1",
-        name: "Steak a la Parrilla",
-        ingredientes: "Bistec de res a la parrilla, papas fritas, ensalada",
-        price: 350,
-        categoria: "Steak House",
-      imagen: "/mva-logo-rb.png"      },
-      // Pollo Frito agregado al menú
-      {
-        id: "burger-pollofrito-1",
-        name: "5 Pzas. Pollo Frito",
-        ingredientes: "Piezas de pollo empanizadas y fritas, papas fritas",
-        price: 220,
-        categoria: "Pollo Frito",
-        imagen: "/mva-logo-rb.png"
-      },
-      {
-        id: "burger-10",
-        name: "Pasta Alfredo",
-        ingredientes: "Pasta fettuccine, salsa Alfredo, queso parmesano, crema, mantequilla",
-        price: 160,
-        categoria: "Pastas",
-        imagen: "/mva-logo-rb.png"
-      },
-      {
-        id: "burger-2",
-        name: "Hamburguesa BBQ",
-        ingredientes: "Carne de res, cebolla caramelizada, queso cheddar, tocino, salsa BBQ, pan de hamburguesa",
-        price: 210,
-        categoria: "Burger & Street Food",
-        imagen: "/mva-logo-rb.png"
-      },
-      {
-        id: "burger-3",
-        name: "Papas Fritas",
-        ingredientes: "Papas, sal",
-        price: 80,
-        categoria: "Entradas",
-        imagen: "/mva-logo-rb.png"
-      },
-      {
-        id: "burger-4",
-        name: "Refresco",
-        ingredientes: "Bebida gaseosa a elección",
-        price: 50,
-        categoria: "Bebidas",
-        imagen: "/mva-logo-rb.png"
-      },
-      {
-        id: "burger-5",
-        name: "Nuggets de Pollo",
-        ingredientes: "Pechuga de pollo empanizada",
-        price: 120,
-        categoria: "Kids",
-        imagen: "/mva-logo-rb.png"
-      },
-      {
-        id: "burger-6",
-        name: "Sopa de Pollo",
-        ingredientes: "Pollo, fideos, zanahoria, apio, cebolla",
-        price: 90,
-        categoria: "Sopas",
-        imagen: "/mva-logo-rb.png"
-      },
-      {
-        id: "burger-7",
-        name: "Brownie con Helado",
-        ingredientes: "Brownie de chocolate, helado de vainilla, sirope de chocolate",
-        price: 100,
-        categoria: "Postres",
-        imagen: "/mva-logo-rb.png"
-      },
-      {
-        id: "burger-8",
-        name: "Ensalada César",
-        ingredientes: "Lechuga, pollo a la plancha, crutones, queso parmesano, aderezo César",
-        price: 130,
-        categoria: "Entradas",
-        imagen: "/mva-logo-rb.png"
-      },
-      {
-        id: "burger-9",
-        name: "Mini Hamburguesa Kids",
-        ingredientes: "Mini hamburguesa de res, pan, queso cheddar",
-        price: 90,
-        categoria: "Kids",
-        imagen: "/mva-logo-rb.png"
-      }
-    ]
+    ],
   },
   {
-    id: "demo-2",
-    name: "Demo",
+    id: "2",
+    name: "Pizzería Bella Italia",
+    direccion: "Calle Roma 345, Guadalajara, Jalisco",
+    phone: "+52 33 5678 9101",
+    perfilImage: "/img/fast-food-3.jpg",
     image: "/mva-logo-rb.png",
-    tipos: ["Pollo"],
-    plan: {
-      id:1,
-      name:"PLAN PLATINUM"
-    },
-    perfilImage: "/img/pollo-frito.jpg",
-    direccion: "Av. Churchill, Santo Domingo.",
-    phone: "866 111 3333",
-    horario: [
-      {
-        dia: "Lunes a Viernes",
-        apertura: "11:00",
-        cierre: "23:00"
-      },
-      {
-        dia: "Sábado",
-        apertura: "12:00",
-        cierre: "23:00"
-      },
-      {
-        dia: "Domingo",
-        apertura: "12:00",
-        cierre: "21:00"
-      }
+    amenities: [
+      { id: "3", svg: "<svg>👨‍👩‍👧‍👦</svg>", nombre: "Familiar" },
+      { id: "4", svg: "wifi.svg", nombre: "WiFi Gratis" },
     ],
-    amnidades: [ 
-      {svg:"area-exterior.svg", name:"Area Exterior"}, 
-      {svg:"wifi.svg", name:"Wifi"}
+    categorias: ["Pizza", "Pastas", "Postres"],
+    horarios: [
+      { id: "4", dia: "Miércoles", horaApertura: "13:00", horaCierre: "23:00" },
+      { id: "5", dia: "Jueves", horaApertura: "13:00", horaCierre: "23:00" },
+      { id: "6", dia: "Viernes", horaApertura: "13:00", horaCierre: "00:00" },
     ],
-    menu: [
+    tipos: ["Restaurante"],
+    plan: { id: 2, name: "Estándar" },
+    horario: "1:00 PM - 12:00 AM",
+    menus: [
       {
-        id: "kfc-1",
-        name: "Combo 2 Piezas de Pollo",
-        ingredientes: "2 piezas de pollo, papas fritas, refresco",
-        price: 220,
-        categoria: "Plato Fuerte",
-        imagen: "/mva-logo-rb.png"
+        id: "m2",
+        nombre: "Pizza Margarita",
+        ingredientes: "Mozzarella, tomate, albahaca fresca, aceite de oliva",
+        precio: 140,
+        activo: true,
+        categoriaId: "2",
+        categoria: { id: "2", nombre: "Pizza" },
+        restauranteId: "2",
+        imagen: "/images/menus/pizza-margarita.jpg",
+        ImageFullPath: "/images/menus/pizza-margarita.jpg",
       },
+    ],
+  },
+  {
+    id: "3",
+    name: "Marisquería El Puerto",
+    direccion: "Blvd. del Mar 777, Cancún, Quintana Roo",
+    phone: "+52 998 222 3344",
+    perfilImage: "/img/fast-food-3.jpg",
+    image: "/mva-logo-rb.png",
+    amenities: [
+      { id: "5", svg: "<svg>🌊</svg>", nombre: "Vista al mar" },
+      { id: "6", svg: "<svg>🎶</svg>", nombre: "Música en vivo" },
+    ],
+    categorias: ["Mariscos", "Pescados", "Bebidas"],
+    horarios: [
+      { id: "7", dia: "Viernes", horaApertura: "11:00", horaCierre: "22:00" },
+      { id: "8", dia: "Sábado", horaApertura: "11:00", horaCierre: "23:00" },
+      { id: "9", dia: "Domingo", horaApertura: "11:00", horaCierre: "21:00" },
+    ],
+    tipos: ["Restaurante", "Terraza"],
+    plan: { id: 3, name: "Gold" },
+    horario: "11:00 AM - 11:00 PM",
+    menus: [
       {
-        id: "kfc-2",
-        name: "Tenders",
-        ingredientes: "Tiras de pechuga de pollo empanizadas",
-        price: 150,
-        categoria: "Entradas",
-        imagen: "/mva-logo-rb.png"
+        id: "m3",
+        nombre: "Ceviche Mixto",
+        ingredientes: "Pescado, camarón, pulpo, limón, cebolla morada, chile",
+        precio: 180,
+        activo: true,
+        categoriaId: "3",
+        categoria: { id: "3", nombre: "Mariscos" },
+        restauranteId: "3",
+        imagen: "/images/menus/ceviche-mixto.jpg",
+        ImageFullPath: "/images/menus/ceviche-mixto.jpg",
       },
-      {
-        id: "kfc-3",
-        name: "Papas Fritas",
-        ingredientes: "Papas, sal",
-        price: 80,
-        categoria: "Entradas",
-        imagen: "/mva-logo-rb.png"
-      },
-      {
-        id: "kfc-4",
-        name: "Refresco",
-        ingredientes: "Bebida gaseosa a elección",
-        price: 50,
-        categoria: "Bebidas",
-        imagen: "/mva-logo-rb.png"
-      },
-      {
-        id: "kfc-5",
-        name: "Helado Sundae",
-        ingredientes: "Helado de vainilla, sirope de chocolate",
-        price: 70,
-        categoria: "Postres",
-        imagen: "/mva-logo-rb.png"
-      },
-      {
-        id: "kfc-6",
-        name: "Sopa de Pollo Picante",
-        ingredientes: "Pollo, vegetales, especias picantes",
-        price: 95,
-        categoria: "Sopas",
-        imagen: "/mva-logo-rb.png"
-      },
-      {
-        id: "kfc-7",
-        name: "Combo Kids",
-        ingredientes: "1 pieza de pollo, papas fritas, jugo",
-        price: 110,
-        categoria: "Kids",
-        imagen: "/mva-logo-rb.png"
-      },
-      {
-        id: "kfc-8",
-        name: "Ensalada de Repollo",
-        ingredientes: "Repollo, zanahoria, aderezo especial",
-        price: 60,
-        categoria: "Entradas",
-        imagen: "/mva-logo-rb.png"
-      },
-      {
-        id: "kfc-9",
-        name: "Pie de Manzana",
-        ingredientes: "Masa crujiente, relleno de manzana",
-        price: 75,
-        categoria: "Postres",
-        imagen: "/mva-logo-rb.png"
-      }
-    ]
-  }
+    ],
+  },
 ];

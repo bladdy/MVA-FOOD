@@ -1,4 +1,4 @@
-import type { Restaurante, RestauranteUpdateDto } from "@/Types/Restaurante.ts";
+import type { Restaurante} from "@/Types/Restaurante.ts";
 const API_URL = "http://localhost:5147/api";
 
 export async function getRestaurante(id: string) {
@@ -6,7 +6,17 @@ export async function getRestaurante(id: string) {
   if (!res.ok) throw new Error("Error al obtener restaurante");
   return await res.json();
 }
+// Obtener la lista de restaurantes con paginación
+export async function getRestaurantes(pageNumber: number = 1, pageSize: number = 10) {
+  const params = new URLSearchParams({
+    PageNumber: pageNumber.toString(),
+    PageSize: pageSize.toString(),
+  });
 
+  const res = await fetch(`${API_URL}/restaurantes?${params.toString()}`);
+  if (!res.ok) throw new Error("Error al obtener restaurantes");
+  return await res.json(); // Aquí puedes retornar los restaurantes paginados
+}
 export async function updateRestaurante(id: string, data: Restaurante) {
   const formData = new FormData();
   console.log(data, id);
@@ -22,9 +32,9 @@ export async function updateRestaurante(id: string, data: Restaurante) {
   }
 
   // ✅ Amenidades
-  if (data.amnidades) {
-    data.amnidades.forEach((id) => {
-      formData.append("AmenidadIds", id);
+  if (data.amenities) {
+    data.amenities.forEach((amenidad) => {
+      formData.append("AmenidadIds", amenidad.id);
     });
   }
 

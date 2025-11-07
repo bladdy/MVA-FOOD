@@ -70,7 +70,7 @@ export interface RestauranteUpdateDto {
   categoriaIds?: string[]
   horarios?: Horario[]
   tipos?: string[]
-  plan?: string
+  plan?: Plan
   horario?: string
 }
 
@@ -82,13 +82,13 @@ export interface Restaurante {
   phone: string;
   perfilImage: File | string | null;
   image: File | string | null;
-  amnidades: string[];
+  amenities: Amenidad[];
   categorias: string[];
   horarios: Horario[];
 
   // Campos opcionales
   tipos?: string[];
-  plan?: string;
+  plan?: Plan;
   horario?: string;
   menus?: any[];
 }
@@ -145,6 +145,10 @@ export interface Horario {
   dia: string;
   horaApertura: string;
   horaCierre: string;
+  horaAperturaTexto: string;
+  horaCierreTexto: string;
+
+  diaTexto: string;
 }
 export type Categorias =
     "Todas"

@@ -1,7 +1,8 @@
 ---
-import Layout from '@/layouts/Layout.astro';
-import { restaurants } from '@/consts/restaurantes';
+export const prerender = false;
 
+import Layout from '@/layouts/Layout.astro';
+import { getRestaurante } from '@/Services/restauranteService.ts'; // ⬅️ Importa tu servicio
 import Location from '@/assets/svg/map-pin.svg';
 import Food from '@/assets/svg/tools-kitchen-3.svg';
 import Phone from '@/assets/svg/phone.svg';
@@ -10,136 +11,149 @@ import Clock from '@/assets/svg/clock.svg';
 import { Image } from 'astro:assets';
 import ShareButton from '@/React/Buttons/ShareButton';
 import MenuSectionWrapper from '@/React/MenuSectionWrapper';
-// Esto importa todos los SVGs de la carpeta "amenidades"
+import type { Horario } from '@/Types/Restaurante';
+const API_URL = "http://localhost:5147";
+// Importa todos los SVGs de amenidades
 const svgModules = import.meta.glob(
   "/src/assets/amenidades/*.svg",
   { eager: true, import: "default" },
 );
 
-// Crear un mapa por nombre de archivo
+// Crea un mapa de SVGs
 const amenidadesMap = Object.fromEntries(
   Object.entries(svgModules).map(([path, mod]) => {
-    const filename = path.split("/").pop(); // ej: "area-exterior.svg"
+    const filename = path.split("/").pop();
     return [filename, mod];
   }),
 );
 
-
+// 📌 Obtenemos el id de la URL
 const { id } = Astro.params;
-// Descripción dinámica
-export function getStaticPaths() {
-  return restaurants.map(({ id }) => {
-    return { params: { id } };
-  });
+
+// 📡 Carga dinámica del restaurante desde la API
+let restaurant = null;
+try {
+  if (typeof id === "string") {
+    restaurant = await getRestaurante(id);
+  } else {
+    console.warn("Parámetro 'id' ausente o no es una cadena:", id);
+  }
+} catch (error) {
+  console.error("Error al cargar restaurante:", error);
 }
-const restaurant = restaurants.find((res) => res.id === id);
-var tomarPedido = false; // Cambia esto si quieres que se tome pedido
-if (restaurant?.plan.id === 2) {
-  
-  tomarPedido = true; // Si el restaurante tiene plan de toma de pedidos, se activa
+// Control si puede tomar pedidos según plan
+let tomarPedido = false;
+if (restaurant?.planRestauranteId === 2 || restaurant?.plan?.nombre === "Estándar" || restaurant?.plan?.nombre === "Premium") {
+  tomarPedido = true;
 }
 
-const description = `Perfil y Menu de ${id}`;
-export const prerender = true;
-
+const description = `Perfil y menú de ${restaurant?.name ?? "Restaurante"}`;
 ---
 
-<Layout title={`Mva Foods - ${restaurant?.name}`} description={description}>
+<Layout title={`Mva Foods - ${restaurant?.name ?? "Restaurante"}`} description={description}>
   {
     restaurant ? (
       <div class="flex flex-col md:flex-row md:gap-[2%] flex-wrap content-start min-h-screen pt-24 pb-10 px-4 lg:px-24 bg-gradient-to-r from-orange-100 to-orange-50">
         <!-- Card lateral -->
         <div class="w-full md:w-1/4 bg-white shadow-lg rounded-lg text-center feature-step p-6">
           <Image
-            src={restaurant.image}
-            alt={restaurant.name}
+            src={typeof restaurant.image === "string" ? `${API_URL}${restaurant.image}` : "/images/placeholder.png"}
+            alt={restaurant.name ?? "Restaurante"}
             title={restaurant.name}
             width="200"
             height="200"
             class="inline-block w-22 transition-transform group-hover:scale-110"
-            style={{"viewTransitionName": restaurant.id}}
+            style={{ "viewTransitionName": restaurant.id }}
           />
-          
-          
+
           <h2 class="text-2xl md:text-4xl font-semibold text-balance text-orange-600 mt-4">
             {restaurant.name}
           </h2>
+
           <ShareButton title={restaurant.name} client:only="react" />
 
           <div class="text-start flex flex-col gap-4 mt-4">
+            <!-- Tipos -->
             <div class="flex items-start">
               <Food class="text-orange-600 w-5 h-5 mr-2" />
               <h2 class="text-md font-semibold text-orange-600">
-                {restaurant.tipos?.join(", ") ?? "Sin categoría"}
+                {restaurant.categorias?.map((c: { nombre: string }) => c.nombre).join(", ") ?? "Sin categoría"}
               </h2>
             </div>
-            <div class="flex items-start">
-              <div>
-              <Location class="text-orange-600 w-5 h-5 mr-2" />
 
-              </div>
+            <!-- Dirección -->
+            <div class="flex items-start">
+              <Location class="text-orange-600 w-5 h-5 mr-2" />
               <h2 class="text-md font-semibold text-orange-600">
                 {restaurant.direccion}
               </h2>
             </div>
+
+            <!-- Teléfono -->
             <div class="flex items-start">
-              <Phone class="text-orange-600 w-5 h-5 mr-2 " />
+              <Phone class="text-orange-600 w-5 h-5 mr-2" />
               <h2 class="text-md font-semibold text-orange-600">
                 {restaurant.phone}
               </h2>
             </div>
+
+            <!-- WhatsApp -->
             <div class="flex items-start">
               <Whatsapp class="text-orange-600 w-5 h-5 mr-2" />
               <h2 class="text-md font-semibold text-orange-600">
                 {restaurant.phone}
               </h2>
             </div>
+
+            <!-- Horarios -->
             <div class="flex">
               <Clock class="text-orange-600 w-5 h-5 mr-2 mt-1" />
               <div class="flex flex-col">
                 {
-                  restaurant.horario.map((horario) => (
+                  restaurant?.horarios?.map((horario: Horario) => (
                     <div class="grid grid-cols-2 justify-between lg:gap-4 text-md font-semibold text-orange-600">
-                      <p>{horario.dia}: </p> 
-                      <p>{horario.apertura} a {horario.cierre}</p>
+                      <p>{horario.diaTexto}:</p>
+                      <p>{horario.horaAperturaTexto} a {horario.horaCierreTexto}</p>
                     </div>
                   ))
                 }
               </div>
             </div>
+
+            <!-- Amenidades -->
             <div class="flex items-start flex-wrap gap-2">
-              {//dividir los platos por categoria
-                restaurant.amenidades.map((amenidade) => {
-                  const SvgIcon = amenidadesMap[amenidade.svg];
+              {
+                restaurant?.amenities?.map((amenidad: any) => {
+                  const SvgIcon = amenidadesMap[amenidad.svg];
                   return (
-                     <div class="flex flex-col items-center w-20 text-center group">
+                    <div class="flex flex-col items-center w-20 text-center group">
                       {SvgIcon && (
                         <SvgIcon class="w-10 h-10 mb-1 text-orange-600 fill-current transition-transform duration-200 group-hover:scale-110" />
                       )}
                       <h2 class="text-sm font-semibold text-orange-600">
-                        {amenidade.name}
+                        {amenidad.nombre}
                       </h2>
                     </div>
                   );
                 })
               }
             </div>
+
+            <!-- Mapa -->
             <div class="relative w-full h-80 overflow-hidden rounded-lg">
-              <iframe 
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d28458.6750399274!2d-101.44747150906393!3d26.924612!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x868bcdc372021f57%3A0x1f92eebe5a1ab44a!2sBurger%20King!5e0!3m2!1ses!2smx!4v1749876497694!5m2!1ses!2smx" 
+              <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d28458.6750399274!2d-101.44747150906393!3d26.924612!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x868bcdc372021f57%3A0x1f92eebe5a1ab44a!2sBurger%20King!5e0!3m2!1ses!2smx!4v1749876497694!5m2!1ses!2smx"
                 class="absolute top-0 left-0 w-full h-full border-0 lg:h-96"
-                allowfullscreen 
-                loading="lazy" 
+                allowfullscreen
+                loading="lazy"
                 referrerpolicy="no-referrer-when-downgrade">
               </iframe>
             </div>
-
           </div>
         </div>
 
         <!-- Contenido central -->
         <div class="w-full md:flex-1 bg-white shadow-lg rounded-lg text-center feature-step p-6 mt-6 md:mt-0">
-          <!-- MenuSection menu={restaurant?.menu ?? []} titulo="Menú" tomaPedido={tomarPedido} client:load /> -->
           <MenuSectionWrapper
             tomaPedido={tomarPedido}
             menu={restaurant?.menu ?? []}
@@ -155,4 +169,3 @@ export const prerender = true;
     )
   }
 </Layout>
-
