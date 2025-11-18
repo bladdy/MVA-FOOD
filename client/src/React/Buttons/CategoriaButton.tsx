@@ -20,7 +20,7 @@ const CategoriaButton = ({ label, icon, active, onClick }: Props) => {
       onClick={handleClick}
       className={clsx(
         "flex flex-col items-center justify-center px-2 py-2 rounded-full border transition-colors text-center shadow-sm",
-        "w-10 h-10 sm:w-12 sm:h-16 md:w-20 md:h-20", // Tamaños responsivos
+        "w-20 h-20 ", //sm:w-14 sm:h-16 md:w-20 md:h-20 Tamaños responsivos
         active
           ? "border-orange-500 text-orange-700 bg-orange-50"
           : "border-gray-300 text-gray-600 hover:border-orange-300",

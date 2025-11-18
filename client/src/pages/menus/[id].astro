@@ -55,7 +55,7 @@ const description = `Perfil y menú de ${restaurant?.name ?? "Restaurante"}`;
           <div class="flex items-center justify-center border-b border-orange-200 mb-4 py-5">
             <Food class="text-orange-600 w-5 h-5 mr-2" />
             <h2 class="text-md font-semibold text-orange-600">
-              {restaurant.tipos?.join(", ") ?? "Sin categoría"}
+              {restaurant.categorias?.map((c: { nombre: string }) => c.nombre).join(", ") ?? "Sin categoría"}
             </h2>
           </div>
 
