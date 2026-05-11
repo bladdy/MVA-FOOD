@@ -1,6 +1,8 @@
 {
   "compilerOptions": {
-    "module": "es2020",
+    "jsx": "react-jsx",
+    "jsxImportSource": "react",
+    "module": "ESNext",
     "allowImportingTsExtensions": true,
     "noEmit": true,
     "esModuleInterop": true,
@@ -13,8 +15,6 @@
         "src/components/*"
       ]
     },
-    "jsx": "react-jsx",
-    "jsxImportSource": "react"
   },
   "include": [
     "src/**/*",
