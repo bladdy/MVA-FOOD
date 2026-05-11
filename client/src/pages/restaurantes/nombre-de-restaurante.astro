@@ -50,7 +50,7 @@ if (restaurant?.planRestauranteId === 2 || restaurant?.plan?.nombre === "Estánd
 const description = `Perfil y menú de ${restaurant?.name ?? "Restaurante"}`;
 ---
 
-<Layout title={`Mva Foods - ${restaurant?.name ?? "Restaurante"}`} description={description}>
+<Layout title={`Mr. Menús - ${restaurant?.name ?? "Restaurante"}`} description={description}>
   {
     restaurant ? (
       <div class="flex flex-col md:flex-row md:gap-[2%] flex-wrap content-start min-h-screen pt-24 pb-10 px-4 lg:px-24 bg-gradient-to-r from-orange-100 to-orange-50">
@@ -128,7 +128,7 @@ const description = `Perfil y menú de ${restaurant?.name ?? "Restaurante"}`;
                   return (
                     <div class="flex flex-col items-center w-20 text-center group">
                       {SvgIcon && (
-                        <SvgIcon class="w-10 h-10 mb-1 text-orange-600 fill-current transition-transform duration-200 group-hover:scale-110" />
+                        <img src={SvgIcon as string} alt={amenidad.nombre} class="w-10 h-10 mb-1 text-orange-600 transition-transform duration-200 group-hover:scale-110" loading="lazy" />
                       )}
                       <h2 class="text-sm font-semibold text-orange-600">
                         {amenidad.nombre}

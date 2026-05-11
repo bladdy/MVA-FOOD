@@ -10,38 +10,71 @@ const LoginForm: React.FC = () => {
     e.preventDefault();
     try {
       await login({ username, password });
-      if (!window) return;
+      //if (!window) return;
       // Redirigir al dashboard
       window.location.href = "/admin/dashboard";
     } catch (err: any) {
       setError(err.message);
+      console.log("Login error:", err);
     }
   };
 
   return (
-    <form onSubmit={handleLogin} className="flex flex-col gap-4 max-w-sm mx-auto mt-10">
-      <h2 className="text-2xl font-bold text-center">Iniciar sesión</h2>
-      <input
-        type="text"
-        placeholder="Usuario"
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
-        className="border p-2 rounded"
-        required
-      />
-      <input
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        className="border p-2 rounded"
-        required
-      />
-      {error && <p className="text-red-500">{error}</p>}
-      <button type="submit" className="bg-blue-600 text-white py-2 rounded hover:bg-blue-700">
-        Login
-      </button>
-    </form>
+    <div className="w-full max-w-md p-4 sm:p-6 md:p-8">
+      {/* Logo centrado */}
+      <div className="flex justify-center items-center mb-4">
+        <img src="mr_menus.png" alt="MVA-FOOD" className="h-32 sm:h-36 md:h-48" />
+      </div>
+
+      {/* Título */}
+      <h2 className="text-2xl sm:text-3xl font-semibold text-gray-800 mb-4 sm:mb-6">
+        Inicia sesión en tu cuenta
+      </h2>
+
+      {/* Subtítulo con enlace */}
+      <p className="text-gray-600 mb-4">
+        ¿Aún no eres miembro? <span>
+          <a href="/contactos" className="text-orange-600 hover:underline">
+            Prueba gratis por 7 días.
+          </a>
+        </span>
+      </p>
+
+      {/* Formulario */}
+      <form onSubmit={handleLogin} className="flex flex-col gap-4">
+        <input
+          type="text"
+          placeholder="Usuario"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          className="border p-3 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 transition"
+          required
+        />
+        <input
+          type="password"
+          placeholder="Contraseña"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          className="border p-3 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 transition"
+          required
+        />
+        {error && <p className="text-red-500 text-sm">{error}</p>}
+
+        <button
+          type="submit"
+          className="bg-orange-600 text-white py-3 rounded-lg mt-4 hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-500 transition"
+        >
+          Iniciar sesión
+        </button>
+
+        <div className="mt-3 text-center">
+          <a href="/" className="text-orange-600">
+            Volver al inicio
+          </a>
+        </div>
+      </form>
+    </div>
+
   );
 };
 

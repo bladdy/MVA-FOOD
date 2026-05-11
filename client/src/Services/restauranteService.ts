@@ -19,7 +19,6 @@ export async function getRestaurantes(pageNumber: number = 1, pageSize: number =
 }
 export async function updateRestaurante(id: string, data: Restaurante) {
   const formData = new FormData();
-  console.log(data, id);
   formData.append("Nombre", data.name);
   formData.append("Direccion", data.direccion);
   formData.append("Telefono", data.phone);

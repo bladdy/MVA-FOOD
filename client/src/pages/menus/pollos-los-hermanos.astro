@@ -9,7 +9,7 @@ import MenuSectionWrapper from "@/React/MenuSectionWrapper.jsx";
 import ShareButton from "@/React/Buttons/ShareButton";
 
 // 📌 Obtener el ID del restaurante desde la URL
-const { id } = Astro.params;
+const id = 'b3137b3f-ebd0-4c86-8c6d-930475daa17f';
 
 // 📡 Cargar dinámicamente el restaurante desde la API
 let restaurant = null;
@@ -32,7 +32,7 @@ try {
 
 const description = `Perfil y menú de ${restaurant?.name ?? "Restaurante"}`;
 ---
-<LayoutMenu title={`Mva Foods - ${restaurant?.name}`} description={description}>
+<LayoutMenu title={`Mr. Menús - ${restaurant?.name}`} description={description}>
   
   {
     restaurant ? (

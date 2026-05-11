@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using MVA_FOOD.API.Data;
 using MVA_FOOD.API.Middleware;
 using MVA_FOOD.Core.Interfaces;
 using MVA_FOOD.Infrastructure.Data;
@@ -13,7 +14,7 @@ var builder = WebApplication.CreateBuilder(args);
 // 1. Configurar DbContext (SQLite)
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
-
+builder.Services.AddTransient<SeedDb>();
 // 2. Configurar CORS
 builder.Services.AddCors(options =>
 {
@@ -123,6 +124,17 @@ using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
     db.Database.Migrate(); // Esto crea la DB y aplica migraciones si no existe
+}
+SeedData(app);
+
+void SeedData(WebApplication app)
+{
+    var scopeFactory = app.Services.GetService<IServiceScopeFactory>();
+    using (var scope = scopeFactory!.CreateScope())
+    {
+        var service = scope.ServiceProvider.GetService<SeedDb>();
+        service!.SeedAsync().Wait();
+    }
 }
 
 // 8. Configurar middleware

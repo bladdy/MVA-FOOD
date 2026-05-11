@@ -1,0 +1,77 @@
+---
+export const prerender = false;
+const API_URL = "http://localhost:5147";
+import { getRestaurante } from '@/Services/restauranteService.ts'; // ✅ Servicio para obtener restaurante
+import Food from "@/assets/svg/tools-kitchen-3.svg";
+import { Image } from "astro:assets";
+import LayoutMenu from "@/layouts/LayoutMenu.astro";
+import MenuSectionWrapper from "@/React/MenuSectionWrapper.jsx";
+import ShareButton from "@/React/Buttons/ShareButton";
+
+// 📌 Obtener el ID del restaurante desde la URL
+const { id } = Astro.params;
+
+// 📡 Cargar dinámicamente el restaurante desde la API
+let restaurant = null;
+let tomarPedido = false;
+
+try {
+  if (typeof id === "string") {
+    restaurant = await getRestaurante(id);
+
+    // Si el restaurante tiene plan "Estándar" o "Premium" → permite pedidos
+    if (restaurant?.plan?.id === 2 || restaurant?.plan?.name === "Estándar" || restaurant?.plan?.name === "Premium") {
+      tomarPedido = true;
+    }
+  } else {
+    console.warn("⚠️ Parámetro 'id' ausente o no válido:", id);
+  }
+} catch (error) {
+  console.error("❌ Error al cargar restaurante:", error);
+}
+
+const description = `Perfil y menú de ${restaurant?.name ?? "Restaurante"}`;
+---
+<LayoutMenu title={`Mr. Menús - ${restaurant?.name}`} description={description}>
+  
+  {
+    restaurant ? (
+      <div class="flex flex-row justify-center min-h-screen px-4 lg:px-24 bg-gradient-to-r from-orange-100 to-orange-50">
+
+        <div class="w-full bg-white shadow-lg rounded-lg text-center feature-step p-4 my-6 lg:w-3/5">
+          <Image
+            src={API_URL + restaurant.image}
+            alt={restaurant.name}
+            title={restaurant.name}
+            width="200"
+            height="200"
+            class="inline-block w-20 md:w-32 "
+          />
+          <h2 class="text-2xl md:text-5xl font-semibold text-balance text-orange-600 mt-4">
+            {restaurant.name}
+          </h2>
+          
+          <ShareButton title={restaurant.name} client:only="react" />
+          <div class="flex items-center justify-center border-b border-orange-200 mb-4 py-5">
+            <Food class="text-orange-600 w-5 h-5 mr-2" />
+            <h2 class="text-md font-semibold text-orange-600">
+              {restaurant.categorias?.map((c: { nombre: string }) => c.nombre).join(", ") ?? "Sin categoría"}
+            </h2>
+          </div>
+
+          <!-- Aquí se reemplaza el componente -->
+          <MenuSectionWrapper
+            tomaPedido={tomarPedido}
+            menu={restaurant?.menu ?? []}
+            titulo="Nuestro Menú"
+            client:load
+          />
+        </div>
+      </div>
+    ) : (
+      <div class="p-10 text-center text-red-600 text-xl md:text-2xl">
+        Restaurante no encontrado.
+      </div>
+    )
+  }
+</LayoutMenu>

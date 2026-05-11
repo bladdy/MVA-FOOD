@@ -148,7 +148,7 @@ const API_URL = "http://localhost:5147";
                           src={`${API_URL}${item.imagen || "/mva-logo-rb.png"}`}
                           alt={item.nombre}
                           className="w-16 h-16 object-cover rounded cursor-pointer hover:opacity-90 transition"
-                          onClick={() => setImagenSeleccionada(item.imagen || "/mva-logo-rb.png")}
+                          onClick={() => setImagenSeleccionada(API_URL + item.imagen || "/mva-logo-rb.png")}
                         />
                       </td>
                       <td className="py-3 px-0 w-4/6">
@@ -178,7 +178,7 @@ const API_URL = "http://localhost:5147";
         {/* Modal de imagen */}
         {imagenSeleccionada && (
           <div className="fixed inset-0 z-50 bg-black bg-opacity-80 flex items-center justify-center p-4">
-            <div className="relative max-w-full max-h-full">
+            <div className="relative flex items-center justify-center">
               <button
                 className="absolute top-2 right-2 text-white bg-orange-500 hover:bg-orange-600 p-2 rounded-full"
                 onClick={() => setImagenSeleccionada(null)}
@@ -188,10 +188,11 @@ const API_URL = "http://localhost:5147";
               <img
                 src={imagenSeleccionada}
                 alt="Imagen del producto"
-                className="max-w-full max-h-[90vh] rounded-lg shadow-lg"
+                className="h-auto w-[800px] rounded-lg shadow-lg object-fill"
               />
             </div>
           </div>
+
         )}
 
         {/* Modales de pedido */}
