@@ -3,9 +3,6 @@
     "module": "es2020",
     "allowImportingTsExtensions": true,
     "noEmit": true,
-    "types": [
-      "astro/client"
-    ],
     "esModuleInterop": true,
     "baseUrl": ".",
     "paths": {

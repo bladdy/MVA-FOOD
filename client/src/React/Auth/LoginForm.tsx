@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { login } from "@/Services/authService.ts";
-
 const LoginForm: React.FC = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -23,7 +22,7 @@ const LoginForm: React.FC = () => {
     <div className="w-full max-w-md p-4 sm:p-6 md:p-8">
       {/* Logo centrado */}
       <div className="flex justify-center items-center mb-4">
-        <img src="mr_menus.png" alt="MVA-FOOD" className="h-32 sm:h-36 md:h-48" />
+        <img src="\src\assets\mr_menus.png" alt="Mr Menus" className="h-32 sm:h-36 md:h-48" />
       </div>
 
       {/* Título */}
