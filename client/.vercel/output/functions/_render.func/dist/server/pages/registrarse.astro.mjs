@@ -1,6 +1,6 @@
 /* empty css                               */
-import { c as createComponent, f as renderComponent, e as renderTemplate, m as maybeRenderHead } from '../chunks/astro/server_cUBcAsSp.mjs';
-import { $ as $$Layout } from '../chunks/Layout_BTBz5APd.mjs';
+import { c as createComponent, f as renderComponent, e as renderTemplate, m as maybeRenderHead } from '../chunks/astro/server_-OnrOxK6.mjs';
+import { $ as $$Layout } from '../chunks/Layout_DXhUJxF1.mjs';
 import { jsxs, jsx } from 'react/jsx-runtime';
 import { useState } from 'react';
 export { renderers } from '../renderers.mjs';
@@ -99,7 +99,6 @@ function MultiStepRestaurantForm() {
   };
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Formulario final:", form);
   };
   const selectedPais = form.direccion.pais;
   const selectedEstado = form.direccion.estado;
@@ -537,7 +536,7 @@ function MultiStepRestaurantForm() {
 }
 
 const $$Registrarse = createComponent(($$result, $$props, $$slots) => {
-  return renderTemplate`${renderComponent($$result, "Layout", $$Layout, { "title": "Mva Foods - Registrarse" }, { "default": ($$result2) => renderTemplate` ${maybeRenderHead()}<section class="min-h-screen px-6 py-24 bg-gray-50 text-gray-800"> ${renderComponent($$result2, "MultiStepForm", MultiStepRestaurantForm, { "client:load": true, "client:component-hydration": "load", "client:component-path": "@/React/Forms/MultiStepForm", "client:component-export": "default" })} </section> ` })}`;
+  return renderTemplate`${renderComponent($$result, "Layout", $$Layout, { "title": "Mr. Men\xFAs - Registrarse" }, { "default": ($$result2) => renderTemplate` ${maybeRenderHead()}<section class="min-h-screen px-6 py-24 bg-gray-50 text-gray-800"> ${renderComponent($$result2, "MultiStepForm", MultiStepRestaurantForm, { "client:load": true, "client:component-hydration": "load", "client:component-path": "@/React/Forms/MultiStepForm", "client:component-export": "default" })} </section> ` })}`;
 }, "C:/Proyectos/MVA-FOOD/client/src/pages/registrarse.astro", void 0);
 
 const $$file = "C:/Proyectos/MVA-FOOD/client/src/pages/registrarse.astro";

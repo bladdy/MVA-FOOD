@@ -2,15 +2,15 @@
 import { defineConfig } from 'astro/config';
 import tailwind from '@astrojs/tailwind';
 import react from '@astrojs/react';
-import vercel from '@astrojs/vercel';
+import vercel from '@astrojs/vercel/serverless';
 import svgr from 'vite-plugin-svgr';
-import node from '@astrojs/node';
 
 // https://astro.build/config
 export default defineConfig({
   integrations: [tailwind(), react()],
   output: 'server',
   //adapter: node({ mode: 'standalone' }), // Use this for docker production with Node.js
+  
   adapter: vercel(), // Use this for deployment on Vercel
   vite: {
     plugins: [svgr()],
