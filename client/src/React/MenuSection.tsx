@@ -64,7 +64,7 @@ export default function MenuSection({ menu, titulo, tomaPedido, mesa }: Props) {
   const [tipoEntrega, setTipoEntrega] = useState<"domicilio" | "recoger">("domicilio");
   const [selectedCategoria, setSelectedCategoria] = useState<Categorias>("Todas");
   const [imagenSeleccionada, setImagenSeleccionada] = useState<string | null>(null);
-const API_URL = "http://localhost:5147";
+const API_URL = "/uploads/Menu/";// Ajusta según tu estructura de carpetas
   // ✅ Corrección: asegurar que la categoría se lea como el nombre del objeto (o “Sin categoría”)
   const groupedMenu = menu.reduce(
     (acc, item) => {
@@ -145,11 +145,17 @@ const API_URL = "http://localhost:5147";
                     >
                       <td className="w-1/6">
                         <img
-                          src={`${API_URL}${item.imagen || "/mva-logo-rb.png"}`}
-                          alt={item.nombre}
-                          className="w-16 h-16 object-cover rounded cursor-pointer hover:opacity-90 transition"
-                          onClick={() => setImagenSeleccionada(API_URL + item.imagen || "/mva-logo-rb.png")}
-                        />
+                            src={item.imagen ? API_URL + item.imagen : "/mva-logo-rb.png"}
+                            alt={item.nombre}
+                            className="w-16 h-16 object-cover rounded cursor-pointer hover:opacity-90 transition"
+                            onClick={() =>
+                              setImagenSeleccionada(
+                                item.imagen
+                                  ? API_URL + item.imagen
+                                  : "/mva-logo-rb.png"
+                              )
+                            }
+                          />
                       </td>
                       <td className="py-3 px-0 w-4/6">
                         <div className="text-base font-semibold text-orange-900">

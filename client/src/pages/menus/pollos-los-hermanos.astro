@@ -7,10 +7,219 @@ import { Image } from "astro:assets";
 import LayoutMenu from "@/layouts/LayoutMenu.astro";
 import MenuSectionWrapper from "@/React/MenuSectionWrapper.jsx";
 import ShareButton from "@/React/Buttons/ShareButton";
-import { pollosHermanos } from "@/consts/polloshermanos.ts";
-
 // 📌 Obtener el ID del restaurante desde la URL
 const id = 'b3137b3f-ebd0-4c86-8c6d-930475daa17f';
+
+
+import logoRestaurant from "../../assets/uploads/Background/a0f4db7f-9ed3-4b47-894b-fa76a5862682.png";
+
+const pollosHermanos : any = 
+    {
+  "id": "b3137b3f-ebd0-4c86-8c6d-930475daa17f",
+  "name": "Pollos Los Hermanos",
+  "image": logoRestaurant,
+  "perfilImage": logoRestaurant,
+  "direccion": "Calle siempre vica",
+  "phone": "88888888888",
+  "planId": "b2e9dcd4-493f-4319-ab8e-7cd952aae95e",
+  "planRestauranteDto": {
+    "id": "7839a87b-e352-4193-93bb-0d81d02ad61d",
+    "nombre": "Basico",
+    "precio": 600,
+    "fechaInicio": "2025-12-27T02:12:57.3196743",
+    "fechaFin": "2026-01-27T02:12:57.3196743",
+    "fechaPago": "0001-01-01T00:00:00",
+    "pagado": false,
+  },
+  "amenidades": [],
+  "categorias": [
+    {
+      "id": "cb60460b-3e91-463c-b7fd-bd7fb35cfe82",
+      "nombre": "Steak House",
+    },
+    {
+      "id": "35678e09-f943-4bb7-ab97-15fe1350c02b",
+      "nombre": "Sopas",
+    },
+    {
+      "id": "0f87ca5e-e21c-4a8c-ad86-7f2772b1226e",
+      "nombre": "Entradas",
+    },
+    {
+      "id": "33dd4c2a-79ed-425c-9e24-5d1db766ae97",
+      "nombre": "Bebidas",
+    },
+    {
+      "id": "065142be-12dc-49b1-a8cf-cd86c84b8b13",
+      "nombre": "Pollo Frito",
+    },
+    {
+      "id": "436e1743-0e55-4235-a264-f23459b85e36",
+      "nombre": "Plato Fuerte",
+    },
+    {
+      "id": "fcdcb265-fdda-4359-b0d2-1e545f3c5508",
+      "nombre": "Kids",
+    },
+    {
+      "id": "5b4b5afc-1b58-4827-bc03-20cd44e9cd0e",
+      "nombre": "Burger & Street Food",
+    },
+    {
+      "id": "156105fa-ca55-4ed4-8071-44e831a0be6d",
+      "nombre": "Pastas",
+    },
+  ],
+  "horarios": [
+    {
+      "id": "6c8087bf-dce9-4790-8dba-fcaa9a07e513",
+      "dia": 1,
+      "horaApertura": "09:00:00",
+      "horaCierre": "18:00:00",
+      "horaAperturaTexto": "09:00 AM",
+      "horaCierreTexto": "06:00 PM",
+      "diaTexto": "Lunes",
+    },
+  ],
+  "menu": [
+    {
+      "id": "30e117e4-6d74-49f8-8b4f-a456f43c80b6",
+      "nombre": "Steak House tbone",
+      "ingredientes": "tbone papas a la francesa",
+      "precio": 800,
+      "categoriaId": "cb60460b-3e91-463c-b7fd-bd7fb35cfe82",
+      "categoria": {
+        "id": "cb60460b-3e91-463c-b7fd-bd7fb35cfe82",
+        "nombre": "Steak House",
+      },
+      "activo": false,
+      "imagen": "03d7782c-1974-4518-bd4f-93bbf5210ac7.jpg",
+      "imageFullPath": "/uploads/Menu/03d7782c-1974-4518-bd4f-93bbf5210ac7.jpg",
+      "restauranteId": "00000000-0000-0000-0000-000000000000",
+      "restaurante": null,
+      "variantes": [],
+    },
+    {
+      "id": "48626bb9-609b-496e-9f1f-a3bff30907b4",
+      "nombre": "Coteles",
+      "ingredientes": "Coteles",
+      "precio": 80,
+      "categoriaId": "33dd4c2a-79ed-425c-9e24-5d1db766ae97",
+      "categoria": {
+        "id": "33dd4c2a-79ed-425c-9e24-5d1db766ae97",
+        "nombre": "Bebidas",
+      },
+      "activo": false,
+      "imagen": "785e964c-ec3c-4d6e-8df9-2672f4b546f3.jpg",
+      "imageFullPath": "785e964c-ec3c-4d6e-8df9-2672f4b546f3.jpg",
+      "restauranteId": "00000000-0000-0000-0000-000000000000",
+      "restaurante": null,
+      "variantes": [],
+    },
+    {
+      "id": "4ecc8582-268e-422b-ae3c-f5a402d29d85",
+      "nombre": "red velvet cake",
+      "ingredientes": "red velvet cake",
+      "precio": 250,
+      "categoriaId": "694fa7bf-5a5b-447c-878e-e067e9cf5408",
+      "categoria": {
+        "id": "694fa7bf-5a5b-447c-878e-e067e9cf5408",
+        "nombre": "Postres",
+      },
+      "activo": false,
+      "imagen": "51c6d49e-5b38-43b9-87fe-11131f822753.jpg",
+      "imageFullPath": "51c6d49e-5b38-43b9-87fe-11131f822753.jpg",
+      "restauranteId": "00000000-0000-0000-0000-000000000000",
+      "restaurante": null,
+      "variantes": [],
+    },
+    {
+      "id": "569d4365-6205-41f2-ae0b-e0af83146c0e",
+      "nombre": "hamburgesa super queso",
+      "ingredientes": "queso jamon tocino pan tomate",
+      "precio": 12,
+      "categoriaId": "5b4b5afc-1b58-4827-bc03-20cd44e9cd0e",
+      "categoria": {
+        "id": "5b4b5afc-1b58-4827-bc03-20cd44e9cd0e",
+        "nombre": "Burger & Street Food",
+      },
+      "activo": false,
+      "imagen": "1a010246-cb72-4fbf-8e55-e3fa36d021eb.jpg",
+      "imageFullPath": "1a010246-cb72-4fbf-8e55-e3fa36d021eb.jpg",
+      "restauranteId": "00000000-0000-0000-0000-000000000000",
+      "restaurante": null,
+      "variantes": [],
+    },
+    {
+      "id": "815e92ca-9591-4185-8804-652affa1b996",
+      "nombre": "Sodas",
+      "ingredientes": "Coca-Cola, 7UP, sprite, pepsi, naranjita, cantaritos",
+      "precio": 25,
+      "categoriaId": "33dd4c2a-79ed-425c-9e24-5d1db766ae97",
+      "categoria": {
+        "id": "33dd4c2a-79ed-425c-9e24-5d1db766ae97",
+        "nombre": "Bebidas",
+      },
+      "activo": false,
+      "imagen": "4b5dd6b6-73d3-4f86-8d60-61ea2fb529de.jpg",
+      "imageFullPath": "4b5dd6b6-73d3-4f86-8d60-61ea2fb529de.jpg",
+      "restauranteId": "00000000-0000-0000-0000-000000000000",
+      "restaurante": null,
+      "variantes": [],
+    },
+    {
+      "id": "d9025632-b758-4f44-bab2-2be0eae84fc5",
+      "nombre": "pollo super frito",
+      "ingredientes": "pollo y especias",
+      "precio": 120,
+      "categoriaId": "065142be-12dc-49b1-a8cf-cd86c84b8b13",
+      "categoria": {
+        "id": "065142be-12dc-49b1-a8cf-cd86c84b8b13",
+        "nombre": "Pollo Frito",
+      },
+      "activo": false,
+      "imagen": "9637e54c-786b-4e79-9001-ddfb728d9dac.jpg",
+      "imageFullPath": "9637e54c-786b-4e79-9001-ddfb728d9dac.jpg",
+      "restauranteId": "00000000-0000-0000-0000-000000000000",
+      "restaurante": null,
+      "variantes": [],
+    },
+    {
+      "id": "dd8eb67c-08c1-4130-8045-bb8bc654b6be",
+      "nombre": "pasta carbonara",
+      "ingredientes": "pasta carbonara",
+      "precio": 0,
+      "categoriaId": "156105fa-ca55-4ed4-8071-44e831a0be6d",
+      "categoria": {
+        "id": "156105fa-ca55-4ed4-8071-44e831a0be6d",
+        "nombre": "Pastas",
+      },
+      "activo": false,
+      "imagen": "1a0a050f-6579-4e93-835d-9c76a3fcbd1c.jpg",
+      "imageFullPath": "1a0a050f-6579-4e93-835d-9c76a3fcbd1c.jpg",
+      "restauranteId": "00000000-0000-0000-0000-000000000000",
+      "restaurante": null,
+      "variantes": [],
+    },
+    {
+      "id": "e27d3c28-8496-4e90-88a6-aa577925d4fe",
+      "nombre": "tres leches cake",
+      "ingredientes": "tres leches cake",
+      "precio": 0,
+      "categoriaId": "694fa7bf-5a5b-447c-878e-e067e9cf5408",
+      "categoria": {
+        "id": "694fa7bf-5a5b-447c-878e-e067e9cf5408",
+        "nombre": "Postres",
+      },
+      "activo": false,
+      "imagen": "05242e4a-a311-4114-addf-e63e29a901f6.jpg",
+      "imageFullPath": "05242e4a-a311-4114-addf-e63e29a901f6.jpg",
+      "restauranteId": "00000000-0000-0000-0000-000000000000",
+      "restaurante": null,
+      "variantes": [],
+    },
+  ],
+}
 
 // 📡 Cargar dinámicamente el restaurante desde la API
 let restaurant = null;
@@ -42,8 +251,8 @@ const description = `Perfil y menú de ${restaurant?.name ?? "Restaurante"}`;
 
         <div class="w-full bg-white shadow-lg rounded-lg text-center feature-step p-4 my-6 lg:w-3/5">
           <Image
-            src={API_URL + restaurant.image}
-            alt={restaurant.name}
+            src={restaurant.image}
+            alt={restaurant.name.toString()}
             title={restaurant.name}
             width="200"
             height="200"

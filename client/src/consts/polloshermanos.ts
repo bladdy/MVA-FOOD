@@ -4,8 +4,8 @@ export const pollosHermanos : any =
     {
   "id": "b3137b3f-ebd0-4c86-8c6d-930475daa17f",
   "name": "Pollos Los Hermanos",
-  "image": "/uploads/Background/a0f4db7f-9ed3-4b47-894b-fa76a5862682.png",
-  "perfilImage": "/uploads/Profile/e4b94bbe-b714-4192-91b5-9cfce74b20e2.png",
+  "image": "../assets/uploads/Background/a0f4db7f-9ed3-4b47-894b-fa76a5862682.png",
+  "perfilImage": "../assets/uploads/Background/a0f4db7f-9ed3-4b47-894b-fa76a5862682.png",
   "direccion": "Calle siempre vica",
   "phone": "88888888888",
   "planId": "b2e9dcd4-493f-4319-ab8e-7cd952aae95e",
@@ -80,8 +80,8 @@ export const pollosHermanos : any =
         "nombre": "Steak House"
       },
       "activo": false,
-      "imagen": "/uploads/Menu/03d7782c-1974-4518-bd4f-93bbf5210ac7.jpg",
-      "imageFullPath": "http://localhost:5147/uploads/Menu/03d7782c-1974-4518-bd4f-93bbf5210ac7.jpg",
+      "imagen": "../../../uploads/Menu/03d7782c-1974-4518-bd4f-93bbf5210ac7.jpg",
+      "imageFullPath": "/uploads/Menu/03d7782c-1974-4518-bd4f-93bbf5210ac7.jpg",
       "restauranteId": "00000000-0000-0000-0000-000000000000",
       "restaurante": null,
       "variantes": []
@@ -98,7 +98,7 @@ export const pollosHermanos : any =
       },
       "activo": false,
       "imagen": "/uploads/Menu/785e964c-ec3c-4d6e-8df9-2672f4b546f3.jpg",
-      "imageFullPath": "http://localhost:5147/uploads/Menu/785e964c-ec3c-4d6e-8df9-2672f4b546f3.jpg",
+      "imageFullPath": "/uploads/Menu/785e964c-ec3c-4d6e-8df9-2672f4b546f3.jpg",
       "restauranteId": "00000000-0000-0000-0000-000000000000",
       "restaurante": null,
       "variantes": []
@@ -115,7 +115,7 @@ export const pollosHermanos : any =
       },
       "activo": false,
       "imagen": "/uploads/Menu/51c6d49e-5b38-43b9-87fe-11131f822753.jpg",
-      "imageFullPath": "http://localhost:5147/uploads/Menu/51c6d49e-5b38-43b9-87fe-11131f822753.jpg",
+      "imageFullPath": "/uploads/Menu/51c6d49e-5b38-43b9-87fe-11131f822753.jpg",
       "restauranteId": "00000000-0000-0000-0000-000000000000",
       "restaurante": null,
       "variantes": []
@@ -131,8 +131,8 @@ export const pollosHermanos : any =
         "nombre": "Burger & Street Food"
       },
       "activo": false,
-      "imagen": "/uploads/Menu/1a010246-cb72-4fbf-8e55-e3fa36d021eb.jpg",
-      "imageFullPath": "http://localhost:5147/uploads/Menu/1a010246-cb72-4fbf-8e55-e3fa36d021eb.jpg",
+      "imagen": "../assets/uploads/Menu/1a010246-cb72-4fbf-8e55-e3fa36d021eb.jpg",
+      "imageFullPath": "../assets/uploads/Menu/1a010246-cb72-4fbf-8e55-e3fa36d021eb.jpg",
       "restauranteId": "00000000-0000-0000-0000-000000000000",
       "restaurante": null,
       "variantes": []
@@ -149,7 +149,7 @@ export const pollosHermanos : any =
       },
       "activo": false,
       "imagen": "/uploads/Menu/4b5dd6b6-73d3-4f86-8d60-61ea2fb529de.jpg",
-      "imageFullPath": "http://localhost:5147/uploads/Menu/4b5dd6b6-73d3-4f86-8d60-61ea2fb529de.jpg",
+      "imageFullPath": "/uploads/Menu/4b5dd6b6-73d3-4f86-8d60-61ea2fb529de.jpg",
       "restauranteId": "00000000-0000-0000-0000-000000000000",
       "restaurante": null,
       "variantes": []
@@ -166,7 +166,7 @@ export const pollosHermanos : any =
       },
       "activo": false,
       "imagen": "/uploads/Menu/9637e54c-786b-4e79-9001-ddfb728d9dac.jpg",
-      "imageFullPath": "http://localhost:5147/uploads/Menu/9637e54c-786b-4e79-9001-ddfb728d9dac.jpg",
+      "imageFullPath": "/uploads/Menu/9637e54c-786b-4e79-9001-ddfb728d9dac.jpg",
       "restauranteId": "00000000-0000-0000-0000-000000000000",
       "restaurante": null,
       "variantes": []
@@ -183,7 +183,7 @@ export const pollosHermanos : any =
       },
       "activo": false,
       "imagen": "/uploads/Menu/1a0a050f-6579-4e93-835d-9c76a3fcbd1c.jpg",
-      "imageFullPath": "http://localhost:5147/uploads/Menu/1a0a050f-6579-4e93-835d-9c76a3fcbd1c.jpg",
+      "imageFullPath": "/uploads/Menu/1a0a050f-6579-4e93-835d-9c76a3fcbd1c.jpg",
       "restauranteId": "00000000-0000-0000-0000-000000000000",
       "restaurante": null,
       "variantes": []
@@ -200,7 +200,7 @@ export const pollosHermanos : any =
       },
       "activo": false,
       "imagen": "/uploads/Menu/05242e4a-a311-4114-addf-e63e29a901f6.jpg",
-      "imageFullPath": "http://localhost:5147/uploads/Menu/05242e4a-a311-4114-addf-e63e29a901f6.jpg",
+      "imageFullPath": "/uploads/Menu/05242e4a-a311-4114-addf-e63e29a901f6.jpg",
       "restauranteId": "00000000-0000-0000-0000-000000000000",
       "restaurante": null,
       "variantes": []
