@@ -1,90 +1,139 @@
 ---
-import { Image } from "astro:assets";
 import Restaurant from "../Restaurant.astro";
+
+import logoRestaurant from "../../assets/uploads/Background/a0f4db7f-9ed3-4b47-894b-fa76a5862682.png";
+
 const restaurants = [
   {
-    slug: "burguer",
+    slug: "pollos-los-hermanos",
     name: "Burguer",
-    image: "https://centrosantafe.com.mx/cdn/shop/files/701.png?v=5733697768863393566",
+    image: logoRestaurant,
   },
   {
-    slug: "kfc",
+    slug: "pollos-los-hermanos",
     name: "KFC",
-    image: "https://1000marcas.net/wp-content/uploads/2020/01/KFC-logo.png",
+    image: logoRestaurant,
   },
   {
-    slug: "mcdonalds",
+    slug: "pollos-los-hermanos",
     name: "McDonalds",
-    image: "https://1000marcas.net/wp-content/uploads/2019/11/McDonalds-logo.png",
+    image: logoRestaurant,
   },
   {
-    slug: "pizza-hut",
+    slug: "pollos-los-hermanos",
     name: "Pizza Hut",
-    image: "https://1000marcas.net/wp-content/uploads/2020/01/Pizza-Hut-logo.png",
+    image: logoRestaurant,
   },
   {
-    slug: "dominos",
+    slug: "pollos-los-hermanos",
     name: "Dominos",
-    image: "https://1000marcas.net/wp-content/uploads/2020/01/Logo-Dominos.png",
+    image: logoRestaurant,
   },
   {
-    slug: "subway",
+    slug: "pollos-los-hermanos",
     name: "Subway",
-    image: "https://1000marcas.net/wp-content/uploads/2020/03/Logo-Subway.png",
+    image: logoRestaurant,
   },
   {
-    slug: "starbucks",
+    slug: "pollos-los-hermanos",
     name: "Starbucks",
-    image: "https://1000marcas.net/wp-content/uploads/2019/12/Starbucks-Logo.png",
+    image: logoRestaurant,
   },
   {
-    slug: "taco-bell",
+    slug: "pollos-los-hermanos",
     name: "Taco Bell",
-    image: "https://1000marcas.net/wp-content/uploads/2020/03/Logo-Taco-Bell.png",
+    image: logoRestaurant,
   },
   {
-    slug: "carls-jr",
+    slug: "pollos-los-hermanos",
     name: "Carls Jr",
-    image: "https://1000marcas.net/wp-content/uploads/2021/02/Carls-Jr.-Logo.png",
+    image: logoRestaurant,
   },
 ];
+
+// duplicamos para efecto infinito
+const loopRestaurants = [...restaurants, ...restaurants];
 ---
 
-<section
-  id="features"
-  class="pt-20 px-12 hidden"
->
-  <div class="text-center mb-16 pt-16">
-    <h2 class="text-4xl font-semibold text-orange-600 mb-4">
+<section id="features" class="py-20 overflow-hidden bg-white">
+  <!-- Header -->
+  <div class="text-center mb-14 px-4">
+    <h2
+      class="text-3xl sm:text-4xl md:text-5xl font-bold text-orange-600 mb-4"
+    >
       Nuestros Clientes
     </h2>
-    <p class="text-2xl text-gray-700">
+
+    <p class="text-base sm:text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">
       Descubre una variedad de restaurantes que ofrecen deliciosos platos.
     </p>
   </div>
-  <!-- Grid container -->
-  <div class="max-w-5xl mx-auto mt-10">
-    <div class="flex flex-wrap justify-center gap-4 mb-6">
+
+  <!-- Carousel -->
+  <div class="relative w-full overflow-hidden">
+    <!-- Fade izquierdo -->
+    <div
+      class="absolute left-0 top-0 z-10 h-full w-10 sm:w-20 md:w-32 bg-gradient-to-r from-white to-transparent"
+    >
+    </div>
+
+    <!-- Fade derecho -->
+    <div
+      class="absolute right-0 top-0 z-10 h-full w-10 sm:w-20 md:w-32 bg-gradient-to-l from-white to-transparent"
+    >
+    </div>
+
+    <!-- Track -->
+    <div class="carousel-track flex justify-center items-center gap-4 sm:gap-6 md:gap-8">
       {
-        restaurants.map((restaurant) => (
-          <div class="flex justify-center items-center">
-            <Restaurant href={`/restaurant/${restaurant.slug}`}>
-              <Image
-                src={restaurant.image}
-                alt={restaurant.name}
-                title={restaurant.name}
-                width="162"
-                height="162"
-                class="inline-block w-22 transition-transform group-hover:scale-110"
-              />
+        loopRestaurants.map((restaurant) => (
+          <div
+            class="flex-shrink-0 w-1/5 group"
+          >
+            <Restaurant href={`/menus/${restaurant.slug}`}>
+              <div
+                class="w-full h-[300px] overflow-hidden flex items-center justify-center"
+              >
+                <img
+                  src={restaurant.image.src}
+                  alt={restaurant.name}
+                  title={restaurant.name}
+                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                />
+              </div>
             </Restaurant>
           </div>
         ))
       }
-
     </div>
   </div>
-  <div class="text-center mt-8">
-    <a href="#" class="bg-orange-600 text-white px-8 py-3 hover:bg-orange-600 rounded-full">Ver Más</a>
-  </div>
 </section>
+
+<style>
+  .carousel-track {
+    animation: scroll 30s linear infinite;
+  }
+
+  .carousel-track:hover {
+    animation-play-state: paused;
+  }
+
+  @keyframes scroll {
+    from {
+      transform: translateX(0);
+    }
+
+    to {
+      transform: translateX(-50%);
+    }
+  }
+.carousel-track > div {
+      width: calc(20vw - 16px);
+    }
+  /* Móvil: máximo 2 visibles */
+  @media (max-width: 640px) {
+    .carousel-track > div {
+      width: calc(85vw - 16px);
+    }
+  }
+</style>
