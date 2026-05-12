@@ -7,6 +7,7 @@ import { Image } from "astro:assets";
 import LayoutMenu from "@/layouts/LayoutMenu.astro";
 import MenuSectionWrapper from "@/React/MenuSectionWrapper.jsx";
 import ShareButton from "@/React/Buttons/ShareButton";
+import { pollosHermanos } from "@/consts/polloshermanos.ts";
 
 // 📌 Obtener el ID del restaurante desde la URL
 const id = 'b3137b3f-ebd0-4c86-8c6d-930475daa17f';
@@ -17,7 +18,7 @@ let tomarPedido = false;
 
 try {
   if (typeof id === "string") {
-    restaurant = await getRestaurante(id);
+    restaurant = pollosHermanos;//await getRestaurante(id);
 
     // Si el restaurante tiene plan "Estándar" o "Premium" → permite pedidos
     if (restaurant?.plan?.id === 2 || restaurant?.plan?.name === "Estándar" || restaurant?.plan?.name === "Premium") {
