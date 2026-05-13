@@ -7,7 +7,6 @@ interface Props {
   image?: string
   icon?: string
 }
-console.log(Astro.props);
 const {
   title = "",
   description = "",
@@ -22,17 +21,7 @@ const {
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
 
-    <link
-  rel="icon"
-  type={icon.endsWith(".svg")
-    ? "image/svg+xml"
-    : icon.endsWith(".png")
-      ? "image/png"
-      : icon.endsWith(".jpg") || icon.endsWith(".jpeg")
-        ? "image/jpeg"
-        : "image/x-icon"}
-  href={icon}
-/>
+    <link rel="icon" type="image/png" href={`/uploads/Background/${icon}`} />
 
     <meta name="generator" content={Astro.generator} />
     <meta

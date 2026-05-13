@@ -243,8 +243,7 @@ try {
 }
 
 const description = `Menú de ${restaurant?.name ?? "Restaurante"}`;
-const icon = "https://mr-menus.vercel.app/" + restaurant.icon;
-console.log("Icon URL:", restaurant.icon.src );
+const icon = restaurant.icon;
 const ogImage =
   "https://mr-menus.vercel.app" + restaurant.image.src;
   
