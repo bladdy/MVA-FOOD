@@ -17,7 +17,7 @@ export default function QRCodeWithLogo({ url }: QRCodeWithLogoProps) {
         width: 300,
         height: 300,
         data: url,
-        image: "img/mr_menus_no.png", //Debe estar en /public/
+        image: "img/mr_menus.png", //Debe estar en /public/
         dotsOptions: {
           color: "#000",
           type: "rounded"
