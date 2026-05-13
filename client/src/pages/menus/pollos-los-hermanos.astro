@@ -241,9 +241,12 @@ try {
   console.error("❌ Error al cargar restaurante:", error);
 }
 
-const description = `Perfil y menú de ${restaurant?.name ?? "Restaurante"}`;
+const description = `Menú de ${restaurant?.name ?? "Restaurante"}`;
+
+const ogImage =
+  "https://mr-menus.vercel.app" + restaurant.image.src;
 ---
-<LayoutMenu title={`Mr. Menús - ${restaurant?.name}`} description={description}>
+<LayoutMenu title={`Mr. Menús - ${restaurant?.name}`} description={description} image={ogImage}>
   
   {
     restaurant ? (
