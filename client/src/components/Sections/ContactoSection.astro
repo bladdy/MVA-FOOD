@@ -196,62 +196,73 @@ import WhatsApp from "@assets/svg/brand-whatsapp.svg";
   const progressMessage = document.getElementById("progress-message");
   const emailDiv = document.getElementById("email-copy");
   const tooltip = document.getElementById("tooltip");
+
   const emailText = "escalate.soft.soluctions@gmail.com";
 
-  emailDiv.addEventListener("click", async () => {
+  // =========================
+  // Copiar email
+  // =========================
+  emailDiv?.addEventListener("click", async () => {
     try {
       await navigator.clipboard.writeText(emailText);
-      // Mostrar tooltip
-      tooltip.classList.remove("opacity-0");
-      tooltip.classList.add("opacity-100");
 
-      // Ocultar después de 2 segundos
+      tooltip?.classList.remove("opacity-0");
+      tooltip?.classList.add("opacity-100");
+
       setTimeout(() => {
-        tooltip.classList.remove("opacity-100");
-        tooltip.classList.add("opacity-0");
+        tooltip?.classList.remove("opacity-100");
+        tooltip?.classList.add("opacity-0");
       }, 2000);
     } catch {
-      //sweet Alert
-      alert("No se pudo copiar el correo. Por favor copia manualmente.");
+      alert("No se pudo copiar el correo.");
     }
   });
 
-  form.addEventListener("submit", async (e) => {
+  // =========================
+  // Enviar formulario
+  // =========================
+  form?.addEventListener("submit", async (e) => {
     e.preventDefault();
-    const formData = new FormData(form);
 
-    // Deshabilitar botón y mostrar progreso
+    const formElement = form;
+    const formData = new FormData(formElement);
+
+    // Loading
     submitButton.disabled = true;
     submitButton.classList.add("opacity-40", "cursor-not-allowed");
     progressMessage.classList.remove("hidden");
 
     try {
-      const response = await fetch("/api/contact", {
+      const response = await fetch("/api/contacts", {
         method: "POST",
         body: formData,
       });
 
-      if (response.ok) {
-        form.reset();
-        form.style.display = "none";
+      const data = await response.json();
+
+      if (data.success) {
+        formElement.reset();
+
+        formElement.style.display = "none";
+
         formMessage.classList.remove("hidden");
       } else {
-        const data = await response.json();
-        console.error("Error response:", data);
-        //sweet Alert
-        alert("Hubo un problema al enviar el mensaje.");
+        console.error(data);
+        alert(data.error || "Error al enviar contacto");
       }
     } catch (error) {
-      console.error("Error:", error);
-      alert("Error al enviar el mensaje.");
+      console.error(error);
+      alert("Error del servidor");
     } finally {
-      // Rehabilitar botón y ocultar progreso (solo si no fue exitoso)
       if (form.style.display !== "none") {
         submitButton.disabled = false;
-        submitButton.classList.remove("opacity-40", "cursor-not-allowed");
+        submitButton.classList.remove(
+          "opacity-40",
+          "cursor-not-allowed",
+        );
+
         progressMessage.classList.add("hidden");
       }
     }
   });
 </script>
-
