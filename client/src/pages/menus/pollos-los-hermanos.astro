@@ -11,7 +11,7 @@ import ShareButton from "@/React/Buttons/ShareButton";
 const id = 'b3137b3f-ebd0-4c86-8c6d-930475daa17f';
 
 
-import logoRestaurant from "../../assets/uploads/Background/a0f4db7f-9ed3-4b47-894b-fa76a5862682.png";
+import logoRestaurant from "../../assets/uploads/Background/00eb3ede-68f2-482f-bc68-864a85204b49.png";
 
 const pollosHermanos : any = 
     {
@@ -21,6 +21,7 @@ const pollosHermanos : any =
   "perfilImage": logoRestaurant,
   "direccion": "Calle siempre vica",
   "phone": "88888888888",
+  "icon" : "00eb3ede-68f2-482f-bc68-864a85204b49.ico",
   "planId": "b2e9dcd4-493f-4319-ab8e-7cd952aae95e",
   "planRestauranteDto": {
     "id": "7839a87b-e352-4193-93bb-0d81d02ad61d",
@@ -228,8 +229,8 @@ let tomarPedido = false;
 try {
   
   if (typeof id === "string") {
+    
     restaurant = pollosHermanos;//await getRestaurante(id);
-
     // Si el restaurante tiene plan "Estándar" o "Premium" → permite pedidos
     if (restaurant?.plan?.id === 2 || restaurant?.plan?.name === "Estándar" || restaurant?.plan?.name === "Premium") {
       tomarPedido = true;
@@ -242,11 +243,13 @@ try {
 }
 
 const description = `Menú de ${restaurant?.name ?? "Restaurante"}`;
-
+const icon = "https://mr-menus.vercel.app" + restaurant.icon;
+console.log("Icon URL:", restaurant.icon);
 const ogImage =
   "https://mr-menus.vercel.app" + restaurant.image.src;
+  
 ---
-<LayoutMenu title={`Mr. Menús - ${restaurant?.name}`} description={description} image={ogImage}>
+<LayoutMenu title={`Mr. Menús - ${restaurant?.name}`} description={description} image={ogImage} icon={icon}>
   
   {
     restaurant ? (

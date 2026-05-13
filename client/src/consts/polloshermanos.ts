@@ -4,8 +4,8 @@ export const pollosHermanos : any =
     {
   "id": "b3137b3f-ebd0-4c86-8c6d-930475daa17f",
   "name": "Pollos Los Hermanos",
-  "image": "../assets/uploads/Background/a0f4db7f-9ed3-4b47-894b-fa76a5862682.png",
-  "perfilImage": "../assets/uploads/Background/a0f4db7f-9ed3-4b47-894b-fa76a5862682.png",
+  "image": "../assets/uploads/Background/00eb3ede-68f2-482f-bc68-864a85204b49.png",
+  "perfilImage": "../assets/uploads/Background/00eb3ede-68f2-482f-bc68-864a85204b49.png",
   "direccion": "Calle siempre vica",
   "phone": "88888888888",
   "planId": "b2e9dcd4-493f-4319-ab8e-7cd952aae95e",
