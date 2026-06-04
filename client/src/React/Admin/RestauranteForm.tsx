@@ -8,6 +8,7 @@ import type {
   Amenidad,
   Categoria,
   Horario,
+  Plan,
   Restaurante,
   RestauranteUpdateDto,
 } from "@/Types/Restaurante.ts";
@@ -21,11 +22,11 @@ export default function RestauranteForm({ onSaved }: { onSaved?: () => void }) {
     phone: "",
     perfilImage: null,
     image: null,
-    amnidades: [],
+    amenidades: [],
     categorias: [],
     horarios: [],
     tipos: [],
-    plan: "",
+    plan: "" as unknown as Plan,
     horario: "",
     menus: [],
   });
@@ -85,7 +86,7 @@ export default function RestauranteForm({ onSaved }: { onSaved?: () => void }) {
       ]).then(([data, amenidades, categorias]) => {
         setAmenidadesDisponibles(amenidades);
         setCategoriasDisponibles(categorias);
-
+        console.log("🍽️ Restaurante cargado:", data.amenidades);
         setRestaurante((prev) => ({
           ...prev,
           id: data.id,
@@ -94,7 +95,7 @@ export default function RestauranteForm({ onSaved }: { onSaved?: () => void }) {
           phone: data.phone,
           perfilImage: null,
           image: null,
-          amnidades: data.amenidades?.map((a: Amenidad) => a.id) || [],
+          amenidades: data.amenidades?.map((a: Amenidad) => a.id) || [],
           categorias: data.categorias?.map((c: Categoria) => c.id) || [],
           horarios: (
             data.horarios?.map((h: Horario) => ({
@@ -133,7 +134,7 @@ export default function RestauranteForm({ onSaved }: { onSaved?: () => void }) {
     }
   };
 
-  const handleAddItem = (field: "amnidades" | "categorias", id: string) => {
+  const handleAddItem = (field: "amenidades" | "categorias", id: string) => {
     if (id && !restaurante[field].includes(id)) {
       setRestaurante((prev) => ({
         ...prev,
@@ -142,7 +143,7 @@ export default function RestauranteForm({ onSaved }: { onSaved?: () => void }) {
     }
   };
 
-  const handleRemoveItem = (field: "amnidades" | "categorias", id: string) => {
+  const handleRemoveItem = (field: "amenidades" | "categorias", id: string) => {
     setRestaurante((prev) => ({
       ...prev,
       [field]: prev[field].filter((v) => v !== id),
@@ -154,7 +155,7 @@ export default function RestauranteForm({ onSaved }: { onSaved?: () => void }) {
       ...prev,
       horarios: [
         ...prev.horarios,
-        { id: "", dia: "Lunes", horaApertura: "09:00", horaCierre: "18:00" },
+        { id: "", dia: "Lunes", horaApertura: "09:00", horaCierre: "18:00", diaTexto: "Lunes", horaAperturaTexto: "09:00", horaCierreTexto: "18:00" },
       ],
     }));
   };
@@ -182,13 +183,16 @@ export default function RestauranteForm({ onSaved }: { onSaved?: () => void }) {
     // 🚀 Construcción del objeto final para enviar
     const form: Restaurante = {
       ...restaurante,
-      amnidades: restaurante.amnidades.filter((id) => !!id), // array de strings
+      amenidades: restaurante.amenidades.filter((id) => !!id), // array de strings
       categorias: restaurante.categorias.filter((id) => !!id), // array de strings
       horarios: restaurante.horarios.map((h) => ({
         id: h.id,
         dia: h.dia,
         horaApertura: h.horaApertura,
         horaCierre: h.horaCierre,
+        horaAperturaTexto: h.horaApertura,
+        horaCierreTexto: h.horaCierre,
+        diaTexto: h.dia,
       })),
     };
 
@@ -264,7 +268,7 @@ export default function RestauranteForm({ onSaved }: { onSaved?: () => void }) {
             />
           ) : originalPerfilImage ? (
             <img
-              src={`http://localhost:5147${originalPerfilImage}`}
+              src={`http://localhost:5000${originalPerfilImage}`}
               alt="preview"
               className="mt-2 h-16 w-16 object-cover rounded-md"
             />
@@ -290,7 +294,7 @@ export default function RestauranteForm({ onSaved }: { onSaved?: () => void }) {
             />
           ) : originalImage ? (
             <img
-              src={`http://localhost:5147${originalImage}`}
+              src={`http://localhost:5000${originalImage}`}
               alt="preview"
               className="mt-2 h-16 w-16 object-cover rounded-md"
             />
@@ -303,7 +307,7 @@ export default function RestauranteForm({ onSaved }: { onSaved?: () => void }) {
         <legend className="font-semibold">Amenidades</legend>
         <div className="flex gap-2">
           <select
-            onChange={(e) => handleAddItem("amnidades", e.target.value)}
+            onChange={(e) => handleAddItem("amenidades", e.target.value)}
             className="border rounded-md p-2"
             defaultValue=""
           >
@@ -318,7 +322,7 @@ export default function RestauranteForm({ onSaved }: { onSaved?: () => void }) {
           </select>
         </div>
         <div className="flex flex-wrap gap-2 mt-2">
-          {restaurante.amnidades.map((id) => {
+          {restaurante.amenidades.map((id) => {
             const amenidad = amenidadesDisponibles.find((a) => a.id === id);
             return (
               <span
@@ -328,7 +332,7 @@ export default function RestauranteForm({ onSaved }: { onSaved?: () => void }) {
                 {amenidad?.nombre}
                 <button
                   type="button"
-                  onClick={() => handleRemoveItem("amnidades", id)}
+                  onClick={() => handleRemoveItem("amenidades", id)}
                   className="text-red-500 font-bold"
                 >
                   ×

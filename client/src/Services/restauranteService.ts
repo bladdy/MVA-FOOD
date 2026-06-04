@@ -1,5 +1,5 @@
 import type { Restaurante} from "@/Types/Restaurante.ts";
-const API_URL = "http://localhost:5147/api";
+const API_URL = "http://localhost:5000/api";
 
 export async function getRestaurante(id: string) {
   const res = await fetch(`${API_URL}/restaurantes/${id}`);
@@ -30,10 +30,11 @@ export async function updateRestaurante(id: string, data: Restaurante) {
     formData.append("Image", data.image);
   }
 
+
   // ✅ Amenidades
-  if (data.amenities) {
-    data.amenities.forEach((amenidad) => {
-      formData.append("AmenidadIds", amenidad.id);
+  if (data.amenidades) {
+    data.amenidades.forEach((aid) => {
+      formData.append("AmenidadIds", aid);
     });
   }
 
@@ -47,7 +48,7 @@ export async function updateRestaurante(id: string, data: Restaurante) {
   // ✅ Horarios (como JSON, porque son objetos)
 
   if (data.horarios && data.horarios.length > 0) {
-  data.horarios.forEach((h, index) => {
+    data.horarios.forEach((h, index) => {
     const horarioId = h.id || "00000000-0000-0000-0000-000000000000";
     formData.append(`Horarios[${index}].Id`, horarioId);
     formData.append(`Horarios[${index}].Dia`, mapDiaToEnum(h.dia).toString());

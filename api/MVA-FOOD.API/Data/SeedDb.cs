@@ -18,6 +18,7 @@ public class SeedDb
         await _context.Database.EnsureCreatedAsync();
         await CheckCategoriesAsync();
         await CheckAmenitiesAsync();
+        await CheckPlansAsync();
     }
 
     private async Task CheckAmenitiesAsync()
@@ -37,6 +38,17 @@ public class SeedDb
         }
     }
 
+    private async Task CheckPlansAsync()
+    {
+        if (!_context.Planes.Any())
+        {
+            _context.Planes.Add(new Plan { Nombre = "Plan Gratuito", Precio = 0m , DuracionDias = 7});
+            _context.Planes.Add(new Plan { Nombre = "Plan Básico",  Precio = 9.99m , DuracionDias = 30});
+            _context.Planes.Add(new Plan { Nombre = "Plan Premium", Precio = 19.99m , DuracionDias = 30});
+            _context.Planes.Add(new Plan { Nombre = "Plan Empresarial", Precio = 49.99m , DuracionDias = 30});
+            await _context.SaveChangesAsync();
+        }
+    }
     private async Task CheckCategoriesAsync()
     {
         if (!_context.Categorias.Any())

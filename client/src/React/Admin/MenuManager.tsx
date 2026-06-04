@@ -82,7 +82,7 @@ const MenuManager: React.FC = () => {
 
   const handleDelete = async (menu: Menu) => {
     try {
-      await fetch(`http://localhost:5147/api/Menu/${menu.id}`, { method: "DELETE" });
+      await fetch(`http://localhost:5000/api/Menu/${menu.id}`, { method: "DELETE" });
       await fetchMenus();
     } catch (error) {
       console.error("Error eliminando menú:", error);

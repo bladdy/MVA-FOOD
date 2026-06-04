@@ -82,7 +82,7 @@ export interface Restaurante {
   phone: string;
   perfilImage: File | string | null;
   image: File | string | null;
-  amenities: Amenidad[];
+  amenidades: string[];
   categorias: string[];
   horarios: Horario[];
 

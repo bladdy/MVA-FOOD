@@ -185,15 +185,19 @@ namespace MVA_FOOD.Infrastructure.Services
                 }).ToListAsync();
         }
 
-        public async Task<RestauranteDto> GetByIdAsync(Guid id)
+        public async Task<RestauranteDto?> GetByIdAsync(Guid id)
         {
             return await _context.Restaurantes
                 .Include(r => r.PlanRestaurante)
+                    .ThenInclude(pr => pr.Plan)
                 .Include(r => r.Menu)
-                .ThenInclude(m => m.Categoria)
+                    .ThenInclude(m => m.Categoria)
                 .Include(r => r.Horario)
                 .Include(r => r.AmenidadRestaurantes)
+                    .ThenInclude(ar => ar.Amenidad)
                 .Include(r => r.CategoriaRestaurantes)
+                    .ThenInclude(cr => cr.Categoria)
+                .Where(r => r.Id == id)
                 .Select(r => new RestauranteDto
                 {
                     Id = r.Id,
@@ -203,53 +207,72 @@ namespace MVA_FOOD.Infrastructure.Services
                     Direccion = r.Direccion,
                     Phone = r.Phone,
                     PlanId = r.PlanRestauranteId,
-                    Menu = r.Menu.Select(m => new MenuDto
+
+                    Menu = r.Menu.Where(m => m.Activo == true)
+                    .Select(m => new MenuDto
                     {
                         Id = m.Id,
                         Nombre = m.Nombre,
                         CategoriaId = m.CategoriaId,
-                        Categoria = m.Categoria != null ? new CategoriaDto
-                        {
-                            Id = m.Categoria.Id,
-                            Nombre = m.Categoria.Nombre
-                        } : null,
+                        Categoria = m.Categoria == null
+                            ? null
+                            : new CategoriaDto
+                            {
+                                Id = m.Categoria.Id,
+                                Nombre = m.Categoria.Nombre
+                            },
                         Ingredientes = m.Ingredientes,
                         Precio = m.Precio,
                         Imagen = m.Imagen
                     }).ToList(),
-                    PlanRestauranteDto = new PlanRestauranteDto
-                    {
-                        Id = r.PlanRestaurante.Id,
-                        Nombre = r.PlanRestaurante.Plan.Nombre,
-                        Precio = r.PlanRestaurante.Plan.Precio,
-                        FechaInicio = r.PlanRestaurante.FechaInicio,
-                        FechaFin = r.PlanRestaurante.FechaFin,
-                        FechaPago = r.PlanRestaurante.FechaPago,
-                        Pagado = r.PlanRestaurante.Pagado
-                    },
-                    Amenidades = r.AmenidadRestaurantes.Select(a => new AmenidadDto
-                    {
-                        Id = a.Amenidad.Id,
-                        Nombre = a.Amenidad.Nombre
-                    }).Where(a => a.Id != Guid.Empty).ToList(),
-                    Categorias = r.CategoriaRestaurantes.Select(c => new CategoriaDto
-                    {
-                        Id = c.Categoria.Id,
-                        Nombre = c.Categoria.Nombre,
 
-                    }).Where(c => c.Id != Guid.Empty).ToList(),
-                    Horarios = r.Horario.Select(h => new HorarioDto
-                    {
-                        Id = h.Id,
-                        Dia = h.Dia,
-                        HoraApertura = h.HoraApertura,
-                        HoraCierre = h.HoraCierre
+                    PlanRestauranteDto = r.PlanRestaurante == null
+                        ? null
+                        : new PlanRestauranteDto
+                        {
+                            Id = r.PlanRestaurante.Id,
+                            Nombre = r.PlanRestaurante.Plan != null
+                                ? r.PlanRestaurante.Plan.Nombre
+                                : null,
+                            Precio = r.PlanRestaurante.Plan != null
+                                ? r.PlanRestaurante.Plan.Precio
+                                : 0,
+                            FechaInicio = r.PlanRestaurante.FechaInicio,
+                            FechaFin = r.PlanRestaurante.FechaFin,
+                            FechaPago = r.PlanRestaurante.FechaPago,
+                            Pagado = r.PlanRestaurante.Pagado
+                        },
 
+                    Amenidades = r.AmenidadRestaurantes
+                        .Where(a => a.Amenidad != null)
+                        .Select(a => new AmenidadDto
+                        {
+                            Id = a.Amenidad.Id,
+                            Nombre = a.Amenidad.Nombre
+                        })
+                        .ToList(),
 
-                    }).Where(c => c.Id != Guid.Empty).ToList(),
-                }).FirstAsync(r => r.Id == id);
+                    Categorias = r.CategoriaRestaurantes
+                        .Where(c => c.Categoria != null)
+                        .Select(c => new CategoriaDto
+                        {
+                            Id = c.Categoria.Id,
+                            Nombre = c.Categoria.Nombre
+                        })
+                        .ToList(),
+
+                    Horarios = r.Horario
+                        .Select(h => new HorarioDto
+                        {
+                            Id = h.Id,
+                            Dia = h.Dia,
+                            HoraApertura = h.HoraApertura,
+                            HoraCierre = h.HoraCierre
+                        })
+                        .ToList()
+                })
+                .FirstOrDefaultAsync();
         }
-
         public async Task<RestauranteDto> CreateAsync(CrearRestauranteDto dto)
         {
             await using var transaction = await _context.Database.BeginTransactionAsync();
@@ -276,37 +299,43 @@ namespace MVA_FOOD.Infrastructure.Services
                     throw new ArgumentException("El plan especificado no existe.");
 
                 var fechaInicio = DateTime.UtcNow;
-                var fechaFin = fechaInicio.AddMonths(1);
+                var fechaFin = fechaInicio.AddDays(plan.DuracionDias);
 
-                //Agregar el listado de Categorias
-                foreach (var categoriaId in dto.CategoriaIds)
+                if (dto.CategoriaIds != null)
                 {
-                    var categoria = await _context.Categorias.FindAsync(categoriaId);
-                    if (categoria == null)
-                        throw new ArgumentException("Una de las categorías especificadas no existe.");
-
-                    var categoriaRestaurante = new CategoriaRestaurantes
+                    //Agregar el listado de Categorias
+                    foreach (var categoriaId in dto.CategoriaIds)
                     {
-                        CategoriaId = categoria.Id,
-                        RestauranteId = restaurante.Id
-                    };
+                        var categoria = await _context.Categorias.FindAsync(categoriaId);
+                        if (categoria == null)
+                            throw new ArgumentException("Una de las categorías especificadas no existe.");
 
-                    _context.CategoriaRestaurantes.Add(categoriaRestaurante);
+                        var categoriaRestaurante = new CategoriaRestaurantes
+                        {
+                            CategoriaId = categoria.Id,
+                            RestauranteId = restaurante.Id
+                        };
+
+                        _context.CategoriaRestaurantes.Add(categoriaRestaurante);
+                    }
                 }
                 //Agregar el listado de Amenidades
-                foreach (var amenidadId in dto.AmenidadIds)
+                if (dto.AmenidadIds != null)
                 {
-                    var amenidad = await _context.Amenidades.FindAsync(amenidadId);
-                    if (amenidad == null)
-                        throw new ArgumentException("Una de las amenidades especificadas no existe.");
-
-                    var amenidadRestaurante = new AmenidadRestaurantes
+                    foreach (var amenidadId in dto.AmenidadIds)
                     {
-                        AmenidadId = amenidad.Id,
-                        RestauranteId = restaurante.Id
-                    };
+                        var amenidad = await _context.Amenidades.FindAsync(amenidadId);
+                        if (amenidad == null)
+                            throw new ArgumentException("Una de las amenidades especificadas no existe.");
 
-                    _context.AmenidadRestaurantes.Add(amenidadRestaurante);
+                        var amenidadRestaurante = new AmenidadRestaurantes
+                        {
+                            AmenidadId = amenidad.Id,
+                            RestauranteId = restaurante.Id
+                        };
+
+                        _context.AmenidadRestaurantes.Add(amenidadRestaurante);
+                    }
                 }
 
                 var planRestaurante = new PlanRestaurante

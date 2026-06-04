@@ -317,7 +317,7 @@ const MenuModal: React.FC<MenuModalProps> = ({
               {form.imagen && typeof form.imagen !== "string" ? (
                 <img src={URL.createObjectURL(form.imagen)} alt="preview" className="mt-2 h-16 w-16 object-cover rounded-md" />
               ) : originalImage ? (
-                <img src={`http://localhost:5147${originalImage}`} alt="preview" className="mt-2 h-16 w-16 object-cover rounded-md" />
+                <img src={`http://localhost:5000${originalImage}`} alt="preview" className="mt-2 h-16 w-16 object-cover rounded-md" />
               ) : null}
             </div>
 

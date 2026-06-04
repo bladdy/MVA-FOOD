@@ -1,6 +1,6 @@
 import type { MenuCreate, Categoria, Menu, PagedResult, MenuFilters, VarianteCreate, Variante, VarianteFilters, Amenidad } from "@/Types/Restaurante.ts";
 
-const API_URL = "http://localhost:5147/api";
+const API_URL = "http://localhost:5000/api";
 
 export const menuService = {
   async create(menu: MenuCreate) {

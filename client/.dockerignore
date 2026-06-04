@@ -1,5 +1,7 @@
 # Evitar subir node_modules
 node_modules
+dist
+pnpm-lock.yaml
 **/node_modules/
 
 # Evitar subir carpetas de build

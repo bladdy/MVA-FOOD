@@ -11,23 +11,36 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// 1. Configurar DbContext (SQLite)
+// ======================================
+// DbContext
+// ======================================
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlite(
+        builder.Configuration.GetConnectionString("DefaultConnection")));
+
 builder.Services.AddTransient<SeedDb>();
-// 2. Configurar CORS
+
+// ======================================
+// CORS
+// ======================================
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
     {
-        policy.WithOrigins("http://localhost:4321") // tu app
-              .AllowAnyHeader()
-              .AllowAnyMethod()
-              .AllowCredentials(); // ⚠️ solo si usas cookies o credenciales
+        policy
+            .WithOrigins(
+                "http://localhost:4321",
+                "http://127.0.0.1:4321"
+            )
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials();
     });
 });
 
-// 3. Configurar autenticación con JWT
+// ======================================
+// JWT Authentication
+// ======================================
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -36,38 +49,43 @@ builder.Services.AddAuthentication(options =>
 .AddJwtBearer(options =>
 {
     var config = builder.Configuration;
+
     options.TokenValidationParameters = new TokenValidationParameters
     {
         ValidateIssuer = true,
         ValidateAudience = true,
         ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
+
         ValidIssuer = config["Jwt:Issuer"],
         ValidAudience = config["Jwt:Audience"],
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["Jwt:Key"]!))
+
+        IssuerSigningKey = new SymmetricSecurityKey(
+            Encoding.UTF8.GetBytes(config["Jwt:Key"]!))
     };
 
-    // 🔹 Capturar token desde cookie "token"
     options.Events = new JwtBearerEvents
     {
         OnMessageReceived = context =>
         {
-            if (context.Request.Cookies.ContainsKey("token"))
+            if (context.Request.Cookies.TryGetValue("token", out var token))
             {
-                context.Token = context.Request.Cookies["token"];
+                context.Token = token;
             }
+
             return Task.CompletedTask;
         }
     };
 });
 
-
-// 4. Configurar Swagger (OpenAPI)
+// ======================================
+// Swagger
+// ======================================
 builder.Services.AddSwaggerGen(options =>
 {
     options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
-        Description = "JWT Authorization header using the Bearer scheme. Ejemplo: 'Bearer {token}'",
+        Description = "Bearer {token}",
         Name = "Authorization",
         In = ParameterLocation.Header,
         Type = SecuritySchemeType.ApiKey,
@@ -81,8 +99,8 @@ builder.Services.AddSwaggerGen(options =>
             {
                 Reference = new OpenApiReference
                 {
-                    Type = ReferenceType.SecurityScheme,
-                    Id = "Bearer"
+                    Id = "Bearer",
+                    Type = ReferenceType.SecurityScheme
                 }
             },
             Array.Empty<string>()
@@ -90,14 +108,19 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 
-// 5. Configurar controladores con JSON options
+// ======================================
+// Controllers
+// ======================================
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
-        options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
+        options.JsonSerializerOptions.ReferenceHandler =
+            System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
     });
 
-// 6. Servicios de la capa de aplicación (Inyección de dependencias)
+// ======================================
+// Application Services
+// ======================================
 builder.Services.AddScoped<IAmenidadService, AmenidadService>();
 builder.Services.AddScoped<ICategoriaService, CategoriaService>();
 builder.Services.AddScoped<IRestauranteService, RestauranteService>();
@@ -111,53 +134,72 @@ builder.Services.AddScoped<IPedidoService, PedidoService>();
 builder.Services.AddScoped<IUsuarioService, UsuarioService>();
 builder.Services.AddScoped<TokenService>();
 
-// 7. Configurar autorización y endpoints
+// ======================================
+// Authorization
+// ======================================
 builder.Services.AddAuthorization();
+
 builder.Services.AddEndpointsApiExplorer();
 
 var app = builder.Build();
 
-// -----------------------------
-// Aplicar migraciones automáticamente
-// -----------------------------
+// ======================================
+// Migraciones automáticas
+// ======================================
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    db.Database.Migrate(); // Esto crea la DB y aplica migraciones si no existe
-}
-SeedData(app);
 
-void SeedData(WebApplication app)
+    db.Database.Migrate();
+}
+
+// ======================================
+// Seed
+// ======================================
+using (var scope = app.Services.CreateScope())
 {
-    var scopeFactory = app.Services.GetService<IServiceScopeFactory>();
-    using (var scope = scopeFactory!.CreateScope())
-    {
-        var service = scope.ServiceProvider.GetService<SeedDb>();
-        service!.SeedAsync().Wait();
-    }
+    var seed = scope.ServiceProvider.GetRequiredService<SeedDb>();
+
+    await seed.SeedAsync();
 }
 
-// 8. Configurar middleware
+// ======================================
+// Swagger
+// ======================================
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
+
     app.UseSwaggerUI(options =>
     {
-        options.SwaggerEndpoint("/swagger/v1/swagger.json", "MVA-FOOD API v1");
+        options.SwaggerEndpoint(
+            "/swagger/v1/swagger.json",
+            "MVA-FOOD API v1");
+
         options.RoutePrefix = string.Empty;
     });
 }
 
+// ======================================
+// Middleware
+// ======================================
 app.UseMiddleware<ExceptionMiddleware>();
+
 app.UseHttpsRedirection();
 
-// Usa la policy nueva (no AllowAll)
+app.UseRouting();
+
 app.UseCors("AllowFrontend");
 
 app.UseAuthentication();
+
 app.UseAuthorization();
 
 app.UseStaticFiles();
+
+// ======================================
+// Endpoints
+// ======================================
 app.MapControllers();
 
 app.Run();
