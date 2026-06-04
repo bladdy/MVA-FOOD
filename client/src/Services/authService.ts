@@ -18,21 +18,20 @@ interface LoginResponse {
 //const API_URL = "http://localhost:5000/api/auth";
 const API_URL = import.meta.env.PUBLIC_API_URL;
 
-export const login = async (username: string, password: string) => {
+export const login = async (data: LoginData) => {
   const response = await fetch(`${API_URL}/auth/login`, {
     method: "POST",
     credentials: "include",
     headers: {
       "Content-Type": "application/json"
     },
-    body: JSON.stringify({
-      username,
-      password
-    })
+    body: JSON.stringify(data)
   });
 
-  if (!response.ok)
-    throw new Error("Credenciales inválidas");
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(errorText);
+  }
 
   return response.json();
 };

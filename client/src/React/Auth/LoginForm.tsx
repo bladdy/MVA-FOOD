@@ -10,7 +10,10 @@ const LoginForm: React.FC = () => {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await login({ username, password });
+      await login({
+        username,
+        password
+      });
       //if (!window) return;
       // Redirigir al dashboard
       window.location.href = "/admin/dashboard";
