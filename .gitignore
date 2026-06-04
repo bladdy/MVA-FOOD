@@ -1,7 +1,7 @@
 # Global
 node_modules/
 *dist/
-.env
+#.env
 *.log
 .vscode/
 *.DS_Store
