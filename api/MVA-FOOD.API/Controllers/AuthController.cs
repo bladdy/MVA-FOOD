@@ -100,9 +100,10 @@ namespace MVA_FOOD.API.Controllers
             {
                 HttpOnly = true,
                 Secure = true,
-                SameSite = SameSiteMode.Strict,
+                SameSite = SameSiteMode.None,
+                Domain = ".mr-menus.com",
                 Path = "/",
-                Expires = DateTimeOffset.UtcNow.AddYears(-1)
+                Expires = DateTimeOffset.UtcNow.AddDays(-1)
             });
 
             return Ok(new
