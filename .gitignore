@@ -83,8 +83,6 @@ secrets.json
 *.mdf
 *.ldf
 
-# EF Core
-Migrations/
 
 # Logs
 *.log
