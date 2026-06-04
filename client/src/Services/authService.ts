@@ -1,3 +1,5 @@
+
+
 // src/services/authService.ts
 interface LoginData {
   username: string;
@@ -13,34 +15,31 @@ interface LoginResponse {
   };
 }
 
-const API_URL = "http://localhost:5000/api/auth";
-  //const API_URL =  "http://api:5000/api/auth";
+//const API_URL = "http://localhost:5000/api/auth";
+const API_URL = import.meta.env.PUBLIC_API_URL;
 
-export const login = async (data: LoginData): Promise<LoginResponse> => {
-  const res = await fetch(`${API_URL}/login`, {
+export const login = async (username: string, password: string) => {
+  const response = await fetch(`${API_URL}/auth/login`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data),
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      username,
+      password
+    })
   });
 
-  if (!res.ok) {
-    const err = await res.json();
-    throw new Error(err.message || "Error al iniciar sesión");
-  }
+  if (!response.ok)
+    throw new Error("Credenciales inválidas");
 
-  const result: LoginResponse = await res.json();
-  // Guardamos el token en localStorage
-  localStorage.setItem("token", result.token);
-
-  // ⚠️ Si backend aún NO devuelve Set-Cookie, entonces lo guardamos manualmente:
-  document.cookie = `token=${result.token}; path=/; Secure; SameSite=Strict`;
-
-  return result;
+  return response.json();
 };
 
 export const validateToken = async (token?: string): Promise<boolean> => {
   try {
-    const res = await fetch(`${API_URL}/validate-token?token=${token}`, {
+    const res = await fetch(`${API_URL}/auth/validate-token?token=${token}`, {
       method: "GET",
       credentials: "include",
     });
@@ -51,26 +50,26 @@ export const validateToken = async (token?: string): Promise<boolean> => {
   }
 };
 export const logout = async () => {
-  await fetch(`${API_URL}/logout`, {
+  const response = await fetch(`${API_URL}/auth/logout`, {
     method: "POST",
-    credentials: "include", // importante para que envíe la cookie al backend
-  });  // Redirigir al login
-  window.location.href = "/login";
-};
-console.log("API_URL:", API_URL);
-
-export const getCurrentUser = async () => {
-  console.log("Consultando:", `${API_URL}/get-current-user`);
-
-  const res = await fetch(`${API_URL}/get-current-user`, {
-    method: "GET",
-    credentials: "include",
+    credentials: "include"
   });
 
-  console.log("Respuesta:", res);
+  console.log("Logout status:", response.status);
 
-  if (!res.ok)
+  window.location.href = "/login";
+};
+
+export const getCurrentUser = async () => {
+  const response = await fetch(
+    `${API_URL}/auth/get-current-user`,
+    {
+      credentials: "include"
+    }
+  );
+
+  if (!response.ok)
     throw new Error("No se pudo obtener el usuario");
 
-  return res.json();
+  return response.json();
 };

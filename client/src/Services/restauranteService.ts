@@ -1,7 +1,8 @@
 import type { Restaurante} from "@/Types/Restaurante.ts";
-const API_URL = "http://localhost:5000/api";
-
+//const API_URL = "http://localhost:5000/api";
+const API_URL = import.meta.env.PUBLIC_API_URL;
 export async function getRestaurante(id: string) {
+  console.log("API_URL:", API_URL); 
   const res = await fetch(`${API_URL}/restaurantes/${id}`);
   if (!res.ok) throw new Error("Error al obtener restaurante");
   return await res.json();
@@ -18,6 +19,7 @@ export async function getRestaurantes(pageNumber: number = 1, pageSize: number =
   return await res.json(); // Aquí puedes retornar los restaurantes paginados
 }
 export async function updateRestaurante(id: string, data: Restaurante) {
+  console.log("API_URL updateRestaurante:", API_URL);
   const formData = new FormData();
   formData.append("Nombre", data.name);
   formData.append("Direccion", data.direccion);

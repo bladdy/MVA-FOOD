@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -9,7 +8,6 @@ using MVA_FOOD.Infrastructure.Services;
 
 namespace MVA_FOOD.API.Controllers
 {
-    // Controllers/AuthController.cs
     [ApiController]
     [Route("api/auth")]
     public class AuthController : ControllerBase
@@ -17,7 +15,9 @@ namespace MVA_FOOD.API.Controllers
         private readonly IUsuarioService _usuarioService;
         private readonly TokenService _tokenService;
 
-        public AuthController(IUsuarioService usuarioService, TokenService tokenService)
+        public AuthController(
+            IUsuarioService usuarioService,
+            TokenService tokenService)
         {
             _usuarioService = usuarioService;
             _tokenService = tokenService;
@@ -26,24 +26,29 @@ namespace MVA_FOOD.API.Controllers
         [HttpPost("login")]
         public IActionResult Login([FromBody] LoginRequestDto request)
         {
-            var usuario = _usuarioService.Autenticar(request.Username, request.Password);
+            var usuario = _usuarioService.Autenticar(
+                request.Username,
+                request.Password);
+
             if (usuario == null)
                 return Unauthorized("Credenciales inválidas");
 
             var token = _tokenService.GenerarToken(usuario);
+
             Response.Cookies.Append("token", token, new CookieOptions
             {
                 HttpOnly = true,
                 Secure = true,
                 SameSite = SameSiteMode.Strict,
-                Path = "/"
+                Path = "/",
+                Expires = DateTimeOffset.UtcNow.AddDays(7)
             });
+
             return Ok(new
             {
-                token,
                 nombre = usuario.Nombre,
                 rol = usuario.Rol,
-                restauranteId = usuario.RestauranteId, // <- agregamos aquí
+                restauranteId = usuario.RestauranteId,
                 usuarioId = usuario.Id
             });
         }
@@ -59,10 +64,13 @@ namespace MVA_FOOD.API.Controllers
                 Nombre = request.Nombre,
                 UsuarioNombre = request.Username,
                 Rol = request.Rol,
-                RestauranteId = null  // ← MUY IMPORTANTE
+                RestauranteId = null
             };
 
-            var usuarioCreado = _usuarioService.Crear(nuevoUsuario, request.Password);
+            var usuarioCreado = _usuarioService.Crear(
+                nuevoUsuario,
+                request.Password);
+
             return Ok(usuarioCreado);
         }
 
@@ -73,6 +81,7 @@ namespace MVA_FOOD.API.Controllers
                 return Unauthorized("Token no proporcionado");
 
             var isValid = _tokenService.ValidarToken(token);
+
             if (!isValid)
                 return Unauthorized("Token inválido");
 
@@ -82,37 +91,57 @@ namespace MVA_FOOD.API.Controllers
         [HttpPost("logout")]
         public IActionResult Logout()
         {
-            // Eliminar la cookie del token
-            if (Request.Cookies.ContainsKey("token"))
-            {
-                Response.Cookies.Delete("token", new CookieOptions
-                {
-                    HttpOnly = true,
-                    Secure = true,
-                    SameSite = SameSiteMode.Strict,
-                    Path = "/"
-                });
-            }
+            var tokenAntes = Request.Cookies["token"];
 
-            return Ok(new { message = "Logged out successfully" });
+            Console.WriteLine($"TOKEN ANTES DE BORRAR: {tokenAntes}");
+
+            Response.Cookies.Append("token", "", new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.Strict,
+                Path = "/",
+                Expires = DateTimeOffset.UtcNow.AddYears(-1)
+            });
+
+            return Ok(new
+            {
+                message = "Logged out successfully"
+            });
         }
+
         [HttpGet("get-current-user")]
         [Authorize]
-        public IActionResult getCurrentUser()
+        public IActionResult GetCurrentUser()
         {
-            /*var request = await _usuarioService.GetCurrentUser(User);
-            Console.Write("USUARIO:" +User.Claims);
-            if (request == null) return Unauthorized("Usuario no autenticado");
-            return Ok(request);*/
+            var token = Request.Cookies["token"];
 
-            var usuarioId = User.Claims.FirstOrDefault(c => c.Type == "usuarioId")?.Value;
-            var nombre = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
-            var rol = User.Claims.FirstOrDefault(c => c.Type == "rol")?.Value;
-            var restauranteId = User.Claims.FirstOrDefault(c => c.Type == "restauranteId")?.Value;
+            if (string.IsNullOrEmpty(token))
+                return Unauthorized("Token no encontrado");
 
-            return Ok(new { usuarioId, nombre, rol, restauranteId });
+            var usuarioId = User.Claims
+                .FirstOrDefault(c => c.Type == "usuarioId")
+                ?.Value;
+
+            var nombre = User.Claims
+                .FirstOrDefault(c => c.Type == ClaimTypes.Name)
+                ?.Value;
+
+            var rol = User.Claims
+                .FirstOrDefault(c => c.Type == "rol")
+                ?.Value;
+
+            var restauranteId = User.Claims
+                .FirstOrDefault(c => c.Type == "restauranteId")
+                ?.Value;
+
+            return Ok(new
+            {
+                usuarioId,
+                nombre,
+                rol,
+                restauranteId
+            });
         }
-
     }
-
 }
