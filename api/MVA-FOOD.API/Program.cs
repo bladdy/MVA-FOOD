@@ -30,7 +30,8 @@ builder.Services.AddCors(options =>
         policy
             .WithOrigins(
                 "http://localhost:4321",
-                "http://127.0.0.1:4321"
+                "http://127.0.0.1:4321",
+                "https://mr-menus.com"
             )
             .AllowAnyHeader()
             .AllowAnyMethod()
