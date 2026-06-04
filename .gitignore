@@ -34,7 +34,6 @@ api/MVA-FOOD.Infrastructure/obj/
 api/MVA-FOOD.Infrastructure/.vs/
 
 # Docker
-**/Dockerfile
 docker-compose.override.yml
 
 # OS
