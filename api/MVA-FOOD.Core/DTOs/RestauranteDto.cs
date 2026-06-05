@@ -13,6 +13,7 @@ namespace MVA_FOOD.Core.DTOs
         public string PerfilImage { get; set; }
         public string Direccion { get; set; }
         public string Phone { get; set; }
+        public string Slug { get; set; }
         public Guid PlanId { get; set; }
         public PlanRestauranteDto PlanRestauranteDto { get; set; } = null!;
         public ICollection<AmenidadDto> Amenidades { get; set; } = new List<AmenidadDto>()!;

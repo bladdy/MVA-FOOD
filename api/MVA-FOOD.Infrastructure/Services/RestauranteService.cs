@@ -96,6 +96,7 @@ namespace MVA_FOOD.Infrastructure.Services
                     Id = r.Id,
                     Name = r.Name,
                     Image = r.Image,
+                    Slug = r.Slug,
                     PerfilImage = r.PerfilImage,
                     Direccion = r.Direccion,
                     Phone = r.Phone,
@@ -161,6 +162,7 @@ namespace MVA_FOOD.Infrastructure.Services
                     Name = r.Name,
                     Image = r.Image,
                     PerfilImage = r.PerfilImage,
+                    Slug = r.Slug,
                     Direccion = r.Direccion,
                     Phone = r.Phone,
                     PlanId = r.PlanRestauranteId,
@@ -210,7 +212,7 @@ namespace MVA_FOOD.Infrastructure.Services
                     Direccion = r.Direccion,
                     Phone = r.Phone,
                     PlanId = r.PlanRestauranteId,
-
+                    Slug = r.Slug,
                     Menu = r.Menu.Where(m => m.Activo == true)
                     .Select(m => new MenuDto
                     {
