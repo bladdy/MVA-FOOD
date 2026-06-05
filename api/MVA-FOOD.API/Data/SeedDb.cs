@@ -1,3 +1,6 @@
+using System.Globalization;
+using System.Text;
+using System.Text.RegularExpressions;
 using MVA_FOOD.Core.Entities;
 using MVA_FOOD.Infrastructure.Data;
 
@@ -24,6 +27,7 @@ public class SeedDb
             _context.Restaurantes.Add(new Restaurante
             {
                 Name = "Restaurante Demo",
+                Slug = GenerateSlug("Restaurante Demo"),
                 Direccion = "Un restaurante de ejemplo para pruebas.",                
                 Phone = "555-1234",
                 Image = "restaurante-demo.jpg",
@@ -113,4 +117,39 @@ public class SeedDb
             await _context.SaveChangesAsync();
         }
     }
+
+    private string GenerateSlug(string nombre)
+    {
+        if (string.IsNullOrWhiteSpace(nombre))
+            return string.Empty;
+
+        // Minúsculas
+        nombre = nombre.Trim().ToLowerInvariant();
+
+        // Eliminar acentos
+        var normalized = nombre.Normalize(NormalizationForm.FormD);
+        var sb = new StringBuilder();
+
+        foreach (var c in normalized)
+        {
+            if (CharUnicodeInfo.GetUnicodeCategory(c) != UnicodeCategory.NonSpacingMark)
+            {
+                sb.Append(c);
+            }
+        }
+
+        nombre = sb.ToString().Normalize(NormalizationForm.FormC);
+
+        // Reemplazar espacios por guiones
+        nombre = Regex.Replace(nombre, @"\s+", "-");
+
+        // Eliminar caracteres especiales
+        nombre = Regex.Replace(nombre, @"[^a-z0-9\-]", "");
+
+        // Eliminar guiones duplicados
+        nombre = Regex.Replace(nombre, @"-+", "-");
+
+        return nombre.Trim('-');
+    }
+
 }

@@ -1,7 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
+using System.Globalization;
 using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
@@ -284,6 +287,7 @@ namespace MVA_FOOD.Infrastructure.Services
                 {
                     Name = dto.Nombre,
                     Direccion = dto.Direccion,
+                    Slug = GenerateSlug(dto.Nombre),
                     Phone = dto.Telefono,
                     Image = dto.Image != null ? await ImagenesHelpers.GuardarImagenAsync(dto.Image, Imagenes.Background.ToString()) : null!,
                     PerfilImage = dto.PerfilImage != null ? await ImagenesHelpers.GuardarImagenAsync(dto.PerfilImage, Imagenes.Profile.ToString()) : null!,
@@ -386,6 +390,7 @@ namespace MVA_FOOD.Infrastructure.Services
             }
 
         }
+
 
         public async Task<bool> DeleteAsync(Guid id)
         {
@@ -504,6 +509,41 @@ namespace MVA_FOOD.Infrastructure.Services
                 await transaction.DisposeAsync();
             }
         }
+
+        private string GenerateSlug(string nombre)
+        {
+            if (string.IsNullOrWhiteSpace(nombre))
+                return string.Empty;
+
+            // Minúsculas
+            nombre = nombre.Trim().ToLowerInvariant();
+
+            // Eliminar acentos
+            var normalized = nombre.Normalize(NormalizationForm.FormD);
+            var sb = new StringBuilder();
+
+            foreach (var c in normalized)
+            {
+                if (CharUnicodeInfo.GetUnicodeCategory(c) != UnicodeCategory.NonSpacingMark)
+                {
+                    sb.Append(c);
+                }
+            }
+
+            nombre = sb.ToString().Normalize(NormalizationForm.FormC);
+
+            // Reemplazar espacios por guiones
+            nombre = Regex.Replace(nombre, @"\s+", "-");
+
+            // Eliminar caracteres especiales
+            nombre = Regex.Replace(nombre, @"[^a-z0-9\-]", "");
+
+            // Eliminar guiones duplicados
+            nombre = Regex.Replace(nombre, @"-+", "-");
+
+            return nombre.Trim('-');
+        }
+
 
     }
 
