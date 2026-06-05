@@ -1,7 +1,9 @@
 // src/Services/varianteService.ts
 import type { VarianteCreate, Variante, PagedResult } from "@/Types/Restaurante.ts";
 
-const API_URL = "http://localhost:5000/api";
+//const API_URL = "http://localhost:5000/api/auth";
+const API_URL = "https://api.mr-menus.com/api";//import.meta.env.PUBLIC_API_URL;
+
 
 export const varianteService = {
   async getAll(): Promise<PagedResult<Variante>> {
