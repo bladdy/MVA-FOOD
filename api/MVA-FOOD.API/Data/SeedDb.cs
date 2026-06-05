@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using MVA_FOOD.Core.Entities;
 using MVA_FOOD.Infrastructure.Data;
 
@@ -19,6 +15,57 @@ public class SeedDb
         await CheckCategoriesAsync();
         await CheckAmenitiesAsync();
         await CheckPlansAsync();
+        await CheckDemoRestaurantsAsync();
+    }
+    private async Task CheckDemoRestaurantsAsync()
+    {
+        if (!_context.Restaurantes.Any())
+        {
+            _context.Restaurantes.Add(new Restaurante
+            {
+                Name = "Restaurante Demo",
+                Direccion = "Un restaurante de ejemplo para pruebas.",                
+                Phone = "555-1234",
+                Image = "restaurante-demo.jpg",
+                PerfilImage = "restaurante-demo-perfil.jpg",
+                PlanRestaurante = new PlanRestaurante
+                {
+                    Plan = _context.Planes.FirstOrDefault(p => p.Nombre == "Plan Gratuito")!,
+                    FechaInicio = DateTime.UtcNow,
+                    FechaFin = DateTime.UtcNow.AddDays(30),
+                    FechaPago = DateTime.UtcNow,
+                    Pagado = true
+                },
+                CategoriaRestaurantes = new List<CategoriaRestaurantes>
+                {
+                    new CategoriaRestaurantes { Categoria = _context.Categorias.FirstOrDefault(c => c.Nombre == "Plato Fuerte")! },
+                    new CategoriaRestaurantes { Categoria = _context.Categorias.FirstOrDefault(c => c.Nombre == "Bebidas")! }
+                },
+                AmenidadRestaurantes = new List<AmenidadRestaurantes>
+                {
+                    new AmenidadRestaurantes { Amenidad = _context.Amenidades.FirstOrDefault(a => a.Nombre == "WiFi")! },
+                    new AmenidadRestaurantes { Amenidad = _context.Amenidades.FirstOrDefault(a => a.Nombre == "Estacionamiento")! }
+                },
+                Usuarios = 
+                {
+                    new Usuario
+                    {
+                        Nombre = "Admin Demo",
+                        UsuarioNombre = "AdminDemo",
+                        PasswordHash = BCrypt.Net.BCrypt.HashPassword("Admin123!"),
+                        Rol = "Admin"
+                    },
+                    new Usuario
+                    {
+                        Nombre = "Empleado Demo",
+                        UsuarioNombre = "EmpleadoDemo",
+                        PasswordHash = BCrypt.Net.BCrypt.HashPassword("Empleado123!"),
+                        Rol = "Empleado"
+                    }
+                }
+            });
+            await _context.SaveChangesAsync();
+        }
     }
 
     private async Task CheckAmenitiesAsync()
