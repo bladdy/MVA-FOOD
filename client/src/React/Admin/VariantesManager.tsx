@@ -68,7 +68,7 @@ const VariantesManager: React.FC = () => {
 
   const handleDelete = async (variante: Variante) => {
     try {
-      await fetch(`http://localhost:5147/api/Variante/${variante.id}`, { method: "DELETE" });
+      await fetch(`https://api.mr-menus.com/api/Variante/${variante.id}`, { method: "DELETE" });
       await fetchVariantes();
     } catch (error) {
       console.error("Error eliminando variante:", error);
