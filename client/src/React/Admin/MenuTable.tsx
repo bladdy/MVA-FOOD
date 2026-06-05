@@ -68,7 +68,7 @@ const MenuTable: React.FC<MenuTableProps> = ({
               <tr key={item.id}>
                 <td className="px-6 py-4">
                   <img
-                    src={`http://localhost:5000${item.imagen}`}
+                    src={`https://api.mr-menus.com${item.imagen}`}
                     alt={item.nombre}
                     className="h-12 w-12 object-cover rounded-md"
                   />
