@@ -5,6 +5,7 @@ using Microsoft.OpenApi.Models;
 using MVA_FOOD.API.Data;
 using MVA_FOOD.API.Middleware;
 using MVA_FOOD.API.Services;
+using MVA_FOOD.Core.DTOs;
 using MVA_FOOD.Core.Interfaces;
 using MVA_FOOD.Infrastructure.Data;
 using MVA_FOOD.Infrastructure.Services;
@@ -109,7 +110,8 @@ builder.Services.AddSwaggerGen(options =>
         }
     });
 });
-
+builder.Services.Configure<GoogleSheetsSettings>(
+    builder.Configuration.GetSection("GoogleSheets"));
 // ======================================
 // Controllers
 // ======================================
