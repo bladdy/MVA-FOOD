@@ -27,6 +27,8 @@ services:
       - ASPNETCORE_URLS=http://+:5000
     working_dir: /app
     restart: always
+    volumes:
+      - sqlite_data:/data
     networks:
       - mr_menus_network
 
@@ -75,6 +77,7 @@ services:
 
 volumes:
   files_data:
+  sqlite_data:
 
 # =========================
 # Red
