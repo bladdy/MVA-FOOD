@@ -1,0 +1,401 @@
+---
+import LayoutMenu from "@/layouts/LayoutMenu.astro";
+import { sasushiRestaurant } from "@/consts/sasushi";
+
+const restaurant = sasushiRestaurant;
+
+const description = `${restaurant.name} - ${restaurant.slogan}`;
+const ogImage = restaurant.logo;
+const icon = restaurant.logo;
+---
+
+<LayoutMenu
+  title={`Mr. Menús - ${restaurant.name}`}
+  description={description}
+  image={ogImage}
+  icon={icon}
+>
+  <main class="menu-page">
+    <section class="hero">
+      <img src={restaurant.logo} alt={restaurant.name} />
+
+      <h1>{restaurant.name}</h1>
+
+      <p>{restaurant.slogan}</p>
+    </section>
+
+    {
+      restaurant.categories.map((category) => (
+        <section class="category">
+          <h2>{category.name}</h2>
+
+          <div class="products">
+            {
+              category.items.map((item) => (
+                <article class="product-card">
+                  <div class="product-image">
+                    <img
+                      src={item.image}
+                      alt={item.name}
+                    />
+                  </div>
+
+                  <div class="product-info">
+                    <h3>{item.name}</h3>
+
+                    <p>{item.description}</p>
+
+                    <span>
+                      Disponible {item.availableTypes.join(" o ")}
+                    </span>
+                  </div>
+
+                  <div class="price">
+                    <small>RD$</small>
+                    <strong>{item.price}</strong>
+                  </div>
+                </article>
+              ))
+            }
+          </div>
+        </section>
+      ))
+    }
+<footer class="menu-footer">
+
+  <div class="footer-row">
+
+    <div class="footer-item">
+      <div class="footer-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-bowl-chopsticks"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M4 11h16a1 1 0 0 1 1 1v.5c0 1.5 -2.517 5.573 -4 6.5v1a1 1 0 0 1 -1 1h-8a1 1 0 0 1 -1 -1v-1c-1.687 -1.054 -4 -5 -4 -6.5v-.5a1 1 0 0 1 1 -1" /><path d="M19 7l-14 1" /><path d="M19 2l-14 3" /></svg></div>
+
+      <div>
+        <small>TODOS LOS ROLLS</small>
+        <strong>INCLUYEN:</strong>
+      </div>
+    </div>
+
+    <div class="footer-item">
+      <div>
+        <small>1 SALSA</small>
+        <span>Elige tu favorita:</span>
+
+        <div class="sauces">
+          <span>TERIYAKI</span>
+          <span>SOYA</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-item">
+      <div class="footer-icon">🥢</div>
+
+      <div>
+        <small>PALILLOS</small>
+        <strong>CHINOS</strong>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="footer-row">
+
+    <div class="footer-item">
+      <div class="footer-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-truck-delivery"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M5 17a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" /><path d="M15 17a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" /><path d="M5 17h-2v-4m-1 -8h11v12m-4 0h6m4 0h2v-6h-8m0 -5h5l3 5" /><path d="M3 9l4 0" /></svg>
+      </div>
+
+      <div>
+        <small>PEDIDOS</small>
+        <strong>POR ENCARGO</strong>
+      </div>
+    </div>
+
+    <div class="footer-item">
+      <div class="footer-icon whatsapp">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-brand-whatsapp"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M3 21l1.65 -3.8a9 9 0 1 1 3.4 2.9l-5.05 .9" /><path d="M9 10a.5 .5 0 0 0 1 0v-1a.5 .5 0 0 0 -1 0v1a5 5 0 0 0 5 5h1a.5 .5 0 0 0 0 -1h-1a.5 .5 0 0 0 0 1" /></svg>
+      </div>
+
+      <a
+        href="https://wa.me/18293042081?text=Hola,%20quiero%20hacer%20un%20pedido"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="whatsapp-link"
+        >
+        <strong>829-304-2081</strong>
+        </a>
+    </div>
+
+    <div class="footer-item">
+      <div class="footer-icon instagram">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-brand-instagram"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M4 8a4 4 0 0 1 4 -4h8a4 4 0 0 1 4 4v8a4 4 0 0 1 -4 4h-8a4 4 0 0 1 -4 -4l0 -8" /><path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" /><path d="M16.5 7.5v.01" /></svg>
+      </div>
+
+      <strong>Sasushi.rd</strong>
+    </div>
+
+  </div>
+
+</footer>
+  </main>
+</LayoutMenu>
+<style>
+    .menu-page {
+  min-height: 100vh;
+  background: #050505;
+  color: white;
+  padding: 2rem 1rem 4rem;
+}
+
+.hero {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.hero img {
+  width: 120px;
+  margin: auto;
+}
+
+.hero h1 {
+  font-size: 3rem;
+  font-weight: 800;
+  letter-spacing: 4px;
+  margin-top: 1rem;
+}
+
+.hero p {
+  color: #ccc;
+  margin-top: 0.5rem;
+}
+
+.category {
+  max-width: 1100px;
+  margin: auto;
+  margin-bottom: 4rem;
+}
+
+.category h2 {
+  text-align: center;
+  color: #8baa2a;
+  font-size: 3rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  margin-bottom: 2rem;
+}
+
+.products {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.product-card {
+  display: grid;
+  grid-template-columns: 220px 1fr 140px;
+
+  background: #080808;
+  border: 1px solid #556b1e;
+  border-radius: 18px;
+
+  overflow: hidden;
+}
+
+.product-image {
+  padding: 1rem;
+}
+
+.product-image img {
+  width: 100%;
+  object-fit: cover;
+}
+
+.product-info {
+  padding: 1.5rem 1rem;
+}
+
+.product-info h3 {
+  color: white;
+  font-size: 1.7rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.product-info p {
+  margin-top: 0.75rem;
+  color: #d8d8d8;
+}
+
+.product-info span {
+  display: inline-block;
+  margin-top: 1rem;
+  color: #8baa2a;
+  font-size: 0.9rem;
+}
+
+.price {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  border-left: 1px dashed #556b1e;
+}
+
+.price small {
+  color: #8baa2a;
+  font-weight: bold;
+}
+
+.price strong {
+  font-size: 2.5rem;
+  font-weight: 900;
+  color: white;
+}
+
+@media (max-width: 768px) {
+  .product-card {
+    grid-template-columns: 1fr;
+  }
+
+  .price {
+    border-left: none;
+    border-top: 1px dashed #556b1e;
+    padding: 1rem;
+  }
+
+  .category h2 {
+    font-size: 2rem;
+  }
+}
+
+/* Footer Styles */
+.menu-footer {
+  max-width: 1100px;
+  margin: 3rem auto 0;
+}
+
+.footer-row {
+  display: flex;
+
+  background: #080808;
+  border: 1px solid #556b1e;
+  border-radius: 14px;
+
+  overflow: hidden;
+}
+
+.footer-row + .footer-row {
+  margin-top: 0.8rem;
+}
+
+.footer-item {
+  flex: 1;
+
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+
+  padding: 0.9rem 1.2rem;
+
+  min-height: 72px;
+}
+
+.footer-item:not(:last-child) {
+  border-right: 1px dashed #556b1e;
+}
+
+.footer-icon {
+  width: 42px;
+  height: 42px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid #556b1e;
+  border-radius: 50%;
+
+  color: #8baa2a;
+  flex-shrink: 0;
+}
+
+.footer-item small {
+  display: block;
+  color: #fff;
+  font-size: 0.75rem;
+  letter-spacing: 1px;
+  line-height: 1.1;
+}
+
+.footer-item strong {
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.footer-item strong:last-child {
+  color: #8baa2a;
+}
+
+.sauce-card,
+.sauces {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.sauces {
+  margin-top: 0.4rem;
+}
+
+.sauces span {
+  border: 1px solid #556b1e;
+  padding: 0.25rem 0.75rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  color: white;
+}
+
+.whatsapp {
+  background: #25d366;
+  color: white;
+  border: none;
+}
+
+.instagram {
+  border: none;
+  color: white;
+  background: linear-gradient(
+    45deg,
+    #f58529,
+    #dd2a7b,
+    #8134af,
+    #515bd4
+  );
+}
+.whatsapp-link {
+  text-decoration: none;
+  color: inherit;
+}
+
+.whatsapp-link strong {
+  color: white;
+  transition: color 0.2s ease;
+}
+
+.whatsapp-link:hover strong {
+  color: #8baa2a;
+}
+@media (max-width: 768px) {
+
+  .footer-row {
+    flex-direction: column;
+  }
+
+  .footer-item:not(:last-child) {
+    border-right: none;
+    border-bottom: 1px dashed #556b1e;
+  }
+
+}
+</style>
