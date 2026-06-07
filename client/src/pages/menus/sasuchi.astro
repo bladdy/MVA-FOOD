@@ -1,6 +1,7 @@
 ---
 import LayoutMenu from "@/layouts/LayoutMenu.astro";
 import { sasushiRestaurant } from "@/consts/sasushi";
+import sushis from "@/assets/uploads/menu/sushi.jpg";
 
 const restaurant = sasushiRestaurant;
 
@@ -35,7 +36,7 @@ const icon = restaurant.logo;
                 <article class="product-card">
                   <div class="product-image">
                     <img
-                      src={item.image}
+                      src={sushis.src}
                       alt={item.name}
                     />
                   </div>
@@ -51,8 +52,8 @@ const icon = restaurant.logo;
                   </div>
 
                   <div class="price">
-                    <small>RD$</small>
-                    <strong>{item.price}</strong>
+                    
+                    <strong><small>RD$</small>{item.price}</strong>
                   </div>
                 </article>
               ))
@@ -234,10 +235,9 @@ const icon = restaurant.logo;
 
 .price {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   justify-content: center;
   align-items: center;
-
   border-left: 1px dashed #556b1e;
 }
 
@@ -254,17 +254,36 @@ const icon = restaurant.logo;
 
 @media (max-width: 768px) {
   .product-card {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr 1fr auto;
   }
+  .product-image {
+  padding: 0.5rem;
 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+  .product-info {
+    padding: 1rem;
+  }
+  .product-info h3 {
+    font-size: 1.2rem;
+  }
+  .price strong {
+  font-size: 1.2rem;
+  font-weight: 900;
+  color: white;
+  padding:0.5rem;
+}
+/*
   .price {
     border-left: none;
     border-top: 1px dashed #556b1e;
     padding: 1rem;
-  }
+  }*/
 
   .category h2 {
-    font-size: 2rem;
+    font-size: 1.5rem;
   }
 }
 
