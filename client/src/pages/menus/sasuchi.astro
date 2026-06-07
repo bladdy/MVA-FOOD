@@ -1,7 +1,6 @@
 ---
 import LayoutMenu from "@/layouts/LayoutMenu.astro";
 import { sasushiRestaurant } from "@/consts/sasushi";
-import sushis from "@/assets/uploads/menu/sushi.jpg";
 
 const restaurant = sasushiRestaurant;
 
@@ -36,7 +35,7 @@ const icon = restaurant.logo;
                 <article class="product-card">
                   <div class="product-image">
                     <img
-                      src={sushis.src}
+                      src="../../assets/uploads/menu/sushi.jpg"
                       alt={item.name}
                     />
                   </div>
