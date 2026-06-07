@@ -1,5 +1,5 @@
 import type { Restaurante} from "@/Types/Restaurante.ts";
-//const API_URL = "http://localhost:5000/api";
+//const API_URL = "http://localhost:5147/api";
 //const API_URL = import.meta.env.PUBLIC_API_URL;
 //const API_URL = "http://localhost:5000/api/auth";
 const API_URL = "https://api.mr-menus.com/api";//import.meta.env.PUBLIC_API_URL;
@@ -7,6 +7,12 @@ const API_URL = "https://api.mr-menus.com/api";//import.meta.env.PUBLIC_API_URL;
 export async function getRestaurante(id: string) {
   console.log("API_URL:", API_URL); 
   const res = await fetch(`${API_URL}/restaurantes/${id}`);
+  if (!res.ok) throw new Error("Error al obtener restaurante");
+  return await res.json();
+}
+export async function getRestauranteBySlug(slug: string) {
+  console.log("API_URL:", API_URL); 
+  const res = await fetch(`${API_URL}/restaurantes/${slug}/slug`);
   if (!res.ok) throw new Error("Error al obtener restaurante");
   return await res.json();
 }

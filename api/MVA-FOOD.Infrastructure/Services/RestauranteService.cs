@@ -144,9 +144,6 @@ namespace MVA_FOOD.Infrastructure.Services
                 TotalPages = (int)Math.Ceiling(totalItems / (double)filter.PageSize)
             };
         }
-
-
-
         public async Task<IEnumerable<RestauranteDto>> GetAllAsync()
         {
             return await _context.Restaurantes
@@ -189,7 +186,95 @@ namespace MVA_FOOD.Infrastructure.Services
                     }).Where(c => c.Id != Guid.Empty).ToList()
                 }).ToListAsync();
         }
+    
+        public async Task<RestauranteDto> GetBySlugAsync(string slug)
+        {
+            return await _context.Restaurantes
+                .Include(r => r.PlanRestaurante)
+                    .ThenInclude(pr => pr.Plan)
+                .Include(r => r.Menu)
+                    .ThenInclude(m => m.Categoria)
+                .Include(r => r.Horario)
+                .Include(r => r.AmenidadRestaurantes)
+                    .ThenInclude(ar => ar.Amenidad)
+                .Include(r => r.CategoriaRestaurantes)
+                    .ThenInclude(cr => cr.Categoria)
+                .Where(r => r.Slug == slug)
+                .Select(r => new RestauranteDto
+                {
+                    Id = r.Id,
+                    Name = r.Name,
+                    Image = r.Image,
+                    PerfilImage = r.PerfilImage,
+                    Direccion = r.Direccion,
+                    Phone = r.Phone,
+                    PlanId = r.PlanRestauranteId,
+                    Slug = r.Slug,
+                    Menu = r.Menu.Where(m => m.Activo == true)
+                    .Select(m => new MenuDto
+                    {
+                        Id = m.Id,
+                        Nombre = m.Nombre,
+                        CategoriaId = m.CategoriaId,
+                        Categoria = m.Categoria == null
+                            ? null
+                            : new CategoriaDto
+                            {
+                                Id = m.Categoria.Id,
+                                Nombre = m.Categoria.Nombre
+                            },
+                        Ingredientes = m.Ingredientes,
+                        Precio = m.Precio,
+                        Imagen = m.Imagen
+                    }).ToList(),
 
+                    PlanRestauranteDto = r.PlanRestaurante == null
+                        ? null
+                        : new PlanRestauranteDto
+                        {
+                            Id = r.PlanRestaurante.Id,
+                            Nombre = r.PlanRestaurante.Plan != null
+                                ? r.PlanRestaurante.Plan.Nombre
+                                : null,
+                            Precio = r.PlanRestaurante.Plan != null
+                                ? r.PlanRestaurante.Plan.Precio
+                                : 0,
+                            FechaInicio = r.PlanRestaurante.FechaInicio,
+                            FechaFin = r.PlanRestaurante.FechaFin,
+                            FechaPago = r.PlanRestaurante.FechaPago,
+                            Pagado = r.PlanRestaurante.Pagado
+                        },
+
+                    Amenidades = r.AmenidadRestaurantes
+                        .Where(a => a.Amenidad != null)
+                        .Select(a => new AmenidadDto
+                        {
+                            Id = a.Amenidad.Id,
+                            Nombre = a.Amenidad.Nombre
+                        })
+                        .ToList(),
+
+                    Categorias = r.CategoriaRestaurantes
+                        .Where(c => c.Categoria != null)
+                        .Select(c => new CategoriaDto
+                        {
+                            Id = c.Categoria.Id,
+                            Nombre = c.Categoria.Nombre
+                        })
+                        .ToList(),
+
+                    Horarios = r.Horario
+                        .Select(h => new HorarioDto
+                        {
+                            Id = h.Id,
+                            Dia = h.Dia,
+                            HoraApertura = h.HoraApertura,
+                            HoraCierre = h.HoraCierre
+                        })
+                        .ToList()
+                })
+                .FirstOrDefaultAsync();
+        }
         public async Task<RestauranteDto?> GetByIdAsync(Guid id)
         {
             return await _context.Restaurantes
@@ -546,7 +631,7 @@ namespace MVA_FOOD.Infrastructure.Services
             return nombre.Trim('-');
         }
 
-
+        
     }
 
 }

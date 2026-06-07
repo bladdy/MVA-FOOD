@@ -33,6 +33,13 @@ namespace MVA_FOOD.API.Controllers
             if (result == null) return NotFound();
             return Ok(result);
         }
+        [HttpGet("{slug}/slug")]
+        public async Task<IActionResult> GetBySlug(string slug)
+        {
+            var result = await _service.GetBySlugAsync(slug);
+            if (result == null) return NotFound();
+            return Ok(result);
+        }
 
         [HttpPost]
         public async Task<ActionResult<RestauranteDto>> Create(CrearRestauranteDto dto)
