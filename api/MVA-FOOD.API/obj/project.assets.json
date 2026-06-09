@@ -15,6 +15,19 @@
           }
         }
       },
+      "FluentFTP/54.2.0": {
+        "type": "package",
+        "compile": {
+          "lib/net8.0/FluentFTP.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net8.0/FluentFTP.dll": {
+            "related": ".xml"
+          }
+        }
+      },
       "Google.Apis/1.75.0": {
         "type": "package",
         "dependencies": {
@@ -997,6 +1010,22 @@
           }
         }
       },
+      "SixLabors.ImageSharp/3.1.12": {
+        "type": "package",
+        "compile": {
+          "lib/net6.0/SixLabors.ImageSharp.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net6.0/SixLabors.ImageSharp.dll": {
+            "related": ".xml"
+          }
+        },
+        "build": {
+          "build/SixLabors.ImageSharp.props": {}
+        }
+      },
       "SQLitePCLRaw.bundle_e_sqlite3/2.1.6": {
         "type": "package",
         "dependencies": {
@@ -1333,6 +1362,22 @@
           "buildTransitive/netcoreapp3.1/_._": {}
         }
       },
+      "System.Drawing.Common/11.0.0-preview.4.26230.115": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.0/System.Drawing.Common.dll": {
+            "related": ".pdb;.xml"
+          }
+        },
+        "runtime": {
+          "lib/netstandard2.0/System.Drawing.Common.dll": {
+            "related": ".pdb;.xml"
+          }
+        },
+        "build": {
+          "buildTransitive/netcoreapp2.0/System.Drawing.Common.targets": {}
+        }
+      },
       "System.IdentityModel.Tokens.Jwt/7.1.2": {
         "type": "package",
         "dependencies": {
@@ -1518,7 +1563,8 @@
           "BCrypt.Net-Next": "4.0.3",
           "MVA-FOOD.Core": "1.0.0",
           "Microsoft.AspNetCore.Authentication.JwtBearer": "8.0.0",
-          "Microsoft.EntityFrameworkCore.Sqlite": "8.0.0"
+          "Microsoft.EntityFrameworkCore.Sqlite": "8.0.0",
+          "System.Drawing.Common": "11.0.0-preview.4.26230.115"
         },
         "compile": {
           "bin/placeholder/MVA-FOOD.Infrastructure.dll": {}
@@ -1559,6 +1605,33 @@
         "lib/netstandard2.1/BCrypt.Net-Next.dll",
         "lib/netstandard2.1/BCrypt.Net-Next.xml",
         "readme.md"
+      ]
+    },
+    "FluentFTP/54.2.0": {
+      "sha512": "n+OyaqU80gnOltXo2xBPZklAqbtxJAfl2GfblOIe5OCAk4jr/3zYW9Jf1fG6eR/USZq4AKWQcUMmKE9neSk8og==",
+      "type": "package",
+      "path": "fluentftp/54.2.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE.TXT",
+        "fluentftp.54.2.0.nupkg.sha512",
+        "fluentftp.nuspec",
+        "lib/net462/FluentFTP.dll",
+        "lib/net462/FluentFTP.xml",
+        "lib/net472/FluentFTP.dll",
+        "lib/net472/FluentFTP.xml",
+        "lib/net7.0/FluentFTP.dll",
+        "lib/net7.0/FluentFTP.xml",
+        "lib/net8.0/FluentFTP.dll",
+        "lib/net8.0/FluentFTP.xml",
+        "lib/net9.0/FluentFTP.dll",
+        "lib/net9.0/FluentFTP.xml",
+        "lib/netstandard2.0/FluentFTP.dll",
+        "lib/netstandard2.0/FluentFTP.xml",
+        "lib/netstandard2.1/FluentFTP.dll",
+        "lib/netstandard2.1/FluentFTP.xml",
+        "logo-nuget.png"
       ]
     },
     "Google.Apis/1.75.0": {
@@ -3234,6 +3307,22 @@
         "packageIcon.png"
       ]
     },
+    "SixLabors.ImageSharp/3.1.12": {
+      "sha512": "iAg6zifihXEFS/t7fiHhZBGAdCp3FavsF4i2ZIDp0JfeYeDVzvmlbY1CNhhIKimaIzrzSi5M/NBFcWvZT2rB/A==",
+      "type": "package",
+      "path": "sixlabors.imagesharp/3.1.12",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE",
+        "build/SixLabors.ImageSharp.props",
+        "lib/net6.0/SixLabors.ImageSharp.dll",
+        "lib/net6.0/SixLabors.ImageSharp.xml",
+        "sixlabors.imagesharp.128.png",
+        "sixlabors.imagesharp.3.1.12.nupkg.sha512",
+        "sixlabors.imagesharp.nuspec"
+      ]
+    },
     "SQLitePCLRaw.bundle_e_sqlite3/2.1.6": {
       "sha512": "BmAf6XWt4TqtowmiWe4/5rRot6GerAeklmOPfviOvwLoF5WwgxcJHAxZtySuyW9r9w+HLILnm8VfJFLCUJYW8A==",
       "type": "package",
@@ -3582,6 +3671,52 @@
         "useSharedDesignerContext.txt"
       ]
     },
+    "System.Drawing.Common/11.0.0-preview.4.26230.115": {
+      "sha512": "ChGTL6TQ2S1OpdSIe9UzAdqWkaOWPYYeF9B5LZJIzXwQYcE7iZdxGNEGN7acuBPWeYhuHzIOTf4R0l4xcPuV1w==",
+      "type": "package",
+      "path": "system.drawing.common/11.0.0-preview.4.26230.115",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "LICENSE.TXT",
+        "PACKAGE.md",
+        "THIRD-PARTY-NOTICES.TXT",
+        "buildTransitive/net10.0/_._",
+        "buildTransitive/net461/System.Drawing.Common.targets",
+        "buildTransitive/net462/_._",
+        "buildTransitive/netcoreapp2.0/System.Drawing.Common.targets",
+        "lib/MonoAndroid10/_._",
+        "lib/MonoTouch10/_._",
+        "lib/net10.0/System.Drawing.Common.dll",
+        "lib/net10.0/System.Drawing.Common.pdb",
+        "lib/net10.0/System.Drawing.Common.xml",
+        "lib/net10.0/System.Private.Windows.Core.dll",
+        "lib/net10.0/System.Private.Windows.Core.xml",
+        "lib/net10.0/System.Private.Windows.GdiPlus.dll",
+        "lib/net10.0/System.Private.Windows.GdiPlus.xml",
+        "lib/net11.0/System.Drawing.Common.dll",
+        "lib/net11.0/System.Drawing.Common.pdb",
+        "lib/net11.0/System.Drawing.Common.xml",
+        "lib/net11.0/System.Private.Windows.Core.dll",
+        "lib/net11.0/System.Private.Windows.Core.xml",
+        "lib/net11.0/System.Private.Windows.GdiPlus.dll",
+        "lib/net11.0/System.Private.Windows.GdiPlus.xml",
+        "lib/net462/System.Drawing.Common.dll",
+        "lib/net462/System.Drawing.Common.pdb",
+        "lib/net462/System.Drawing.Common.xml",
+        "lib/netstandard2.0/System.Drawing.Common.dll",
+        "lib/netstandard2.0/System.Drawing.Common.pdb",
+        "lib/netstandard2.0/System.Drawing.Common.xml",
+        "lib/xamarinios10/_._",
+        "lib/xamarinmac20/_._",
+        "lib/xamarintvos10/_._",
+        "lib/xamarinwatchos10/_._",
+        "system.drawing.common.11.0.0-preview.4.26230.115.nupkg.sha512",
+        "system.drawing.common.nuspec",
+        "useSharedDesignerContext.txt"
+      ]
+    },
     "System.IdentityModel.Tokens.Jwt/7.1.2": {
       "sha512": "Thhbe1peAmtSBFaV/ohtykXiZSOkx59Da44hvtWfIMFofDA3M3LaVyjstACf2rKGn4dEDR2cUpRAZ0Xs/zB+7Q==",
       "type": "package",
@@ -3841,6 +3976,7 @@
   },
   "projectFileDependencyGroups": {
     "net8.0": [
+      "FluentFTP >= 54.2.0",
       "Google.Apis.Auth >= 1.75.0",
       "Google.Apis.Sheets.v4 >= 1.74.0.4061",
       "MVA-FOOD.Core >= 1.0.0",
@@ -3848,6 +3984,7 @@
       "Microsoft.AspNetCore.OpenApi >= 8.0.*",
       "Microsoft.EntityFrameworkCore.Sqlite >= 8.0.*",
       "Microsoft.EntityFrameworkCore.Tools >= 8.0.*",
+      "SixLabors.ImageSharp >= 3.1.12",
       "Swashbuckle.AspNetCore >= 8.0.*"
     ]
   },
@@ -3909,6 +4046,10 @@
       "net8.0": {
         "targetAlias": "net8.0",
         "dependencies": {
+          "FluentFTP": {
+            "target": "Package",
+            "version": "[54.2.0, )"
+          },
           "Google.Apis.Auth": {
             "target": "Package",
             "version": "[1.75.0, )"
@@ -3930,6 +4071,10 @@
             "suppressParent": "All",
             "target": "Package",
             "version": "[8.0.*, )"
+          },
+          "SixLabors.ImageSharp": {
+            "target": "Package",
+            "version": "[3.1.12, )"
           },
           "Swashbuckle.AspNetCore": {
             "target": "Package",

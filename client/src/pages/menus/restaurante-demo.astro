@@ -39,7 +39,7 @@ const icon = "00eb3ede-68f2-482f-bc68-864a85204b49.ico";
 const defaultImage = "/uploads/defaults/restaurant-default.jpg";
 
 const ogImage = restaurant?.image
-  ? `https://mr-menus.vercel.app${restaurant.image}`
+  ? `${restaurant.image}`
   : defaultImage;
 
 ---
@@ -57,7 +57,7 @@ const ogImage = restaurant?.image
   >
     <img
         src={restaurant?.image
-            ? API_URL + restaurant.image
+            ? restaurant.image
             : "/uploads/Background/00eb3ede-68f2-482f-bc68-864a85204b49.pngg"}
         alt="Logo Restaurant"
         class="w-40 md:w-56 animate-pulse"
@@ -73,7 +73,7 @@ const ogImage = restaurant?.image
 
         <div class="w-full bg-white shadow-lg rounded-lg text-center feature-step p-4 my-6 lg:w-3/5">
           <Image
-            src={API_URL + restaurant.image}
+            src={restaurant.image}
             alt={restaurant.name}
             title={restaurant.name}
             width="200"

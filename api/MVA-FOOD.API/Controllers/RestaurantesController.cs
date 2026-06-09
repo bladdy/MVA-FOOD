@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using MVA_FOOD.API.Services;
 using MVA_FOOD.Core.DTOs;
 using MVA_FOOD.Core.Filters;
 using MVA_FOOD.Core.Interfaces;
@@ -11,10 +12,12 @@ namespace MVA_FOOD.API.Controllers
     {
         //Update Restaurantes amenidades y categorias
         private readonly IRestauranteService _service;
+        private readonly FtpStorageService _ftp;
 
-        public RestaurantesController(IRestauranteService service)
+        public RestaurantesController(IRestauranteService service, FtpStorageService ftp)
         {
             _service = service;
+            _ftp = ftp;
         }
 
         [HttpGet]
@@ -44,6 +47,15 @@ namespace MVA_FOOD.API.Controllers
         [HttpPost]
         public async Task<ActionResult<RestauranteDto>> Create(CrearRestauranteDto dto)
         {
+            using var stream = dto.Image.OpenReadStream();
+            var url = await _ftp.UploadImageAsync(stream, "restaurant", dto.Image.FileName);
+
+            using var stream2 = dto.PerfilImage.OpenReadStream();
+            var url2 = await _ftp.UploadImageAsync(stream2, "restaurant", dto.PerfilImage.FileName);
+
+            dto.ImageUrl = url;
+            dto.PerfilImageUrl = url2;
+
             var result = await _service.CreateAsync(dto);
             if (result == null) return BadRequest("No se pudo crear el restaurante.");
             return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
@@ -51,11 +63,19 @@ namespace MVA_FOOD.API.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(Guid id, CrearRestauranteDto dto)
         {
+            using var stream = dto.Image.OpenReadStream();
+            var url = await _ftp.UploadImageAsync(stream, "restaurant", dto.Image.FileName);
+
+            using var stream2 = dto.PerfilImage.OpenReadStream();
+            var url2 = await _ftp.UploadImageAsync(stream2, "restaurant", dto.PerfilImage.FileName);
+
+            dto.ImageUrl = url;
+            dto.PerfilImageUrl = url2;
+
             var result = await _service.UpdateAsync(id, dto);
             if (result == null) return NotFound("Restaurante no encontrado o no se pudo actualizar.");
             return Ok(result);
         }
-
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)

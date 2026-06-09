@@ -145,13 +145,13 @@ const API_URL = "https://api.mr-menus.com";//Ajusta según tu estructura de carp
                     >
                       <td className="w-1/6">
                         <img
-                            src={ API_URL + item.imagen || "/mva-logo-rb.png"}
+                            src={ item.imagen || "/mva-logo-rb.png"}
                             alt={item.nombre}
                             className="w-16 h-16 object-cover rounded cursor-pointer hover:opacity-90 transition"
                             onClick={() =>
                               setImagenSeleccionada(
                                 item.imagen
-                                  ? API_URL + item.imagen
+                                  ? item.imagen
                                   : "/mva-logo-rb.png"
                               )
                             }

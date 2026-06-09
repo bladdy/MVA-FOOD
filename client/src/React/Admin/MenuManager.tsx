@@ -82,7 +82,10 @@ const MenuManager: React.FC = () => {
 
   const handleDelete = async (menu: Menu) => {
     try {
-      await fetch(`https://api.mr-menus.com/api/Menu/${menu.id}`, { method: "DELETE" });
+      var response = await menuService.deleteMenu(menu.id);
+      if (response.ok) {
+        console.warn("El menú aún existe después de intentar eliminarlo:", menu.id);
+      }
       await fetchMenus();
     } catch (error) {
       console.error("Error eliminando menú:", error);

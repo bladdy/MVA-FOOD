@@ -1,7 +1,7 @@
 import type { MenuCreate, Categoria, Menu, PagedResult, MenuFilters, VarianteCreate, Variante, VarianteFilters, Amenidad } from "@/Types/Restaurante.ts";
 
 //const API_URL = "http://localhost:5000/api/auth";
-const API_URL = "https://api.mr-menus.com/api";//import.meta.env.PUBLIC_API_URL;
+const API_URL = import.meta.env.PUBLIC_API_URL;
 
 
 export const menuService = {
@@ -127,4 +127,10 @@ export const menuService = {
     if (!res.ok) return new Promise<PagedResult<Menu>>((resolve) => resolve({ items: [], totalItems: 0 , pageNumber: 1, pageSize: 10, totalPages: 0}));
     return res.json();
   },
+  async deleteMenu(id: string) {
+    const res = await fetch(`${API_URL}/Menu/${id}`, {
+      method: "DELETE",
+    });
+    return res;
+  }
 };

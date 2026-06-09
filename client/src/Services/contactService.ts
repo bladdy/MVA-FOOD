@@ -5,11 +5,12 @@ export interface ContactRequest {
   replyPhone: string;
   message: string;
 }
-
+//const API_URL = "http://localhost:5000/api/auth";
+const API_URL = import.meta.env.PUBLIC_API_URL;
 export class ContactService {
   static async send(data: ContactRequest) {
     const response = await fetch(
-      "https://api.mr-menus.com/api/contact",
+      `${API_URL}/contact`,
       {
         method: "POST",
         headers: {

@@ -125,6 +125,9 @@ builder.Services.AddControllers()
 // ======================================
 // Application Services
 // ======================================
+
+builder.Services.AddScoped<FtpStorageService>();
+
 builder.Services.AddScoped<IAmenidadService, AmenidadService>();
 builder.Services.AddScoped<ICategoriaService, CategoriaService>();
 builder.Services.AddScoped<IRestauranteService, RestauranteService>();

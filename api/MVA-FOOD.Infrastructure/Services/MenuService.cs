@@ -205,9 +205,7 @@ namespace MVA_FOOD.Infrastructure.Services
                     CategoriaId = dto.CategoriaId,
                     Categoria = await _context.Categorias.FindAsync(dto.CategoriaId),
                     RestauranteId = dto.RestauranteId,
-                    Imagen = dto.Image != null
-                        ? await ImagenesHelpers.GuardarImagenAsync(dto.Image, Imagenes.Menu.ToString())
-                        : "/Img/noimage.png",
+                    Imagen = dto.ImageUrl ?? "/Img/noimage.png",
                     //VarianteMenus = new List<VarianteMenus>()
                 };
 
@@ -246,6 +244,7 @@ namespace MVA_FOOD.Infrastructure.Services
             if (menu == null) return null;
 
             await using var transaction = await _context.Database.BeginTransactionAsync();
+            
             try
             {
                 menu.Nombre = dto.Nombre;
@@ -253,7 +252,10 @@ namespace MVA_FOOD.Infrastructure.Services
                 menu.Precio = dto.Precio;
                 menu.Activo = dto.Activo;
                 menu.CategoriaId = dto.CategoriaId;
-                menu.Imagen = await ImagenesHelpers.ActualizarImagenAsync(dto.Image, Imagenes.Menu.ToString(), menu.Imagen);
+                if (dto.ImageUrl != menu.Imagen)
+                {
+                    menu.Imagen = dto.ImageUrl;
+                }
 
                 // IDs que llegan en el DTO
                 var variantesDtoIds = dto.Variantes?.Select(v => v.Id).ToList() ?? new List<Guid>();

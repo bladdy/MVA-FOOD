@@ -16,5 +16,7 @@ namespace MVA_FOOD.Core.DTOs
         public List<Guid> AmenidadIds { get; set; } = null!;
         public List<Guid> CategoriaIds { get; set; } = null!;
         public List<HorarioDto> Horarios { get; set; } = null!;
+        public string ImageUrl { get; set; }= null!;
+        public string PerfilImageUrl { get; set; }= null!;
     }
 }

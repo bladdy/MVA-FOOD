@@ -376,8 +376,8 @@ namespace MVA_FOOD.Infrastructure.Services
                     Direccion = dto.Direccion,
                     Slug = GenerateSlug(dto.Nombre),
                     Phone = dto.Telefono,
-                    Image = dto.Image != null ? await ImagenesHelpers.GuardarImagenAsync(dto.Image, Imagenes.Background.ToString()) : null!,
-                    PerfilImage = dto.PerfilImage != null ? await ImagenesHelpers.GuardarImagenAsync(dto.PerfilImage, Imagenes.Profile.ToString()) : null!,
+                    Image = dto.ImageUrl,
+                    PerfilImage = dto.PerfilImageUrl,
                     PlanRestauranteId = dto.PlanId
                 };
 
@@ -509,16 +509,9 @@ namespace MVA_FOOD.Infrastructure.Services
                 restaurante.Direccion = dto.Direccion;
                 restaurante.Phone = dto.Telefono;
 
-                if (dto.Image != null)
-                {
-                    restaurante.Image = await ImagenesHelpers.GuardarImagenAsync(dto.Image, Imagenes.Background.ToString());
-                }
-
-                if (dto.PerfilImage != null)
-                {
-                    restaurante.PerfilImage = await ImagenesHelpers.GuardarImagenAsync(dto.PerfilImage, Imagenes.Profile.ToString());
-                }
-
+                restaurante.Image = dto.ImageUrl;
+                restaurante.PerfilImage = dto.PerfilImageUrl;
+                
                 // Actualizar Categorías
                 var categoriasActuales = restaurante.CategoriaRestaurantes.ToList();
                 _context.CategoriaRestaurantes.RemoveRange(categoriasActuales);

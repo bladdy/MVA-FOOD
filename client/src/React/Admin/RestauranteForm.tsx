@@ -86,15 +86,15 @@ export default function RestauranteForm({ onSaved }: { onSaved?: () => void }) {
       ]).then(([data, amenidades, categorias]) => {
         setAmenidadesDisponibles(amenidades);
         setCategoriasDisponibles(categorias);
-        console.log("🍽️ Restaurante cargado:", data.amenidades);
+
         setRestaurante((prev) => ({
           ...prev,
           id: data.id,
           name: data.name,
           direccion: data.direccion,
           phone: data.phone,
-          perfilImage: null,
-          image: null,
+          perfilImage: data.perfilImage || null,
+          image: data.image || null,
           amenidades: data.amenidades?.map((a: Amenidad) => a.id) || [],
           categorias: data.categorias?.map((c: Categoria) => c.id) || [],
           horarios: (
@@ -268,7 +268,7 @@ export default function RestauranteForm({ onSaved }: { onSaved?: () => void }) {
             />
           ) : originalPerfilImage ? (
             <img
-              src={`http://localhost:5000${originalPerfilImage}`}
+              src={`${restaurante.perfilImage}`}
               alt="preview"
               className="mt-2 h-16 w-16 object-cover rounded-md"
             />
@@ -294,7 +294,7 @@ export default function RestauranteForm({ onSaved }: { onSaved?: () => void }) {
             />
           ) : originalImage ? (
             <img
-              src={`http://localhost:5000${originalImage}`}
+              src={`${restaurante.perfilImage}`}
               alt="preview"
               className="mt-2 h-16 w-16 object-cover rounded-md"
             />

@@ -1,5 +1,5 @@
 ---
-// RestaurantsList.astro
+// .astro
 import RestauranteCard from './RestauranteCard.astro';
 import type { Restaurante } from '@/Types/Restaurante.ts';
 
@@ -18,7 +18,7 @@ const { restaurantes } = Astro.props;
           <RestauranteCard
             href={`/restaurantes/${restaurant.id}`}
             name={restaurant.name}
-            image={restaurant.image}
+            image={restaurant.image ?? "/img/default.jpg"}
             perfilImage={restaurant.perfilImage ?? "/img/default.jpg"}
             tipoComida={restaurant.tipos ?? ["Sin categoría"]}
             direccion={restaurant.direccion ?? "Dirección no disponible"}

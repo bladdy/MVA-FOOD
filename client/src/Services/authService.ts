@@ -16,7 +16,7 @@ interface LoginResponse {
 }
 
 //const API_URL = "http://localhost:5000/api/auth";
-const API_URL = "https://api.mr-menus.com/api";//import.meta.env.PUBLIC_API_URL;
+const API_URL = import.meta.env.PUBLIC_API_URL;
 
 export const login = async (data: LoginData) => {
   const response = await fetch(`${API_URL}/auth/login`, {
@@ -28,6 +28,7 @@ export const login = async (data: LoginData) => {
     body: JSON.stringify(data)
   });
 
+console.log("Login response status:", response.status, API_URL);
   if (!response.ok) {
     const errorText = await response.text();
     throw new Error(errorText);

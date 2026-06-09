@@ -58,6 +58,10 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
+            "FluentFTP": {
+              "target": "Package",
+              "version": "[54.2.0, )"
+            },
             "Google.Apis.Auth": {
               "target": "Package",
               "version": "[1.75.0, )"
@@ -79,6 +83,10 @@
               "suppressParent": "All",
               "target": "Package",
               "version": "[8.0.*, )"
+            },
+            "SixLabors.ImageSharp": {
+              "target": "Package",
+              "version": "[3.1.12, )"
             },
             "Swashbuckle.AspNetCore": {
               "target": "Package",
@@ -280,6 +288,10 @@
               "suppressParent": "All",
               "target": "Package",
               "version": "[8.0.*, )"
+            },
+            "System.Drawing.Common": {
+              "target": "Package",
+              "version": "[11.0.0-preview.4.26230.115, )"
             }
           },
           "imports": [
