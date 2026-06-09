@@ -6,7 +6,7 @@ export interface ContactRequest {
   message: string;
 }
 //const API_URL = "http://localhost:5000/api/auth";
-const API_URL = import.meta.env.PUBLIC_API_URL;
+const API_URL = "https://api.mr-menus.com/api";//import.meta.env.PUBLIC_API_URL;
 export class ContactService {
   static async send(data: ContactRequest) {
     const response = await fetch(

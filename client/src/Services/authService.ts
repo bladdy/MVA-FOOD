@@ -16,7 +16,7 @@ interface LoginResponse {
 }
 
 //const API_URL = "http://localhost:5000/api/auth";
-const API_URL = import.meta.env.PUBLIC_API_URL;
+const API_URL = "https://api.mr-menus.com/api";//import.meta.env.PUBLIC_API_URL;
 
 export const login = async (data: LoginData) => {
   const response = await fetch(`${API_URL}/auth/login`, {
