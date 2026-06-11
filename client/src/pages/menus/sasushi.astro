@@ -3,7 +3,7 @@ import LayoutMenu from "@/layouts/LayoutMenu.astro";
 import { sasushiRestaurant } from "@/consts/sasushi";
 import sushiImage from "@/assets/uploads/Menu/sushi.jpg";
 import sasushiLogo from "@/assets/uploads/Profile/sasushi.png";
-
+import sasushiLogo2 from "@/assets/uploads/Profile/sasushibg.jpg";
 import sasushiIcon from "@/assets/uploads/Profile/sasushibg.ico";
 
 const restaurant = sasushiRestaurant;
@@ -16,7 +16,7 @@ const icon = sasushiIcon;
 <LayoutMenu
   title={`Mr. Menús - ${restaurant.name}`}
   description={description}
-  image={sasushiLogo.src}
+  image={sasushiLogo2.src}
   icon={icon}
 >
   <main class="menu-page">
