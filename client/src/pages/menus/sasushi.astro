@@ -1,15 +1,52 @@
 ---
+import { imageConfig } from "astro:assets";
+
 import LayoutMenu from "@/layouts/LayoutMenu.astro";
 import { sasushiRestaurant } from "@/consts/sasushi";
 import sushiImage from "@/assets/uploads/Menu/sushi.jpg";
-import sasushiLogo from "@/assets/uploads/Profile/sasushi.png";
-import sasushiLogo2 from "@/assets/uploads/Profile/sasushibg.jpg";
-import sasushiIcon from "@/assets/uploads/Profile/sasushibg.ico";
+import sasushiLogo from "@/assets/uploads/Profile/sasushi/sasushi.png";
+import sasushiLogo2 from "@/assets/uploads/Profile/sasushi/sasushibg.jpg";
+import sasushiIcon from "@/assets/uploads/Profile/sasushi/sasushibg.ico";
+import brushMask from "@/assets/uploads/Profile/sasushi/brush-mask.svg";
+
+import sasushiComboBasico from "@/assets/uploads/Profile/sasushi/combo-basico.jpg";
+import sasushiComboIntermedio from "@/assets/uploads/Profile/sasushi/combo-intermedio.jpg";
+import sasushiComboPremium from "@/assets/uploads/Profile/sasushi/combo-premium.jpg";
+
+const comboImages = {
+  "combo-basico": sasushiComboBasico,
+  "combo-intermedio": sasushiComboIntermedio,
+  "combo-premium": sasushiComboPremium,
+};
+
+import sasushiCamarones from "@/assets/uploads/Profile/sasushi/camarones.jpeg";
+import sasushiPlantainRoll from "@/assets/uploads/Profile/sasushi/plantain-roll.jpeg";
+import sasushiPlantain from "@/assets/uploads/Profile/sasushi/plantain.jpeg";
+
+import sasushiPollo2 from "@/assets/uploads/Profile/sasushi/pollo-2.jpeg";
+import sasushiPollo3 from "@/assets/uploads/Profile/sasushi/pollo-3.jpeg";
+import sasushiPollo4 from "@/assets/uploads/Profile/sasushi/pollo-4.jpeg";
+
+import sasushiSalmon2 from "@/assets/uploads/Profile/sasushi/salmon-2.jpeg";
+import sasushiSalmon3 from "@/assets/uploads/Profile/sasushi/salmon-3.jpeg";
+import sasushiSalmon from "@/assets/uploads/Profile/sasushi/salmon.jpeg";
+
+import sasushiVegano2 from "@/assets/uploads/Profile/sasushi/vegano-2.jpeg";
+import sasushiVegano from "@/assets/uploads/Profile/sasushi/vegano.jpeg";
+
+const productImages = {
+  "roll-pollo": sasushiPollo2,
+  "roll-salmon": sasushiSalmon,
+  "roll-camaron": sasushiCamarones,
+  "avocado-lover": sasushiVegano,
+  "sweet-plantain": sasushiPlantain,
+  "tofu-teriyaki": sasushiVegano2,
+  "mushroom-crunch": sasushiPollo3,
+};
 
 const restaurant = sasushiRestaurant;
 
 const description = `${restaurant.name} - ${restaurant.slogan}`;
-const ogImage = restaurant.logo;
 const icon = sasushiIcon;
 ---
 
@@ -37,7 +74,8 @@ const icon = sasushiIcon;
             {category.items.map((item) => (
               <article class="product-card">
                 <div class="product-image">
-                  <img src={sushiImage.src} alt={item.name} />
+                  <img src={productImages[item.id as keyof typeof productImages].src}
+                     alt={item.name} />
                 </div>
 
                 <div class="product-info">
@@ -58,6 +96,68 @@ const icon = sasushiIcon;
         </section>
       ))
     }
+
+    {
+      (
+        <section class="combos">
+          <h2>Combos Sasushi</h2>
+
+          <div class="combos-grid">
+            {restaurant.combos.items.map((combo) => (
+              <article class={`combo-card ${combo.id}`}>
+                <div class="combo-header">
+                  {combo.id === "combo-intermedio" && (
+                    <div
+                        class="combo-top-badge"
+                        style={`--mask-url:url(${brushMask.src})`}
+                      >
+                        ⭐ MÁS VENDIDO
+                      </div>
+                  )}
+
+                  {combo.id === "combo-premium" && (
+                    <div class="combo-premium-badge">⭐ PREMIUM</div>
+                  )}
+
+                  <div
+                      class="combo-title"
+                      style={`--mask-url:url(${brushMask.src});
+                        --mask-color: #8baa2a`}
+                    >
+                      <span>COMBO</span>
+                      <h3>{combo.name.replace("Combo", "").trim()}</h3>
+                    </div>
+
+                  <div class="combo-person">👥 {combo.person}</div>
+                </div>
+
+                <div class="combo-image">
+                  <img
+                    src={comboImages[combo.id as keyof typeof comboImages].src}
+                    alt={combo.nameProduct}
+                  />
+                </div>
+
+                <div class="combo-product-name">{combo.nameProduct}</div>
+
+                <ul class="combo-items">
+                  {combo.availableTypes.map((item) => (
+                    <li>{item}</li>
+                  ))}
+                </ul>
+
+                <div class="combo-price">
+                  <small>RD$</small>
+                  <strong>{combo.price.toLocaleString()}</strong>
+                </div>
+
+                <div class="combo-footer">Incluye salsa especial y palitos</div>
+              </article>
+            ))}
+          </div>
+        </section>
+      )
+    }
     <footer class="menu-footer">
       <div class="footer-row">
         <div class="footer-item">
@@ -76,7 +176,8 @@ const icon = sasushiIcon;
               ><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path
                 d="M4 11h16a1 1 0 0 1 1 1v.5c0 1.5 -2.517 5.573 -4 6.5v1a1 1 0 0 1 -1 1h-8a1 1 0 0 1 -1 -1v-1c-1.687 -1.054 -4 -5 -4 -6.5v-.5a1 1 0 0 1 1 -1"
               ></path><path d="M19 7l-14 1"></path><path d="M19 2l-14 3"
-              ></path></svg>
+              ></path></svg
+            >
           </div>
 
           <div>
@@ -197,6 +298,7 @@ const icon = sasushiIcon;
     </footer>
   </main>
 </LayoutMenu>
+
 <style>
   .menu-page {
     min-height: 100vh;
@@ -233,7 +335,8 @@ const icon = sasushiIcon;
     margin-bottom: 4rem;
   }
 
-  .category h2 {
+  .category h2,
+  .combos h2 {
     text-align: center;
     color: #8baa2a;
     font-size: 3rem;
@@ -258,13 +361,10 @@ const icon = sasushiIcon;
     overflow: hidden;
   }
 
-  .product-image {
-    padding: 1rem;
-  }
-
   .product-image img {
     width: 100%;
-    object-fit: cover;
+    object-fit: fill;
+    border-radius: 12px;
   }
 
   .product-info {
@@ -272,6 +372,7 @@ const icon = sasushiIcon;
     padding: 1.5rem 1rem;
     padding-bottom: 4rem;
   }
+
   .product-info h3 {
     color: white;
     font-size: 1.7rem;
@@ -314,39 +415,206 @@ const icon = sasushiIcon;
     line-height: 1;
   }
 
-  @media (max-width: 768px) {
-    .product-card {
-      grid-template-columns: 120px 1fr;
-    }
-    .product-image {
-      padding: 0.5rem;
+  /* ==========================================
+   COMBOS
+========================================== */
 
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-    .product-info {
-      padding: 1rem;
-      padding-bottom: 3rem;
-    }
-    .product-info h3 {
-      font-size: 1.2rem;
-    }
-
-    .product-price {
-      right: 0.75rem;
-      bottom: 0.75rem;
-    }
-
-    .product-price strong {
-      font-size: 1.3rem;
-    }
-    .category h2 {
-      font-size: 1.5rem;
-    }
+  .combos {
+    max-width: 1100px;
+    margin: auto;
+    margin-bottom: 4rem;
   }
 
-  /* Footer Styles */
+  .combos-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+  }
+
+  .combo-card {
+    background: #050505;
+    color: white;
+    padding: 1.5rem;
+    text-align: center;
+
+    border: 1px solid #556b1e;
+    border-radius: 18px;
+
+    display: flex;
+    flex-direction: column;
+  }
+
+  .combo-header {
+    min-height: 140px;
+  }
+
+.combo-top-badge {
+  position: relative;
+  isolation: isolate;
+
+  display: inline-block;
+
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 800;
+
+  padding: 0.5rem 1.2rem;
+
+  margin-bottom: 1rem;
+}
+
+.combo-top-badge::before {
+  content: "";
+  position: absolute;
+
+  inset: -45px -25px;
+
+  background: #f2b01e;
+
+  -webkit-mask-image: var(--mask-url);
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  -webkit-mask-size: 100% 100%;
+
+  mask-image: var(--mask-url);
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mask-size: 100% 100%;
+
+  z-index: -1;
+}
+  .combo-title {
+    position: relative;
+    isolation: isolate;
+  }
+
+  .combo-title span {
+    display: block;
+    color: #fff;
+    font-size: 0.85rem;
+    letter-spacing: 2px;
+    margin-bottom: 0.3rem;
+  }
+
+  .combo-title h3 {
+    margin: 0;
+    font-size: 3rem;
+    line-height: 1;
+    font-weight: 900;
+    text-transform: uppercase;
+  }
+
+  /* BASICO */
+.combo-basico .combo-title::before {
+  content: "";
+  position: absolute;
+
+  inset: -55px -30px;
+
+  background: var(--mask-color);
+
+  -webkit-mask-image: var(--mask-url);
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  -webkit-mask-size: 100% 100%;
+
+  mask-image: var(--mask-url);
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mask-size: 100% 100%;
+
+  z-index: -1;
+}
+
+  /* PERSONA */
+  .combo-person {
+    margin-top: 1rem;
+    color: #d0d0d0;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+  }
+
+  /* IMAGEN */
+  .combo-image {
+    margin: 1.5rem 0;
+  }
+
+  .combo-image img {
+    width: 100%;
+    display: block;
+    border-radius: 12px;
+  }
+
+  /* NOMBRE PRODUCTO */
+  .combo-product-name {
+    font-size: 1.8rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+
+  /* ITEMS */
+  .combo-items {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    text-align: left;
+    flex: 1;
+  }
+
+  .combo-items li {
+    position: relative;
+    padding-left: 1.5rem;
+    margin-bottom: 0.8rem;
+    color: #f3f3f3;
+    font-size: 1.5rem;
+  }
+
+  .combo-items li::before {
+    content: "✓";
+    position: absolute;
+    left: 0;
+    color: #8baa2a;
+    font-weight: bold;
+  }
+
+  /* PRECIO */
+  .combo-price {
+    margin-top: 1.5rem;
+
+    display: flex;
+    justify-content: center;
+    align-items: baseline;
+    gap: 0.25rem;
+  }
+
+  .combo-price small {
+    color: #8baa2a;
+    font-size: 1.5rem;
+    line-height: 1;
+    font-weight: 900;
+  }
+
+  .combo-price strong {
+    color: white;
+    font-size: 3.5rem;
+    line-height: 1;
+    font-weight: 900;
+  }
+
+  /* FOOTER COMBO */
+  .combo-footer {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px dashed #8baa2a;
+    color: #cfcfcf;
+    font-size: 0.85rem;
+  }
+
+  /* ==========================================
+   FOOTER (menu)
+========================================== */
+
   .menu-footer {
     max-width: 1100px;
     margin: 3rem auto 0;
@@ -445,6 +713,7 @@ const icon = sasushiIcon;
     color: white;
     background: linear-gradient(45deg, #f58529, #dd2a7b, #8134af, #515bd4);
   }
+
   .whatsapp-link {
     text-decoration: none;
     color: inherit;
@@ -458,7 +727,78 @@ const icon = sasushiIcon;
   .whatsapp-link:hover strong {
     color: #8baa2a;
   }
+
+  /* ==========================================
+   TABLET (max-width: 992px)
+========================================== */
+
+  @media (max-width: 992px) {
+    .combos-grid {
+      grid-template-columns: repeat(1, 1fr);
+      gap: 1rem;
+    }
+
+    .combo-card {
+      border: 1px solid #556b1e;
+    }
+  }
+
+  /* ==========================================
+   MOBILE (max-width: 768px)
+========================================== */
   @media (max-width: 768px) {
+    .product-card {
+      grid-template-columns: 120px 1fr;
+    }
+    .product-image {
+      padding: 0.5rem;
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .product-info {
+      padding: 1rem;
+      padding-bottom: 3rem;
+    }
+    .product-info h3 {
+      font-size: 1.2rem;
+    }
+
+    .product-price {
+      right: 0.75rem;
+      bottom: 0.75rem;
+    }
+
+    .product-price strong {
+      font-size: 1.3rem;
+    }
+    .category h2 {
+      font-size: 1.5rem;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .combo-card {
+      padding: 1.25rem;
+    }
+
+    .combo-title h3 {
+      font-size: 2rem;
+    }
+
+    .combo-product-name {
+      font-size: 1.4rem;
+    }
+
+    .combo-price strong {
+      font-size: 2.5rem;
+    }
+
+    .combo-header {
+      min-height: auto;
+    }
+
     .footer-row {
       flex-direction: column;
     }
