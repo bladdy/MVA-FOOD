@@ -1,5 +1,5 @@
 export const restaurantePaxBeneficia = {
-  nombre: "Pax & Beneficia",
+  nombre: "Terraza 47",
   telefono: "+525551234567",
   whatsapp: "+525551234567",
 
