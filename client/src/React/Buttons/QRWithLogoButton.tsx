@@ -3,9 +3,10 @@ import QRCodeStyling from 'qr-code-styling';
 
 interface QRCodeWithLogoProps {
   url: string;
+  logo: string;
 }
 
-export default function QRCodeWithLogo({ url }: QRCodeWithLogoProps) {
+export default function QRCodeWithLogo({ url,logo }: QRCodeWithLogoProps) {
   const qrRef = useRef(null);
 
   // Crear instancia de QR
@@ -17,7 +18,7 @@ export default function QRCodeWithLogo({ url }: QRCodeWithLogoProps) {
         width: 300,
         height: 300,
         data: url,
-        image: "img/mr_menus.png", //Debe estar en /public/
+        image: logo, //Debe estar en /public/
         dotsOptions: {
           color: "#000",
           type: "rounded"
@@ -50,12 +51,19 @@ export default function QRCodeWithLogo({ url }: QRCodeWithLogoProps) {
     <div className="flex flex-col items-center space-y-6 p-8 w-full mt-10">
       <h2 className="text-2xl font-bold text-gray-800">QR con logo embebido</h2>
       <div ref={qrRef} className="bg-gray-100 rounded" />
-      <button
+      <button data-tooltip="#default_tooltip"
         onClick={handleDownload}
-        className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded transition duration-200"
+        className="bg-orange-600 hover:bg-orange-700 text-white px-6 py-2 rounded transition duration-200"
       >
-        Descargar QR
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" 
+        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" 
+         stroke-linejoin="round" 
+        className="icon icon-tabler icons-tabler-outline icon-tabler-qrcode"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M4 5a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1l0 -4" /><path d="M7 17l0 .01" /><path d="M14 5a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1l0 -4" /><path d="M7 7l0 .01" /><path d="M4 15a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1l0 -4" /><path d="M17 7l0 .01" /><path d="M14 14l3 0" /><path d="M20 14l0 .01" /><path d="M14 14l0 3" /><path d="M14 20l3 0" /><path d="M17 17l3 0" /><path d="M20 17l0 3" /></svg>
+        
       </button>
+      <div className="tooltip" id="default_tooltip">
+        Descargar QR Con la Url de tu menú.
+      </div>
     </div>
   );
 }

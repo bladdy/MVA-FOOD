@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useUser } from "@/context/UserContext.tsx";
+import QRCodeGenerator from "@/React/Buttons/QRWithLogoButton";
 import {
   getRestaurante,
   updateRestaurante,
@@ -13,6 +14,7 @@ import type {
   RestauranteUpdateDto,
 } from "@/Types/Restaurante.ts";
 import { menuService } from "@/Services/menuService.ts";
+import { url } from "inspector";
 //19d76c9b-115d-4470-8c3f-079c7b40f2f4 2e742b46-3756-41c6-87a7-e32df07ff19d
 export default function RestauranteForm({ onSaved }: { onSaved?: () => void }) {
   const [restaurante, setRestaurante] = useState<Restaurante>({
@@ -29,6 +31,7 @@ export default function RestauranteForm({ onSaved }: { onSaved?: () => void }) {
     plan: "" as unknown as Plan,
     horario: "",
     menus: [],
+    slug: "",
   });
 
   const { user } = useUser();
@@ -93,6 +96,7 @@ export default function RestauranteForm({ onSaved }: { onSaved?: () => void }) {
           name: data.name,
           direccion: data.direccion,
           phone: data.phone,
+          slug: data.slug,
           perfilImage: data.perfilImage || null,
           image: data.image || null,
           amenidades: data.amenidades?.map((a: Amenidad) => a.id) || [],
@@ -211,7 +215,16 @@ export default function RestauranteForm({ onSaved }: { onSaved?: () => void }) {
       onSubmit={handleSubmit}
       className="space-y-8 p-6 bg-white rounded-lg shadow-md"
     >
-      <h2 className="text-xl font-semibold">Perfil Restaurante</h2>
+      <div className="flex items-center justify-between">
+        <h2 className="text-xl font-semibold">
+          Perfil Restaurante
+        </h2>
+
+        <QRCodeGenerator
+          logo={`${restaurante.image}`}
+          url={`https://mr-menus.com/menus/${restaurante.slug}`}
+        />
+      </div>
 
       {/* Información básica */}
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">

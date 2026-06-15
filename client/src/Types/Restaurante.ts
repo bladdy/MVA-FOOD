@@ -78,6 +78,7 @@ export interface RestauranteUpdateDto {
 export interface Restaurante {
   id?: string;
   name: string;
+  slug: string;
   direccion: string;
   phone: string;
   perfilImage: File | string | null;

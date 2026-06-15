@@ -10,7 +10,7 @@ const url =
 
 <Layout title="Mva Foods - QR">
   <div class="bg-gray-100 flex justify-center items-center lg:h-screen p-24">
-      <QRCodeGenerator client:load url={url} /><!--  -->
+      <QRCodeGenerator client:load url={url} logo="" /><!--  -->
      <form method="post" action="/api/upload" enctype="multipart/form-data" class="space-y-4 hidden">
       <input type="file" name="file" />
       <input type="hidden" name="tipo" value="perfil" />
