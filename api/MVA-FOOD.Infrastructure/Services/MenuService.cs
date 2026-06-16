@@ -252,7 +252,7 @@ namespace MVA_FOOD.Infrastructure.Services
                 menu.Precio = dto.Precio;
                 menu.Activo = dto.Activo;
                 menu.CategoriaId = dto.CategoriaId;
-                if (dto.ImageUrl != menu.Imagen)
+                if (dto.ImageUrl != null)
                 {
                     menu.Imagen = dto.ImageUrl;
                 }

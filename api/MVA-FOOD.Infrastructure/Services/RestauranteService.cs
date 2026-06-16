@@ -509,12 +509,12 @@ namespace MVA_FOOD.Infrastructure.Services
                 restaurante.Direccion = dto.Direccion;
                 restaurante.Phone = dto.Telefono;
 
-                if (restaurante.Image != dto.ImageUrl)
+                if ( dto.ImageUrl != null)
                 {
                     restaurante.Image = dto.ImageUrl;
                     
                 }
-                if (restaurante.PerfilImage != dto.PerfilImageUrl)
+                if (dto.PerfilImageUrl != null)
                 {
                     restaurante.PerfilImage = dto.PerfilImageUrl;
                 }
