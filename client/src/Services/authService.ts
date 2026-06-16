@@ -15,7 +15,7 @@ interface LoginResponse {
   };
 }
 
-//const API_URL = "http://localhost:5000/api/auth";
+//const API_URL = "http://localhost:5147/api";
 const API_URL = "https://api.mr-menus.com/api";//import.meta.env.PUBLIC_API_URL;
 
 export const login = async (data: LoginData) => {

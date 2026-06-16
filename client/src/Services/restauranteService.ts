@@ -1,7 +1,7 @@
-import type { Restaurante} from "@/Types/Restaurante.ts";
+import type { Restaurante, RestauranteDTO} from "@/Types/Restaurante.ts";
 //const API_URL = "http://localhost:5147/api";
 //const API_URL = import.meta.env.PUBLIC_API_URL;
-//const API_URL = "http://localhost:5000/api/auth";
+//const API_URL = "http://localhost:5147/api";
 const API_URL = "https://api.mr-menus.com/api";//import.meta.env.PUBLIC_API_URL;
 
 export async function getRestaurante(id: string) {
@@ -28,7 +28,7 @@ export async function getRestaurantes(pageNumber: number = 1, pageSize: number =
   if (!res.ok) throw new Error("Error al obtener restaurantes");
   return await res.json(); // Aquí puedes retornar los restaurantes paginados
 }
-export async function updateRestaurante(id: string, data: Restaurante) {
+export async function updateRestaurante(id: string, data: RestauranteDTO) {
   console.log("API_URL updateRestaurante:", API_URL);
   const formData = new FormData();
   formData.append("Nombre", data.name);

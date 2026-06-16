@@ -24,6 +24,7 @@ namespace MVA_FOOD.API.Services
                 Credentials = new System.Net.NetworkCredential(username, password),
                 Port = int.Parse(_configuration["FTP:Port"] ?? "21")
             };
+            Console.WriteLine($"host: {host}");
             client.Connect();
             return client;
         }

@@ -74,12 +74,30 @@ export interface RestauranteUpdateDto {
   horario?: string
 }
 
-
-export interface Restaurante {
+export interface RestauranteDTO {
   id?: string;
   name: string;
   slug: string;
   direccion: string;
+  phone: string;
+  perfilImage: File | string | null;
+  image: string | File | null;
+  amenidades: string[];
+  categorias: string[];
+  horarios: Horario[];
+
+  // Campos opcionales
+  tipos?: string[];
+  plan?: Plan;
+  horario?: string;
+  menus?: any[];
+}
+export interface Restaurante {
+
+  id?: string;
+  name: string;
+  direccion: string;
+  slug: string;
   phone: string;
   perfilImage: File | string | null;
   image: File | string | null;

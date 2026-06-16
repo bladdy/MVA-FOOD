@@ -11,10 +11,10 @@ import type {
   Horario,
   Plan,
   Restaurante,
+  RestauranteDTO,
   RestauranteUpdateDto,
 } from "@/Types/Restaurante.ts";
 import { menuService } from "@/Services/menuService.ts";
-import { url } from "inspector";
 //19d76c9b-115d-4470-8c3f-079c7b40f2f4 2e742b46-3756-41c6-87a7-e32df07ff19d
 export default function RestauranteForm({ onSaved }: { onSaved?: () => void }) {
   const [restaurante, setRestaurante] = useState<Restaurante>({
@@ -22,6 +22,7 @@ export default function RestauranteForm({ onSaved }: { onSaved?: () => void }) {
     name: "",
     direccion: "",
     phone: "",
+    slug:"",
     perfilImage: null,
     image: null,
     amenidades: [],
@@ -30,8 +31,7 @@ export default function RestauranteForm({ onSaved }: { onSaved?: () => void }) {
     tipos: [],
     plan: "" as unknown as Plan,
     horario: "",
-    menus: [],
-    slug: "",
+    menus: []
   });
 
   const { user } = useUser();
@@ -94,9 +94,8 @@ export default function RestauranteForm({ onSaved }: { onSaved?: () => void }) {
           ...prev,
           id: data.id,
           name: data.name,
-          direccion: data.direccion,
-          phone: data.phone,
           slug: data.slug,
+          direccion: data.direccion,
           perfilImage: data.perfilImage || null,
           image: data.image || null,
           amenidades: data.amenidades?.map((a: Amenidad) => a.id) || [],
@@ -185,7 +184,7 @@ export default function RestauranteForm({ onSaved }: { onSaved?: () => void }) {
     e.preventDefault();
     if (!user?.restauranteId) return;
     // 🚀 Construcción del objeto final para enviar
-    const form: Restaurante = {
+    const form: RestauranteDTO = {
       ...restaurante,
       amenidades: restaurante.amenidades.filter((id) => !!id), // array de strings
       categorias: restaurante.categorias.filter((id) => !!id), // array de strings
@@ -210,21 +209,15 @@ export default function RestauranteForm({ onSaved }: { onSaved?: () => void }) {
     }
   };
 
-  return (
+  return (<>
+  <QRCodeGenerator url={`https://mr-menus.com/menus/${restaurante.slug}` } logo={restaurante.image ?? ""} />
     <form
       onSubmit={handleSubmit}
       className="space-y-8 p-6 bg-white rounded-lg shadow-md"
     >
-      <div className="flex items-center justify-between">
         <h2 className="text-xl font-semibold">
           Perfil Restaurante
         </h2>
-
-        <QRCodeGenerator
-          logo={`${restaurante.image}`}
-          url={`https://mr-menus.com/menus/${restaurante.slug}`}
-        />
-      </div>
 
       {/* Información básica */}
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
@@ -474,5 +467,6 @@ export default function RestauranteForm({ onSaved }: { onSaved?: () => void }) {
         </button>
       </div>
     </form>
+  </>
   );
 }
