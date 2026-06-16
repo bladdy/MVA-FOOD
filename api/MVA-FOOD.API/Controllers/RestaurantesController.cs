@@ -47,14 +47,25 @@ namespace MVA_FOOD.API.Controllers
         [HttpPost]
         public async Task<ActionResult<RestauranteDto>> Create(CrearRestauranteDto dto)
         {
-            using var stream = dto.Image.OpenReadStream();
-            var url = await _ftp.UploadImageAsync(stream, "restaurant", dto.Image.FileName);
+            if (dto.Image != null)
+            {
+                using var stream = dto.Image.OpenReadStream();
 
-            using var stream2 = dto.PerfilImage.OpenReadStream();
-            var url2 = await _ftp.UploadImageAsync(stream2, "restaurant", dto.PerfilImage.FileName);
+                dto.ImageUrl = await _ftp.UploadImageAsync(
+                    stream,
+                    "restaurant",
+                    dto.Image.FileName);
+            }
 
-            dto.ImageUrl = url;
-            dto.PerfilImageUrl = url2;
+            if (dto.PerfilImage != null)
+            {
+                using var stream = dto.PerfilImage.OpenReadStream();
+
+                dto.PerfilImageUrl = await _ftp.UploadImageAsync(
+                    stream,
+                    "restaurant",
+                    dto.PerfilImage.FileName);
+            }
 
             var result = await _service.CreateAsync(dto);
             if (result == null) return BadRequest("No se pudo crear el restaurante.");

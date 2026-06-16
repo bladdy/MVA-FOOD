@@ -42,7 +42,7 @@ namespace MVA_FOOD.API.Controllers
         [HttpPost]
         public async Task<ActionResult<MenuDto>> Create([FromForm]MenuCreateDto dto)
         {
-            if (dto.ImageUrl != null)
+            if (dto.Image != null)
             {
                 using var stream = dto.Image.OpenReadStream();
                 var url = await _ftp.UploadImageAsync(stream, "menus", dto.Image.FileName);
