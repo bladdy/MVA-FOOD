@@ -509,8 +509,15 @@ namespace MVA_FOOD.Infrastructure.Services
                 restaurante.Direccion = dto.Direccion;
                 restaurante.Phone = dto.Telefono;
 
-                restaurante.Image = dto.ImageUrl;
-                restaurante.PerfilImage = dto.PerfilImageUrl;
+                if (restaurante.Image != dto.ImageUrl)
+                {
+                    restaurante.Image = dto.ImageUrl;
+                    
+                }
+                if (restaurante.PerfilImage != dto.PerfilImageUrl)
+                {
+                    restaurante.PerfilImage = dto.PerfilImageUrl;
+                }
                 
                 // Actualizar Categorías
                 var categoriasActuales = restaurante.CategoriaRestaurantes.ToList();

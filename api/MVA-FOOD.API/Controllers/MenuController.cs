@@ -42,9 +42,13 @@ namespace MVA_FOOD.API.Controllers
         [HttpPost]
         public async Task<ActionResult<MenuDto>> Create([FromForm]MenuCreateDto dto)
         {
-            using var stream = dto.Image.OpenReadStream();
-            var url = await _ftp.UploadImageAsync(stream, "menus", dto.Image.FileName);
-            dto.ImageUrl = url;
+            if (dto.ImageUrl != null)
+            {
+                using var stream = dto.Image.OpenReadStream();
+                var url = await _ftp.UploadImageAsync(stream, "menus", dto.Image.FileName);
+                dto.ImageUrl = url;
+                
+            }
             var menu = await _service.CreateAsync(dto);
             if (menu == null) return BadRequest(new ApiResponse(400, "No se pudo crear el menú."));
 
@@ -54,9 +58,13 @@ namespace MVA_FOOD.API.Controllers
         [HttpPut("{id}")]
         public async Task<ActionResult<MenuDto>> Update(Guid id, [FromForm] MenuUpdateDto dto)
         {
-            using var stream = dto.Image.OpenReadStream();
-            var url = await _ftp.UploadImageAsync(stream, "menus", dto.Image.FileName);
-            dto.ImageUrl = url;
+            if (dto.ImageUrl != null)
+            {
+                using var stream = dto.Image.OpenReadStream();
+                var url = await _ftp.UploadImageAsync(stream, "menus", dto.Image.FileName);
+                dto.ImageUrl = url;
+                
+            }
             var updated = await _service.UpdateAsync(id, dto);            
             if (updated == null) return BadRequest(new ApiResponse(400, "No se pudo actualizar el menú."));
             return CreatedAtAction(nameof(Get), new { id = updated.Id }, updated);

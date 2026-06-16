@@ -63,17 +63,31 @@ namespace MVA_FOOD.API.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(Guid id, CrearRestauranteDto dto)
         {
-            using var stream = dto.Image.OpenReadStream();
-            var url = await _ftp.UploadImageAsync(stream, "restaurant", dto.Image.FileName);
+            if (dto.Image != null)
+            {
+                using var stream = dto.Image.OpenReadStream();
 
-            using var stream2 = dto.PerfilImage.OpenReadStream();
-            var url2 = await _ftp.UploadImageAsync(stream2, "restaurant", dto.PerfilImage.FileName);
+                dto.ImageUrl = await _ftp.UploadImageAsync(
+                    stream,
+                    "restaurant",
+                    dto.Image.FileName);
+            }
 
-            dto.ImageUrl = url;
-            dto.PerfilImageUrl = url2;
+            if (dto.PerfilImage != null)
+            {
+                using var stream = dto.PerfilImage.OpenReadStream();
+
+                dto.PerfilImageUrl = await _ftp.UploadImageAsync(
+                    stream,
+                    "restaurant",
+                    dto.PerfilImage.FileName);
+            }
 
             var result = await _service.UpdateAsync(id, dto);
-            if (result == null) return NotFound("Restaurante no encontrado o no se pudo actualizar.");
+
+            if (result == null)
+                return NotFound("Restaurante no encontrado o no se pudo actualizar.");
+
             return Ok(result);
         }
 
