@@ -96,6 +96,7 @@ export default function RestauranteForm({ onSaved }: { onSaved?: () => void }) {
           name: data.name,
           slug: data.slug,
           direccion: data.direccion,
+          phone: data.phone,
           perfilImage: data.perfilImage || null,
           image: data.image || null,
           amenidades: data.amenidades?.map((a: Amenidad) => a.id) || [],
