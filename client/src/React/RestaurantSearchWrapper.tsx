@@ -5,6 +5,7 @@ import { getRestaurantes } from "@/Services/restauranteService.ts"; // ✅ impor
 import RestaurantSearch from "./RestaurantSearch.tsx";
 import RestaurantsList from "./RestaurantsList.tsx";
 import RestaurantePaginator from "./RestaurantePaginator.tsx";
+import { Restaurante } from "@/Types/Restaurante.ts";
 
 interface Filters {
   name: string;
@@ -14,7 +15,7 @@ interface Filters {
 }
 
 export default function RestaurantSearchWrapper() {
-  const [restaurants, setRestaurants] = useState<any[]>([]);
+  const [restaurants, setRestaurants] = useState<Restaurante[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(false);

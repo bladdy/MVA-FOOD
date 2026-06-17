@@ -1,8 +1,8 @@
 // src/Services/varianteService.ts
 import type { VarianteCreate, Variante, PagedResult } from "@/Types/Restaurante.ts";
-
+import { API_URL } from "@/lib/apiConfig";
 //const API_URL = "http://localhost:5147/api";
-const API_URL = "https://api.mr-menus.com/api";//import.meta.env.PUBLIC_API_URL;
+//const API_URL = "https://api.mr-menus.com/api";//import.meta.env.PUBLIC_API_URL;
 
 
 export const varianteService = {

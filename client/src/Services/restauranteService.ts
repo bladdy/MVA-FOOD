@@ -1,8 +1,9 @@
 import type { Restaurante, RestauranteDTO} from "@/Types/Restaurante.ts";
+import { API_URL } from "@/lib/apiConfig";
 //const API_URL = "http://localhost:5147/api";
 //const API_URL = import.meta.env.PUBLIC_API_URL;
 //const API_URL = "http://localhost:5147/api";
-const API_URL = "https://api.mr-menus.com/api";//import.meta.env.PUBLIC_API_URL;
+//const API_URL = "https://api.mr-menus.com/api";//import.meta.env.PUBLIC_API_URL;
 
 export async function getRestaurante(id: string) {
   console.log("API_URL:", API_URL); 
