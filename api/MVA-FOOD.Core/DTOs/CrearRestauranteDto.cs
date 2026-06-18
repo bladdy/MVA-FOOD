@@ -1,22 +1,28 @@
 
 using Microsoft.AspNetCore.Http;
 
-namespace MVA_FOOD.Core.DTOs
+namespace MVA_FOOD.Core.DTOs;
+
+public class CrearRestauranteDto
 {
-    public class CrearRestauranteDto
-    {
-        public string Nombre { get; set; } = null!;
-        public string Direccion { get; set; } = null!;
-        public string Telefono { get; set; } = null!;
-        public IFormFile Image { get; set; } = null!;
-        public IFormFile PerfilImage { get; set; } = null!;
-        public Guid PlanId { get; set; } // nuevo campo obligatorio
-        public DateTime? FechaInicio { get; set; } = DateTime.UtcNow; // opcional, por defecto hoy
-        public Guid UsuarioId { get; set; } = Guid.NewGuid(); // 👈 nuevo campo
-        public List<Guid> AmenidadIds { get; set; } = null!;
-        public List<Guid> CategoriaIds { get; set; } = null!;
-        public List<HorarioDto> Horarios { get; set; } = null!;
-        public string ImageUrl { get; set; }= null!;
-        public string PerfilImageUrl { get; set; }= null!;
-    }
+    public string Nombre { get; set; } = null!;
+    public string Direccion { get; set; } = null!;
+    public string Telefono { get; set; } = null!;
+    public IFormFile Image { get; set; } = null!;
+    public IFormFile PerfilImage { get; set; } = null!;
+
+    public Guid PlanId { get; set; }
+    public DateTime? FechaInicio { get; set; } = DateTime.UtcNow;
+
+    // Usuario administrador
+    public string NombreUsuario { get; set; } = null!;
+    public string Username { get; set; } = null!;
+    public string Password { get; set; } = null!;
+
+    public List<Guid> AmenidadIds { get; set; } = null!;
+    public List<Guid> CategoriaIds { get; set; } = null!;
+    public List<HorarioDto> Horarios { get; set; } = null!;
+
+    public string ImageUrl { get; set; } = null!;
+    public string PerfilImageUrl { get; set; } = null!;
 }

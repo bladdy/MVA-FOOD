@@ -1,19 +1,17 @@
-import type { Restaurante, RestauranteDTO} from "@/Types/Restaurante.ts";
+//restauranteService.ts
+
+import type { Restaurante, RestauranteDTO } from "@/Types/Restaurante.ts";
 import { API_URL } from "@/lib/apiConfig";
-//const API_URL = "http://localhost:5147/api";
-//const API_URL = import.meta.env.PUBLIC_API_URL;
-//const API_URL = "http://localhost:5147/api";
-//const API_URL = "https://api.mr-menus.com/api";//import.meta.env.PUBLIC_API_URL;
 
 export async function getRestaurante(id: string) {
-  console.log("API_URL:", API_URL); 
+  console.log("API_URL:", API_URL);
   const res = await fetch(`${API_URL}/restaurantes/${id}`);
 
   if (!res.ok) throw new Error("Error al obtener restaurante");
   return await res.json();
 }
 export async function getRestauranteBySlug(slug: string) {
-  console.log("API_URL:", API_URL); 
+  console.log("API_URL:", API_URL);
   const res = await fetch(`${API_URL}/restaurantes/${slug}/slug`);
   if (!res.ok) throw new Error("Error al obtener restaurante");
   return await res.json();
@@ -62,13 +60,13 @@ export async function updateRestaurante(id: string, data: RestauranteDTO) {
 
   if (data.horarios && data.horarios.length > 0) {
     data.horarios.forEach((h, index) => {
-    const horarioId = h.id || "00000000-0000-0000-0000-000000000000";
-    formData.append(`Horarios[${index}].Id`, horarioId);
-    formData.append(`Horarios[${index}].Dia`, mapDiaToEnum(h.dia).toString());
-    formData.append(`Horarios[${index}].HoraApertura`, h.horaApertura + ":00");
-    formData.append(`Horarios[${index}].HoraCierre`, h.horaCierre + ":00");
-  });
-}
+      const horarioId = h.id || "00000000-0000-0000-0000-000000000000";
+      formData.append(`Horarios[${index}].Id`, horarioId);
+      formData.append(`Horarios[${index}].Dia`, mapDiaToEnum(h.dia).toString());
+      formData.append(`Horarios[${index}].HoraApertura`, h.horaApertura + ":00");
+      formData.append(`Horarios[${index}].HoraCierre`, h.horaCierre + ":00");
+    });
+  }
 
 
   const res = await fetch(`${API_URL}/restaurantes/${id}`, {
@@ -98,4 +96,80 @@ function mapDiaToEnum(dia: string): number {
     default:
       return 0;
   }
+}
+
+export async function createRestaurante(data: {
+  nombre: string;
+  direccion: string;
+  telefono: string;
+
+  nombreUsuario: string;
+  username: string;
+  password: string;
+
+  planId: string;
+
+  image: File | null;
+  perfilImage: File | null;
+
+  amenidadIds: string[];
+  categoriaIds: string[];
+
+  horarios: {
+    dia: number;
+    horaApertura: string;
+    horaCierre: string;
+  }[];
+}) {
+  const formData = new FormData();
+
+  formData.append("Nombre", data.nombre);
+  formData.append("Direccion", data.direccion);
+  formData.append("Telefono", data.telefono);
+
+  formData.append("PlanId", data.planId);
+
+  formData.append("NombreUsuario", data.nombreUsuario);
+  formData.append("Username", data.username);
+  formData.append("Password", data.password);
+
+  if (data.image) {
+    formData.append("Image", data.image);
+  }
+
+  if (data.perfilImage) {
+    formData.append("PerfilImage", data.perfilImage);
+  }
+
+  data.amenidadIds.forEach((id) => {
+    formData.append("AmenidadIds", id);
+  });
+
+  data.categoriaIds.forEach((id) => {
+    formData.append("CategoriaIds", id);
+  });
+
+  data.horarios.forEach((h, index) => {
+    formData.append(`Horarios[${index}].Dia`, h.dia.toString());
+    formData.append(
+      `Horarios[${index}].HoraApertura`,
+      h.horaApertura + ":00"
+    );
+    formData.append(
+      `Horarios[${index}].HoraCierre`,
+      h.horaCierre + ":00"
+    );
+  });
+
+  const response = await fetch(`${API_URL}/restaurantes`, {
+    method: "POST",
+    body: formData,
+  });
+
+  if (!response.ok) {
+    const error = await response.text();
+    throw new Error(error);
+  }
+
+  return await response.json();
 }

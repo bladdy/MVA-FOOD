@@ -186,7 +186,7 @@ namespace MVA_FOOD.Infrastructure.Services
                     }).Where(c => c.Id != Guid.Empty).ToList()
                 }).ToListAsync();
         }
-    
+
         public async Task<RestauranteDto> GetBySlugAsync(string slug)
         {
             return await _context.Restaurantes
@@ -369,7 +369,14 @@ namespace MVA_FOOD.Infrastructure.Services
 
             try
             {
-                // crear el restaurante
+                // Validar username
+                var usuarioExiste = await _context.Usuarios
+                    .AnyAsync(x => x.UsuarioNombre == dto.Username);
+
+                if (usuarioExiste)
+                    throw new ArgumentException("El nombre de usuario ya existe.");
+
+                // Crear restaurante
                 var restaurante = new Restaurante
                 {
                     Name = dto.Nombre,
@@ -377,80 +384,99 @@ namespace MVA_FOOD.Infrastructure.Services
                     Slug = GenerateSlug(dto.Nombre),
                     Phone = dto.Telefono,
                     Image = dto.ImageUrl,
-                    PerfilImage = dto.PerfilImageUrl,
-                    PlanRestauranteId = dto.PlanId
+                    PerfilImage = dto.PerfilImageUrl
                 };
 
                 _context.Restaurantes.Add(restaurante);
                 await _context.SaveChangesAsync();
 
-                // buscar el plan
+                // Buscar plan
                 var plan = await _context.Planes.FindAsync(dto.PlanId);
+
                 if (plan == null)
                     throw new ArgumentException("El plan especificado no existe.");
 
-                var fechaInicio = DateTime.UtcNow;
+                var fechaInicio = dto.FechaInicio ?? DateTime.UtcNow;
                 var fechaFin = fechaInicio.AddDays(plan.DuracionDias);
 
+                // Categorías
                 if (dto.CategoriaIds != null)
                 {
-                    //Agregar el listado de Categorias
                     foreach (var categoriaId in dto.CategoriaIds)
                     {
                         var categoria = await _context.Categorias.FindAsync(categoriaId);
+
                         if (categoria == null)
                             throw new ArgumentException("Una de las categorías especificadas no existe.");
 
-                        var categoriaRestaurante = new CategoriaRestaurantes
+                        _context.CategoriaRestaurantes.Add(new CategoriaRestaurantes
                         {
                             CategoriaId = categoria.Id,
                             RestauranteId = restaurante.Id
-                        };
-
-                        _context.CategoriaRestaurantes.Add(categoriaRestaurante);
+                        });
                     }
                 }
-                //Agregar el listado de Amenidades
+
+                // Amenidades
                 if (dto.AmenidadIds != null)
                 {
                     foreach (var amenidadId in dto.AmenidadIds)
                     {
                         var amenidad = await _context.Amenidades.FindAsync(amenidadId);
+
                         if (amenidad == null)
                             throw new ArgumentException("Una de las amenidades especificadas no existe.");
 
-                        var amenidadRestaurante = new AmenidadRestaurantes
+                        _context.AmenidadRestaurantes.Add(new AmenidadRestaurantes
                         {
                             AmenidadId = amenidad.Id,
                             RestauranteId = restaurante.Id
-                        };
-
-                        _context.AmenidadRestaurantes.Add(amenidadRestaurante);
+                        });
                     }
                 }
 
+                // Horarios
+                if (dto.Horarios != null)
+                {
+                    foreach (var horarioDto in dto.Horarios)
+                    {
+                        _context.Horarios.Add(new Horario
+                        {
+                            RestauranteId = restaurante.Id,
+                            Dia = horarioDto.Dia,
+                            HoraApertura = horarioDto.HoraApertura,
+                            HoraCierre = horarioDto.HoraCierre,
+                        });
+                    }
+                }
+
+                // Plan del restaurante
                 var planRestaurante = new PlanRestaurante
                 {
                     RestauranteId = restaurante.Id,
                     PlanId = plan.Id,
                     FechaInicio = fechaInicio,
                     FechaFin = fechaFin,
+                    FechaPago = DateTime.UtcNow,
                     Pagado = false
                 };
 
                 _context.PlanesRestaurantes.Add(planRestaurante);
+
+                // Usuario administrador
+                var usuario = new Usuario
+                {
+                    Nombre = dto.NombreUsuario,
+                    UsuarioNombre = dto.Username,
+                    PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password),
+                    Rol = "Admin",
+                    RestauranteId = restaurante.Id
+                };
+
+                _context.Usuarios.Add(usuario);
+
                 await _context.SaveChangesAsync();
 
-                // asignar el usuario al restaurante
-                var usuario = await _context.Usuarios.FindAsync(dto.UsuarioId);
-                if (usuario == null)
-                    throw new ArgumentException("El usuario especificado no existe.");
-
-                usuario.RestauranteId = restaurante.Id;
-
-                await _context.SaveChangesAsync();
-
-                // ✅ confirmar transacción
                 await transaction.CommitAsync();
 
                 return new RestauranteDto
@@ -461,21 +487,14 @@ namespace MVA_FOOD.Infrastructure.Services
                     PerfilImage = restaurante.PerfilImage,
                     Direccion = restaurante.Direccion,
                     Phone = restaurante.Phone,
-                    PlanId = dto.PlanId
+                    PlanId = plan.Id
                 };
             }
-            catch (DbUpdateException)
+            catch
             {
                 await transaction.RollbackAsync();
-
                 throw;
-
             }
-            finally
-            {
-                await transaction.DisposeAsync();
-            }
-
         }
 
 
@@ -509,16 +528,16 @@ namespace MVA_FOOD.Infrastructure.Services
                 restaurante.Direccion = dto.Direccion;
                 restaurante.Phone = dto.Telefono;
 
-                if ( dto.ImageUrl != null)
+                if (dto.ImageUrl != null)
                 {
                     restaurante.Image = dto.ImageUrl;
-                    
+
                 }
                 if (dto.PerfilImageUrl != null)
                 {
                     restaurante.PerfilImage = dto.PerfilImageUrl;
                 }
-                
+
                 // Actualizar Categorías
                 var categoriasActuales = restaurante.CategoriaRestaurantes.ToList();
                 _context.CategoriaRestaurantes.RemoveRange(categoriasActuales);
@@ -631,7 +650,7 @@ namespace MVA_FOOD.Infrastructure.Services
             return nombre.Trim('-');
         }
 
-        
+
     }
 
 }

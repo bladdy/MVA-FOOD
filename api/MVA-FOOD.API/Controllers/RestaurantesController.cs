@@ -12,11 +12,13 @@ namespace MVA_FOOD.API.Controllers
     {
         //Update Restaurantes amenidades y categorias
         private readonly IRestauranteService _service;
+        private readonly IUsuarioService _usuarioService;
         private readonly FtpStorageService _ftp;
 
-        public RestaurantesController(IRestauranteService service, FtpStorageService ftp)
+        public RestaurantesController(IRestauranteService service, FtpStorageService ftp, IUsuarioService usuarioService)
         {
             _service = service;
+            _usuarioService = usuarioService;
             _ftp = ftp;
         }
 
@@ -47,6 +49,12 @@ namespace MVA_FOOD.API.Controllers
         [HttpPost]
         public async Task<ActionResult<RestauranteDto>> Create(CrearRestauranteDto dto)
         {
+
+            //Verifica si el usuario existe
+            if (_usuarioService.ObtenerPorUsuario(dto.Username) != null)
+                return BadRequest("El usuario ya existe");
+
+            
             if (dto.Image != null)
             {
                 using var stream = dto.Image.OpenReadStream();

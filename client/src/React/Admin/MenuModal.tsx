@@ -12,7 +12,7 @@ import { menuService } from "@/Services/menuService.ts";
 interface MenuModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSave: (item: any) => void;
+  onSave: () => void;
   initialData?: MenuCreate | Menu;
   restauranteId?: string;
 }
@@ -249,7 +249,7 @@ const MenuModal: React.FC<MenuModalProps> = ({
       setForm(initialForm);
       setOriginalImage(null);
       onClose();
-      onSave(null);
+      onSave();
     } catch (error) {
       console.error(error);
       alert("Hubo un error al guardar el menú");

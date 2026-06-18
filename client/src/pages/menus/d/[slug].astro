@@ -1,0 +1,128 @@
+---
+export const prerender = false;
+import { getRestauranteBySlug } from '@/Services/restauranteService.ts'; // ✅ Servicio para obtener restaurante
+import Food from "@/assets/svg/tools-kitchen-3.svg";
+import { Image } from "astro:assets";
+import LayoutMenu from "@/layouts/LayoutMenu.astro";
+import MenuSectionWrapper from "@/React/MenuSectionWrapper.jsx";
+import ShareButton from "@/React/Buttons/ShareButton";
+
+// 📌 Obtener el slug del restaurante desde la URL
+//const slug  ="restaurante-demo";
+
+// 📡 Cargar dinámicamente el restaurante desde la API
+let restaurant = null;
+let tomarPedido = false;
+const { slug } = Astro.params;
+try {
+  if (typeof slug === "string") {
+    restaurant = await getRestauranteBySlug(slug);
+    if (!restaurant) {
+        // Si no se encuentra el restaurante, redireccionar a una página de error o mostrar un mensaje
+        window.location.href = "/404"; // Redirige a una página de error personalizada
+      console.warn("⚠️ Restaurante no encontrado para slug:", slug);
+    }
+
+    // Si el restaurante tiene plan "Estándar" o "Premium" → permite pedidos
+    if (restaurant?.plan?.id === 2 || restaurant?.plan?.name === "Estándar" || restaurant?.plan?.name === "Premium") {
+        tomarPedido = true;
+    }
+} else {
+    console.warn("⚠️ Parámetro 'slug' ausente o no válido:", slug);
+  }
+} catch (error) {
+    console.error("❌ Error al cargar restaurante:", error);
+}
+const description = `Perfil y menú de ${restaurant?.name ?? "Restaurante"}`;
+const defaultImage = "/uploads/defaults/restaurant-default.jpg";
+
+const ogImage = restaurant?.image
+  ? `${restaurant.image}`
+  : defaultImage;
+
+---
+<LayoutMenu
+  title={`Mr. Menús - ${restaurant?.name}`}
+  description={description}
+  image={ogImage}
+  icon={ogImage}
+>
+
+  <!-- LOADING SCREEN -->
+  <div
+    id="loading-screen"
+    class="fixed inset-0 z-50 flex items-center justify-center bg-white transition-opacity duration-700"
+  >
+    <img
+        src={restaurant?.image
+            ? restaurant.image
+            : "/uploads/Background/00eb3ede-68f2-482f-bc68-864a85204b49.pngg"}
+        alt="Logo Restaurant"
+        class="w-40 md:w-56 animate-pulse"
+        onerror="this.src='/uploads/Background/00eb3ede-68f2-482f-bc68-864a85204b49.png'; this.onerror=null;"
+        />
+  </div>
+
+  <!-- CONTENIDO -->
+  <div id="main-content" class="opacity-0 transition-opacity duration-700">
+  {
+    restaurant ? (
+      <div class="flex flex-row justify-center min-h-screen px-4 lg:px-24 bg-gradient-to-r from-orange-100 to-orange-50">
+
+        <div class="w-full bg-white shadow-lg rounded-lg text-center feature-step p-4 my-6 lg:w-3/5">
+          <Image
+            src={restaurant.image}
+            alt={restaurant.name}
+            title={restaurant.name}
+            width="200"
+            height="200"
+            class="inline-block w-20 md:w-32 "
+          />
+          <h2 class="text-2xl md:text-5xl font-semibold text-balance text-orange-600 mt-4">
+            {restaurant.name}
+          </h2>
+          
+          <ShareButton title={restaurant.name} client:only="react" />
+          <div class="flex items-center justify-center border-b border-orange-200 mb-4 py-5">
+            <Food class="text-orange-600 w-5 h-5 mr-2" />
+            <h2 class="text-md font-semibold text-orange-600">
+              {restaurant.categorias?.map((c: { nombre: string }) => c.nombre).join(", ") ?? "Sin categoría"}
+            </h2>
+          </div>
+
+          <!-- Aquí se reemplaza el componente -->
+          <MenuSectionWrapper
+            tomaPedido={tomarPedido}
+            menu={restaurant?.menu ?? []}
+            titulo="Nuestro Menú"
+            client:load
+          />
+        </div>
+      </div>
+    ) : (
+      <div class="p-10 text-center text-red-600 text-xl md:text-2xl">
+        Restaurante no encontrado.
+      </div>
+    )
+  }
+    </div>
+
+      <!-- SCRIPT -->
+  <script>
+    window.addEventListener("load", () => {
+      const loading = document.getElementById("loading-screen");
+      const content = document.getElementById("main-content");
+
+      // mínimo 2 segundos
+      setTimeout(() => {
+        loading?.classList.add("opacity-0");
+
+        setTimeout(() => {
+          loading?.classList.add("hidden");
+          content?.classList.remove("opacity-0");
+        }, 700);
+
+      }, 2000);
+    });
+  </script>
+</LayoutMenu>
