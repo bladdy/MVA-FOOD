@@ -38,7 +38,7 @@ const LoginForm: React.FC = () => {
       {/* Subtítulo con enlace */}
       <p className="text-gray-600 mb-4">
         ¿Aún no eres miembro? <span>
-          <a href="/contactos" className="text-orange-600 hover:underline">
+          <a href="/registrarse" className="text-orange-600 hover:underline">
             Prueba gratis por 7 días.
           </a>
         </span>
