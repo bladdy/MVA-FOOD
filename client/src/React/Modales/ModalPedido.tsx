@@ -1,3 +1,4 @@
+import { useState } from "react";
 import AddIcon from "@/components/Icons/AddIcon.tsx";
 import CheckIcon from "@/components/Icons/CheckIcon.tsx";
 import CrossIcon from "@/components/Icons/CrossIcon.tsx";
@@ -14,6 +15,7 @@ export default function ModalPedido({
   comentario,
   setComentario,
   envioGratis = true,
+  onSubmit,
 }: {
   pedido: PedidoItem[];  
   mesa?: string | null;
@@ -23,7 +25,10 @@ export default function ModalPedido({
   comentario?: string;
   setComentario?: (value: string) => void;
   envioGratis?: boolean;
+  onSubmit?: (nombre: string, telefono: string) => void;
 }) {
+  const [nombre, setNombre] = useState("");
+  const [telefono, setTelefono] = useState("");
   const metaEnvioGratis = 200;
   const progreso = Math.min((total / metaEnvioGratis) * 100, 100);
   if (mesa) envioGratis = false; // Si hay mesa, no hay envío Gratis
@@ -82,18 +87,18 @@ export default function ModalPedido({
               <li key={idx} className="flex items-start gap-4 border-b pb-4">
                 <img
                   src={item.producto.imagen || "/mva-logo-rb.png"}
-                  alt={item.producto.name}
+                  alt={item.producto.nombre}
                   className="w-16 h-16 rounded-lg object-cover"
                 />
                 <div className="flex-1">
-                  <div className="text-md font-semibold text-gray-800">{item.producto.name}</div>
+                  <div className="text-md font-semibold text-gray-800">{item.producto.nombre}</div>
                   <div className="text-sm text-gray-600 text-left">{item.notas}</div>
                 </div>
 
                 {/* Control cantidad */}
                 <div className="flex flex-col items-center gap-4">
                   <div className="text-sm font-bold text-gray-900 mt-1">
-                    ${item.producto.price.toLocaleString("es-MX")} × {item.cantidad}
+                    ${item.producto.precio.toLocaleString("es-MX")} × {item.cantidad}
                   </div>
                   <div className="flex justify-center">
                     {onCantidadChange && (
@@ -139,9 +144,30 @@ export default function ModalPedido({
           <span>${total.toLocaleString("es-MX")}</span>
         </div>
 
-        <button className="w-full bg-orange-500 hover:bg-orange-600 text-white py-2 rounded-lg font-semibold">
-          {/*Cuando le vaya a finalizar pedido evalua si hay mesa o no, si hay mesa se le pasa directo a los meseros
-           y sino se va directo a la caja para que ejecuten la orden*/}
+        {!mesa && onSubmit && (
+          <div className="space-y-3 mb-4">
+            <input
+              type="text"
+              placeholder="Tu nombre *"
+              value={nombre}
+              onChange={(e) => setNombre(e.target.value)}
+              className="w-full border border-gray-300 rounded-lg p-2 text-sm"
+            />
+            <input
+              type="tel"
+              placeholder="Tu teléfono *"
+              value={telefono}
+              onChange={(e) => setTelefono(e.target.value)}
+              className="w-full border border-gray-300 rounded-lg p-2 text-sm"
+            />
+          </div>
+        )}
+
+        <button
+          className="w-full bg-orange-500 hover:bg-orange-600 text-white py-2 rounded-lg font-semibold disabled:bg-gray-400 disabled:cursor-not-allowed"
+          disabled={!onSubmit || (!mesa && (!nombre.trim() || !telefono.trim()))}
+          onClick={() => onSubmit?.(nombre, telefono)}
+        >
           Finalizar Pedido
         </button>
       </div>

@@ -1,0 +1,56 @@
+---
+import { SukoriSushi as SukoriSushiData } from "@/consts/SukoriSushi.ts";
+
+const { combos } = SukoriSushiData;
+---
+
+<div id="combos" class="scroll-mt-32">
+  <img
+    src={combos.imagenPortada}
+    alt="Combos"
+    class="w-full h-40 object-cover rounded-2xl mb-3"
+    loading="lazy"
+  />
+
+  <div class="bg-black rounded-lg px-4 py-2 mb-3">
+    <h2 class="text-white text-sm font-bold tracking-widest uppercase text-center">
+      Combos
+    </h2>
+  </div>
+
+  <div class="space-y-5">
+    {
+      combos.pasos.map((paso) => (
+        <div class="bg-white rounded-2xl border border-gray-100 p-4">
+          <div class="flex items-center gap-3 mb-3">
+            <span class="w-7 h-7 rounded-full bg-black text-white text-xs font-bold flex items-center justify-center shrink-0">
+              {paso.numero}
+            </span>
+            <h3 class="text-xs font-bold tracking-wide uppercase">
+              {paso.titulo}
+            </h3>
+          </div>
+
+          {paso.nota && (
+            <p class="text-[11px] text-orange-600 font-semibold mb-2">
+              {paso.nota}
+            </p>
+          )}
+
+          <ul class="grid grid-cols-2 gap-x-3 gap-y-1.5">
+            {paso.opciones.map((op) => (
+              <li class="flex justify-between text-xs text-gray-700 gap-1">
+                <span>{op.nombre}</span>
+                {op.precio && (
+                  <span class="font-semibold text-orange-600 whitespace-nowrap">
+                    {op.precio}
+                  </span>
+                )}
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))
+    }
+  </div>
+</div>

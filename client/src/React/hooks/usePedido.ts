@@ -23,7 +23,7 @@ export function usePedido(): UsePedidoHook {
     setModalProducto(null); // cerrar modal
   }
 
-  const total = pedido.reduce((acc, item) => acc + item.producto.price * item.cantidad, 0);
+  const total = pedido.reduce((acc, item) => acc + item.producto.precio * item.cantidad, 0);
 
   return {
     pedido,

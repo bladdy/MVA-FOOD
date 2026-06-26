@@ -1,6 +1,5 @@
 ---
 export const prerender = false;
-const API_URL = "http://localhost:5000";
 import { getRestauranteBySlug } from '@/Services/restauranteService.ts'; // ✅ Servicio para obtener restaurante
 import Food from "@/assets/svg/tools-kitchen-3.svg";
 import { Image } from "astro:assets";
@@ -93,6 +92,7 @@ const ogImage = restaurant?.image
 
           <!-- Aquí se reemplaza el componente -->
           <MenuSectionWrapper
+          restaurantId=''
             tomaPedido={tomarPedido}
             menu={restaurant?.menu ?? []}
             titulo="Nuestro Menú"

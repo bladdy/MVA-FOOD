@@ -1,0 +1,61 @@
+---
+import type { Producto } from "@/consts/SukoriSushi.ts"
+
+interface Props {
+  producto: Producto;
+}
+
+const { producto } = Astro.props;
+---
+
+<article class="flex gap-3 py-4 border-b border-gray-100 last:border-b-0">
+  {
+    producto.imagen && (
+      <img
+        src={producto.imagen}
+        alt={producto.nombre}
+        loading="lazy"
+        class="w-20 h-20 rounded-xl object-cover shrink-0 bg-gray-100"
+      />
+    )
+  }
+
+  <div class="flex-1 min-w-0">
+    <div class="flex items-start justify-between gap-2">
+      <h3 class="font-semibold text-sm leading-snug">{producto.nombre}</h3>
+      {
+        producto.precio && (
+          <span class="text-sm font-bold text-orange-600 whitespace-nowrap">
+            {producto.precio}
+          </span>
+        )
+      }
+    </div>
+
+    {
+      producto.descripcion && (
+        <p class="text-xs text-gray-500 mt-1 leading-relaxed">
+          {producto.descripcion}
+        </p>
+      )
+    }
+
+    {
+      producto.precios && producto.precios.length > 0 && (
+        <div class="flex flex-wrap gap-x-3 gap-y-1 mt-2">
+          {producto.precios.map((p) => (
+            <span class="text-xs bg-gray-50 border border-gray-100 rounded-full px-2 py-0.5">
+              {p.etiqueta} <strong class="text-orange-600">{p.valor}</strong>
+            </span>
+          ))}
+        </div>
+      )
+    }
+
+    {
+      producto.nota && (
+        <p class="text-[11px] text-gray-400 mt-1 italic">{producto.nota}</p>
+      )
+    }
+  </div>
+</article>

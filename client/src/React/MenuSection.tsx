@@ -5,6 +5,7 @@ import { usePedido } from "@/React/hooks/usePedido.ts";
 import ModalProducto from "@/React/Modales/ModalProducto.tsx";
 import ModalPedido from "@/React/Modales/ModalPedido.tsx";
 import BotonVerPedido from "@/React/Buttons/BotonVerPedido.tsx";
+import { pedidoService } from "@/Services/pedidoService.ts";
 
 import FoodIcon from "@/components/Icons/FoodIcon.tsx";
 import { categoriaOrden as baseCategorias } from "@/consts/categorias.ts";
@@ -24,6 +25,7 @@ import CrossIcon from "@/components/Icons/CrossIcon.tsx"; // Para cerrar la gale
 import TipoEntregaSelector from "./TipoEntregaSelector.tsx";
 
 interface Props {
+  restaurantId: string;
   titulo: string;
   menu: Menu[];
   tomaPedido?: boolean;
@@ -48,7 +50,7 @@ const categoriaIcons: Record<Categorias, JSX.Element> = {
   Pastas: <PastasIcon className="w-6 h-6" />,
 };
 
-export default function MenuSection({ menu, titulo, tomaPedido, mesa }: Props) {
+export default function MenuSection({ restaurantId,menu, titulo, tomaPedido, mesa }: Props) {
 
   const {
     pedido,
@@ -81,6 +83,34 @@ const API_URL = "https://api.mr-menus.com";//Ajusta según tu estructura de carp
     ...baseCategorias.filter((cat) => groupedMenu[cat as Categorias]?.length > 0),
   ] as Categorias[];
 
+
+  const [enviando, setEnviando] = useState(false);
+
+  const handleSubmitPedido = async (nombre: string, telefono: string) => {
+    if (!menu.length) return;
+    setEnviando(true);
+    try {
+      await pedidoService.create({
+        clienteNombre: nombre,
+        clienteTelefono: telefono,
+        restauranteId: restaurantId,
+        items: pedido.map((i) => ({
+          menuId: i.producto.id,
+          cantidad: i.cantidad,
+          notas: i.notas || "",
+          opciones: i.opciones || "",
+        })),
+      });
+      setPedido([]);
+      setModalPedidoAbierto(false);
+      alert("¡Pedido enviado con éxito!");
+    } catch (err) {
+      console.error(err);
+      alert("Error al enviar el pedido");
+    } finally {
+      setEnviando(false);
+    }
+  };
 
   const handleCantidadChange = (index: number, nuevaCantidad: number) => {
     const nuevoPedido = [...pedido];
@@ -217,6 +247,7 @@ const API_URL = "https://api.mr-menus.com";//Ajusta según tu estructura de carp
             envioGratis={tipoEntrega === "domicilio"}
             onClose={() => setModalPedidoAbierto(false)}
             onCantidadChange={handleCantidadChange}
+            onSubmit={handleSubmitPedido}
           />
         )}
 

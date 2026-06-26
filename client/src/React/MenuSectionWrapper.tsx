@@ -4,12 +4,13 @@ import MenuSection from "./MenuSection.tsx";
 import type { Menu } from "@/Types/Restaurante.ts";
 
 interface MenuSectionWrapperProps {
+  restaurantId: string,
   menu: Menu[]; // arreglo de menús
   titulo: string;
   tomaPedido: boolean;
 }
 
-const MenuSectionWrapper = ({ menu, titulo, tomaPedido }: MenuSectionWrapperProps) => {
+const MenuSectionWrapper = ({ restaurantId, menu, titulo, tomaPedido }: MenuSectionWrapperProps) => {
   const [loading, setLoading] = useState(true);
   const [mesa, setMesa] = useState<string | null>(null);
   useEffect(() => {
@@ -39,6 +40,7 @@ const MenuSectionWrapper = ({ menu, titulo, tomaPedido }: MenuSectionWrapperProp
         </p>
       )}
       <MenuSection
+        restaurantId ={restaurantId}
         menu={menu}
         titulo={titulo}
         tomaPedido={tomaPedido}

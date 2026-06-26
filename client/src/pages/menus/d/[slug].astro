@@ -12,7 +12,7 @@ import ShareButton from "@/React/Buttons/ShareButton";
 
 // 📡 Cargar dinámicamente el restaurante desde la API
 let restaurant = null;
-let tomarPedido = false;
+let tomarPedido = true;
 const { slug } = Astro.params;
 try {
   if (typeof slug === "string") {
@@ -92,6 +92,7 @@ const ogImage = restaurant?.image
 
           <!-- Aquí se reemplaza el componente -->
           <MenuSectionWrapper
+            restaurantId ={restaurant.id}
             tomaPedido={tomarPedido}
             menu={restaurant?.menu ?? []}
             titulo="Nuestro Menú"

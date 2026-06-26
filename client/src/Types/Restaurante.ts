@@ -58,6 +58,7 @@ export interface MenuCreate {
 export interface Categoria {
   id: string;
   nombre: string;
+  imagen: string;
 }
 export interface RestauranteUpdateDto {
   id?: string
@@ -169,6 +170,18 @@ export interface Horario {
 
   diaTexto: string;
 }
+export interface CreatePedidoDto {
+  clienteNombre: string;
+  clienteTelefono: string;
+  restauranteId: string;
+  items: {
+    menuId: string;
+    cantidad: number;
+    notas?: string;
+    opciones?: string;
+  }[];
+}
+
 export type Categorias =
     "Todas"
   | "Entradas"

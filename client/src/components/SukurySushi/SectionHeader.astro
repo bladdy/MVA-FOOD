@@ -1,0 +1,27 @@
+---
+interface Props {
+  id: string;
+  titulo: string;
+  imagen?: string;
+}
+
+const { id, titulo, imagen } = Astro.props;
+---
+
+<div id={id} class="scroll-mt-32">
+  {
+    imagen && (
+      <img
+        src={imagen}
+        alt={titulo}
+        class="w-full h-36 object-cover rounded-2xl mb-3"
+        loading="lazy"
+      />
+    )
+  }
+  <div class="bg-black rounded-lg px-4 py-2 mb-1">
+    <h2 class="text-white text-sm font-bold tracking-widest uppercase text-center">
+      {titulo}
+    </h2>
+  </div>
+</div>

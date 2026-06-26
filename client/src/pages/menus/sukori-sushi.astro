@@ -1,0 +1,160 @@
+---
+//sukory-sushi.astro
+import LayoutMenu from "@/layouts/LayoutMenu.astro";
+
+import { SukoriSushi as SukoriSushiData } from "@/consts/SukoriSushi.ts";
+import Header from "@/components/SukurySushi/Header.astro";
+import Categories from "@/components/SukurySushi/Categories.astro";
+import ComboSection from "@/components/SukurySushi/ComboSection.astro";
+import SectionHeader from "@/components/SukurySushi/SectionHeader.astro";
+import ProductCard from "@/components/SukurySushi/ProductCard.astro";
+import CharolasSection from "@/components/SukurySushi/CharolasSection.astro";
+
+const {
+  rollosFrios,
+  rollosCalientes,
+  especialidades,
+  botanas,
+  tacos,
+  entradas,
+  ensaladas,
+  arroz,
+  postres,
+  sukoritos,
+} = SukoriSushiData;
+---
+<LayoutMenu
+  title={`Mr. Menús - ${SukoriSushiData?.nombre}`}
+  description={SukoriSushiData?.nombre}
+  image="https://flagcdn.com/w20/es.png"
+  icon="https://flagcdn.com/w20/es.png"
+>
+
+ <Header />
+  <Categories />
+
+  <main class="max-w-96 mx-auto px-4 pb-16 pt-4 space-y-10">
+    <!-- COMBOS -->
+    <ComboSection />
+
+    <!-- ROLLOS FRÍOS -->
+    <section>
+      <SectionHeader id="rollos-frios" titulo={rollosFrios.titulo} />
+      <div class="mt-1">
+        {rollosFrios.productos.map((p) => <ProductCard producto={p} />)}
+      </div>
+    </section>
+
+    <!-- ROLLOS CALIENTES -->
+    <section>
+      <SectionHeader id="rollos-calientes" titulo={rollosCalientes.titulo} />
+      <div class="mt-1">
+        {rollosCalientes.productos.map((p) => <ProductCard producto={p} />)}
+      </div>
+    </section>
+
+    <!-- ESPECIALIDADES -->
+    <section>
+      <SectionHeader id="especialidades" titulo={especialidades.titulo} />
+      <div class="mt-1">
+        {especialidades.productos.map((p) => <ProductCard producto={p} />)}
+      </div>
+    </section>
+
+    <!-- BOTANAS -->
+    <section>
+      <SectionHeader
+        id="botanas"
+        titulo={botanas.titulo}
+        imagen={botanas.imagenPortada}
+      />
+      <div class="mt-1">
+        {botanas.productos.map((p) => <ProductCard producto={p} />)}
+      </div>
+    </section>
+
+    <!-- TACOS -->
+    <section>
+      <SectionHeader id="tacos" titulo={tacos.titulo} />
+      <div class="mt-1">
+        {tacos.productos.map((p) => <ProductCard producto={p} />)}
+      </div>
+    </section>
+
+    <!-- ENTRADAS -->
+    <section>
+      <SectionHeader id="entradas" titulo={entradas.titulo} />
+      <div class="mt-1">
+        {entradas.productos.map((p) => <ProductCard producto={p} />)}
+      </div>
+    </section>
+
+    <!-- ENSALADAS -->
+    <section>
+      <SectionHeader id="ensaladas" titulo={ensaladas.titulo} />
+      <div class="mt-1">
+        {ensaladas.productos.map((p) => <ProductCard producto={p} />)}
+      </div>
+    </section>
+
+    <!-- ARROZ -->
+    <section>
+      <SectionHeader id="arroz" titulo={arroz.titulo} />
+      <div class="mt-1">
+        {arroz.productos.map((p) => <ProductCard producto={p} />)}
+      </div>
+    </section>
+
+    <!-- POSTRES -->
+    <section>
+      <SectionHeader id="postres" titulo={postres.titulo} />
+      <div class="mt-1">
+        {postres.productos.map((p) => <ProductCard producto={p} />)}
+      </div>
+    </section>
+
+    <!-- SUKORITOS -->
+    <section>
+      <SectionHeader id="sukoritos" titulo={sukoritos.titulo} />
+      <div class="mt-1">
+        {sukoritos.productos.map((p) => <ProductCard producto={p} />)}
+      </div>
+    </section>
+
+    <!-- CHAROLAS -->
+    <CharolasSection />
+
+    <footer class="text-center text-[11px] text-gray-400 pt-6">
+      {SukoriSushiData.nombre} · Menú digital
+    </footer>
+  </main>
+
+  <script>
+    // resaltar la categoría activa al hacer scroll
+    const sections = Array.from(
+      document.querySelectorAll<HTMLElement>("main [id]"),
+    );
+    const buttons = Array.from(
+      document.querySelectorAll<HTMLElement>(".categoria-btn"),
+    );
+
+    const setActive = (id: string) => {
+      buttons.forEach((btn) => {
+        const isActive = btn.dataset.category === id;
+        btn.classList.toggle("opacity-100", isActive);
+        btn.classList.toggle("opacity-60", !isActive);
+      });
+    };
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) setActive(entry.target.id);
+        });
+      },
+      { rootMargin: "-140px 0px -70% 0px", threshold: 0 },
+    );
+
+    sections.forEach((s) => observer.observe(s));
+  </script>
+</LayoutMenu>

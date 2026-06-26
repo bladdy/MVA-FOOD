@@ -41,7 +41,7 @@ export default function ModalProducto({
   };
 
   const calcularTotal = () => {
-    let total = producto.price;
+    let total = producto.precio;
 
     variantes.forEach((grupo) => {
       const seleccionadas = selecciones[grupo.id] || [];
@@ -75,7 +75,7 @@ export default function ModalProducto({
           <CrossIcon className="h-4 w-4"/>
         </button>
 
-        <h2 className="text-xl font-bold mb-2 text-orange-600">{producto.name}</h2>
+        <h2 className="text-xl font-bold mb-2 text-orange-600">{producto.nombre}</h2>
         <p className="text-sm mb-4 text-gray-600">{producto.ingredientes}</p>
 
         {variantes.map((grupo) => (

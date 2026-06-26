@@ -1,8 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
+using Microsoft.EntityFrameworkCore;
+using MVA_FOOD.API.Services.Hubs;
 using MVA_FOOD.Core.DTOs;
 using MVA_FOOD.Core.Entities;
 using MVA_FOOD.Core.Interfaces;
@@ -14,16 +13,18 @@ namespace MVA_FOOD.API.Controllers
     public class PedidoController : ControllerBase
     {
         private readonly IPedidoService _service;
+        private readonly IHubContext<OrderHub> _hubContext;
 
-        public PedidoController(IPedidoService service)
+        public PedidoController(IPedidoService service, IHubContext<OrderHub> hubContext)
         {
             _service = service;
+            _hubContext = hubContext;
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromQuery] Guid? restauranteId)
         {
-            var pedidos = await _service.GetAllAsync();
+            var pedidos = await _service.GetAllAsync(restauranteId);
             return Ok(pedidos);
         }
 
@@ -38,8 +39,25 @@ namespace MVA_FOOD.API.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(PedidoDto dto)
         {
-            var pedido = await _service.CreateAsync(dto);
-            return CreatedAtAction(nameof(GetById), new { id = pedido.Id }, pedido);
+            try
+            {
+                var pedido = await _service.CreateAsync(dto);
+
+                var pedidoConItems = await _service.GetByIdSignalRAsync(pedido.Id);
+
+                await _hubContext.Clients
+                    .Group($"restaurant_{pedido.RestauranteId}")
+                    .SendAsync("NuevoPedido", pedidoConItems);
+
+                return CreatedAtAction(nameof(GetById), new { id = pedido.Id }, pedido);
+            }
+            catch (Exception ex)
+            {
+                var msg = ex.InnerException is DbUpdateException due
+                    ? due.InnerException?.Message ?? due.Message
+                    : ex.Message;
+                return BadRequest(new { mensaje = msg });
+            }
         }
 
         [HttpPatch("{id}/estado")]
@@ -47,35 +65,34 @@ namespace MVA_FOOD.API.Controllers
         {
             var actualizado = await _service.UpdateEstadoAsync(id, estado);
             if (!actualizado) return NotFound();
+
+            var pedido = await _service.GetByIdSignalRAsync(id);
+            if (pedido != null)
+            {
+                await _hubContext.Clients
+                    .Group($"restaurant_{pedido.RestauranteId}")
+                    .SendAsync("EstadoPedidoActualizado", pedido);
+            }
+
             return NoContent();
         }
-
-        [HttpPatch("{id}/cambiar-mesa")]
-        public async Task<IActionResult> CambiarMesa(Guid id, [FromQuery] Guid nuevaMesaId)
-        {
-            var actualizado = await _service.CambiarMesaAsync(id, nuevaMesaId);
-            if (!actualizado) return NotFound();
-            return NoContent();
-        }
-
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
             var eliminado = await _service.DeleteAsync(id);
             if (!eliminado) return NotFound();
+
             return NoContent();
         }
-    
+
         [HttpGet("{id}/reimprimir")]
         public async Task<IActionResult> Reimprimir(Guid id)
         {
             var pedido = await _service.GetByIdAsync(id);
             if (pedido == null) return NotFound();
 
-            // Aquí puedes aplicar lógica adicional para generar un layout de impresión
             return Ok(pedido);
         }
     }
-
 }

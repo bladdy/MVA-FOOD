@@ -1,0 +1,52 @@
+---
+import { SukoriSushi as SukoriSushiData } from "@/consts/SukoriSushi.ts";
+---
+
+<section class="sticky top-16 z-40 bg-white border-b border-gray-100">
+  <div class="max-w-96 mx-auto">
+    <div class="flex gap-4 overflow-x-auto px-3 py-3 scrollbar-hide">
+      {
+        SukoriSushiData.categorias.map((categoria) => (
+          <a
+            href={`#${categoria.id}`}
+            class="categoria-btn flex flex-col items-center shrink-0"
+            data-category={categoria.id}
+          >
+            <div class="w-16 h-16 rounded-full p-[2px] bg-gradient-to-r from-orange-400 to-red-500">
+              <div class="w-full h-full rounded-full overflow-hidden bg-white">
+                {categoria.imagen ? (
+                  <img
+                    src={categoria.imagen}
+                    alt={categoria.nombre}
+                    class="w-full h-full object-cover"
+                  />
+                ) : (
+                  <div class="w-full h-full flex items-center justify-center text-2xl">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                      <path d="M19 3v12h-5c-.023 -3.681 .184 -7.406 5 -12m0 12v6h-1v-3m-10 -14v17m-3 -17v3a3 3 0 1 0 6 0v-3" />
+                    </svg>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <span class="text-[11px] mt-2 whitespace-nowrap">
+              {categoria.nombre}
+            </span>
+          </a>
+        ))
+      }
+    </div>
+  </div>
+</section>

@@ -1,0 +1,507 @@
+---
+export const prerender = false;
+//sukory-sushi.astro
+import LayoutMenu from "@/layouts/LayoutMenu.astro";
+
+import { SukoriSushi as SukoriSushiData } from "@/consts/SukoriSushi.ts";
+import SectionHeader from "@/components/SukurySushi/SectionHeader.astro";
+import ProductCard from "@/components/SukurySushi/ProductCard.astro";
+import { getRestauranteBySlug } from '@/Services/restauranteService.ts'; // ✅ Servicio para obtener restaurante
+import { Categoria } from "@/Types/Restaurante";
+const {
+  rollosFrios,combos,charolas,
+  rollosCalientes,
+  especialidades,
+  botanas,
+  tacos,
+  entradas,
+  ensaladas,
+  arroz,
+  postres,
+  sukoritos,
+} = SukoriSushiData;
+
+
+
+// 📌 Obtener el slug del restaurante desde la URL
+const slug  ="sukory-sushi";
+// 📡 Cargar dinámicamente el restaurante desde la API
+let restaurant = null;
+try {
+  if (typeof slug === "string") {
+    restaurant = await getRestauranteBySlug(slug);
+    if (!restaurant) {
+        // Si no se encuentra el restaurante, redireccionar a una página de error o mostrar un mensaje
+        window.location.href = "/404"; // Redirige a una página de error personalizada
+      console.warn("⚠️ Restaurante no encontrado para slug:", slug);
+    }
+} else {
+    console.warn("⚠️ Parámetro 'slug' ausente o no válido:", slug);
+  }
+} catch (error) {
+    console.error("❌ Error al cargar restaurante:", error);
+}
+const description = `Perfil y menú de ${restaurant?.name ?? "Restaurante"}`;
+const defaultImage = "/uploads/defaults/restaurant-default.jpg";
+
+const ogImage = restaurant?.image
+  ? `${restaurant.image}`
+  : defaultImage;
+
+
+const categoriaCombo = restaurant?.categorias?.find(
+  (c: any) => c.nombre?.toLowerCase().includes("combo"),
+);
+
+const imagenCombo =
+  categoriaCombo?.imagen ??
+  restaurant?.image ??
+  "/images/default-combo.jpg";
+
+---
+<LayoutMenu
+  title={`Mr. Menús - ${restaurant?.name}`}
+  description={description}
+  image={ogImage}
+  icon={ogImage}
+>
+<!--HEADER -->
+ <header class="sticky top-0 z-50 bg-white border-b border-gray-100 h-16">
+  <div class="max-w-96 mx-auto px-4 py-3">
+    <div class="flex items-center justify-between">
+      <h1 class="font-semibold text-base truncate">
+        {restaurant?.name}
+      </h1>
+
+      <div class="flex items-center gap-4 text-lg">
+        <div class="relative">
+          <button
+            id="languageButton"
+            class="flex items-center gap-2 text-sm font-medium"
+          >
+            <img
+              id="selectedFlag"
+              src="https://flagcdn.com/w20/es.png"
+              alt="Español"
+              class="w-5 h-5 rounded-full object-cover"
+            />
+
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="w-4 h-4"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M19 9l-7 7-7-7"></path>
+            </svg>
+          </button>
+
+          <div
+            id="languageMenu"
+            class="hidden absolute right-0 top-full mt-2 w-44 bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden z-50"
+          >
+            <button
+              class="language-option flex items-center gap-3 w-full px-4 py-3 hover:bg-gray-50"
+              data-lang="es"
+              data-flag="https://flagcdn.com/w20/es.png"
+            >
+              <img
+                src="https://flagcdn.com/w20/es.png"
+                class="w-5 h-5 rounded-full"
+                alt=""
+              />
+              Español
+            </button>
+
+            <button
+              class="language-option flex items-center gap-3 w-full px-4 py-3 hover:bg-gray-50"
+              data-lang="en"
+              data-flag="https://flagcdn.com/w20/us.png"
+            >
+              <img
+                src="https://flagcdn.com/w20/us.png"
+                class="w-5 h-5 rounded-full"
+                alt=""
+              />
+              English
+            </button>
+
+            <button
+              class="language-option flex items-center gap-3 w-full px-4 py-3 hover:bg-gray-50"
+              data-lang="fr"
+              data-flag="https://flagcdn.com/w20/fr.png"
+            >
+              <img
+                src="https://flagcdn.com/w20/fr.png"
+                class="w-5 h-5 rounded-full"
+                alt=""
+              />
+              Français
+            </button>
+          </div>
+        </div>
+
+        <a
+          href={`https://wa.me/${restaurant?.phone}`}
+          target="_blank"
+          class="text-green-500"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            ><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path
+              d="M3 21l1.65 -3.8a9 9 0 1 1 3.4 2.9l-5.05 .9"></path><path
+              d="M9 10a.5 .5 0 0 0 1 0v-1a.5 .5 0 0 0 -1 0v1a5 5 0 0 0 5 5h1a.5 .5 0 0 0 0 -1h-1a.5 .5 0 0 0 0 1"
+            ></path></svg
+          >
+        </a>
+
+        <a href={`tel:${restaurant?.phone}`}>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            ><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path
+              d="M5 4h4l2 5l-2.5 1.5a11 11 0 0 0 5 5l1.5 -2.5l5 2v4a2 2 0 0 1 -2 2a16 16 0 0 1 -15 -15a2 2 0 0 1 2 -2"
+            ></path></svg
+          >
+        </a>
+
+        <button id="shareButton">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            ><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path
+              d="M3 12a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"></path><path
+              d="M15 6a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"></path><path
+              d="M15 18a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"></path><path
+              d="M8.7 10.7l6.6 -3.4"></path><path d="M8.7 13.3l6.6 3.4"
+            ></path></svg
+          >
+        </button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!--CATEGORIAS -->
+<section class="sticky top-16 z-40 bg-white border-b border-gray-100">
+  <div class="max-w-96 mx-auto">
+    <div class="flex gap-4 overflow-x-auto px-3 py-3 scrollbar-hide">
+      {
+        restaurant.categorias?.map((categoria : Categoria) => (
+          <a
+            href={`#${categoria.id}`}
+            class="categoria-btn flex flex-col items-center shrink-0"
+            data-category={categoria.id}
+          >
+            <div class="w-16 h-16 rounded-full p-[2px] bg-gradient-to-r from-orange-400 to-red-500">
+              <div class="w-full h-full rounded-full overflow-hidden bg-white">
+                {categoria.imagen ? (
+                  <img
+                    src={categoria.imagen}
+                    alt={categoria.nombre}
+                    class="w-full h-full object-cover"
+                  />
+                ) : (
+                  <div class="w-full h-full flex items-center justify-center text-2xl">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                      <path d="M19 3v12h-5c-.023 -3.681 .184 -7.406 5 -12m0 12v6h-1v-3m-10 -14v17m-3 -17v3a3 3 0 1 0 6 0v-3" />
+                    </svg>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <span class="text-[11px] mt-2 whitespace-nowrap">
+              {categoria.nombre}
+            </span>
+          </a>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+
+  <main class="max-w-96 mx-auto px-4 pb-16 pt-4 space-y-10">
+    <!-- COMBOS -->
+    <div id="combos" class="scroll-mt-32">
+<img
+  src={imagenCombo}
+  alt={categoriaCombo?.nombre ?? "Combos"}
+  class="w-full h-40 object-cover rounded-2xl mb-3"
+  loading="lazy"
+/>
+
+  <div class="bg-black rounded-lg px-4 py-2 mb-3">
+    <h2 class="text-white text-sm font-bold tracking-widest uppercase text-center">
+      Combos
+    </h2>
+  </div>
+
+  <div class="space-y-5">
+    {
+      combos.pasos.map((paso) => (
+        <div class="bg-white rounded-2xl border border-gray-100 p-4">
+          <div class="flex items-center gap-3 mb-3">
+            <span class="w-7 h-7 rounded-full bg-black text-white text-xs font-bold flex items-center justify-center shrink-0">
+              {paso.numero}
+            </span>
+            <h3 class="text-xs font-bold tracking-wide uppercase">
+              {paso.titulo}
+            </h3>
+          </div>
+
+          {paso.nota && (
+            <p class="text-[11px] text-orange-600 font-semibold mb-2">
+              {paso.nota}
+            </p>
+          )}
+
+          <ul class="grid grid-cols-2 gap-x-3 gap-y-1.5">
+            {paso.opciones.map((op) => (
+              <li class="flex justify-between text-xs text-gray-700 gap-1">
+                <span>{op.nombre}</span>
+                {op.precio && (
+                  <span class="font-semibold text-orange-600 whitespace-nowrap">
+                    {op.precio}
+                  </span>
+                )}
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))
+    }
+  </div>
+</div>
+
+
+    <!-- ROLLOS FRÍOS -->
+    <section>
+      <SectionHeader id="rollos-frios" titulo={rollosFrios.titulo} />
+      <div class="mt-1">
+        {rollosFrios.productos.map((p) => <ProductCard producto={p} />)}
+      </div>
+    </section>
+
+    <!-- ROLLOS CALIENTES -->
+    <section>
+      <SectionHeader id="rollos-calientes" titulo={rollosCalientes.titulo} />
+      <div class="mt-1">
+        {rollosCalientes.productos.map((p) => <ProductCard producto={p} />)}
+      </div>
+    </section>
+
+    <!-- ESPECIALIDADES -->
+    <section>
+      <SectionHeader id="especialidades" titulo={especialidades.titulo} />
+      <div class="mt-1">
+        {especialidades.productos.map((p) => <ProductCard producto={p} />)}
+      </div>
+    </section>
+
+    <!-- BOTANAS -->
+    <section>
+      <SectionHeader
+        id="botanas"
+        titulo={botanas.titulo}
+        imagen={botanas.imagenPortada}
+      />
+      <div class="mt-1">
+        {botanas.productos.map((p) => <ProductCard producto={p} />)}
+      </div>
+    </section>
+
+    <!-- TACOS -->
+    <section>
+      <SectionHeader id="tacos" titulo={tacos.titulo} />
+      <div class="mt-1">
+        {tacos.productos.map((p) => <ProductCard producto={p} />)}
+      </div>
+    </section>
+
+    <!-- ENTRADAS -->
+    <section>
+      <SectionHeader id="entradas" titulo={entradas.titulo} />
+      <div class="mt-1">
+        {entradas.productos.map((p) => <ProductCard producto={p} />)}
+      </div>
+    </section>
+
+    <!-- ENSALADAS -->
+    <section>
+      <SectionHeader id="ensaladas" titulo={ensaladas.titulo} />
+      <div class="mt-1">
+        {ensaladas.productos.map((p) => <ProductCard producto={p} />)}
+      </div>
+    </section>
+
+    <!-- ARROZ -->
+    <section>
+      <SectionHeader id="arroz" titulo={arroz.titulo} />
+      <div class="mt-1">
+        {arroz.productos.map((p) => <ProductCard producto={p} />)}
+      </div>
+    </section>
+
+    <!-- POSTRES -->
+    <section>
+      <SectionHeader id="postres" titulo={postres.titulo} />
+      <div class="mt-1">
+        {postres.productos.map((p) => <ProductCard producto={p} />)}
+      </div>
+    </section>
+
+    <!-- SUKORITOS -->
+    <section>
+      <SectionHeader id="sukoritos" titulo={sukoritos.titulo} />
+      <div class="mt-1">
+        {sukoritos.productos.map((p) => <ProductCard producto={p} />)}
+      </div>
+    </section>
+
+    <!-- CHAROLAS -->
+    <div id="charolas" class="scroll-mt-32">
+  <SectionHeader id="charolas-titulo" titulo="Charolas" />
+
+  <div class="space-y-4 mt-3">
+    {
+      charolas.map((charola) => (
+        <article class="bg-white rounded-2xl border border-gray-100 overflow-hidden">
+          <img
+            src={charola.imagen}
+            alt={charola.nombre}
+            class="w-full h-36 object-cover"
+            loading="lazy"
+          />
+          <div class="p-4">
+            <div class="flex items-start justify-between gap-2">
+              <h3 class="font-bold text-sm">{charola.nombre}</h3>
+              <span class="text-sm font-bold text-orange-600 whitespace-nowrap">
+                {charola.precio}
+              </span>
+            </div>
+            <p class="text-xs text-gray-500 mt-1 leading-relaxed">
+              {charola.descripcion}
+            </p>
+          </div>
+        </article>
+      ))
+    }
+  </div>
+</div>
+
+
+    <footer class="text-center text-[11px] text-gray-400 pt-6">
+      {SukoriSushiData.nombre} · Menú digital
+    </footer>
+  </main>
+
+  <script>
+    // resaltar la categoría activa al hacer scroll
+    const sections = Array.from(
+      document.querySelectorAll<HTMLElement>("main [id]"),
+    );
+    const buttons = Array.from(
+      document.querySelectorAll<HTMLElement>(".categoria-btn"),
+    );
+
+    const setActive = (id: string) => {
+      buttons.forEach((btn) => {
+        const isActive = btn.dataset.category === id;
+        btn.classList.toggle("opacity-100", isActive);
+        btn.classList.toggle("opacity-60", !isActive);
+      });
+    };
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) setActive(entry.target.id);
+        });
+      },
+      { rootMargin: "-140px 0px -70% 0px", threshold: 0 },
+    );
+
+    sections.forEach((s) => observer.observe(s));
+  </script>
+</LayoutMenu>
+
+<script>
+  const languageButton = document.getElementById("languageButton");
+  const languageMenu = document.getElementById("languageMenu");
+  const selectedFlag = document.getElementById(
+    "selectedFlag",
+  ) as HTMLImageElement | null;
+
+  languageButton?.addEventListener("click", (e) => {
+    e.stopPropagation();
+    languageMenu?.classList.toggle("hidden");
+  });
+
+  document.querySelectorAll(".language-option").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const flag = btn.getAttribute("data-flag");
+      if (flag && selectedFlag) selectedFlag.src = flag;
+      languageMenu?.classList.add("hidden");
+    });
+  });
+
+  document.addEventListener("click", () => {
+    languageMenu?.classList.add("hidden");
+  });
+
+  document.getElementById("shareButton")?.addEventListener("click", async () => {
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: document.title,
+          url: window.location.href,
+        });
+      } catch {
+        /* el usuario canceló */
+      }
+    } else {
+      await navigator.clipboard.writeText(window.location.href);
+      alert("Enlace copiado");
+    }
+  });
+</script>
