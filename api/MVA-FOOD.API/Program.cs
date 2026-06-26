@@ -126,6 +126,13 @@ builder.Services.AddControllers()
 // Application Services
 // ======================================
 
+builder.Services.AddSignalR()
+    .AddJsonProtocol(options =>
+    {
+        options.PayloadSerializerOptions.ReferenceHandler =
+            System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
+    });
+
 builder.Services.AddScoped<FtpStorageService>();
 
 builder.Services.AddScoped<IAmenidadService, AmenidadService>();
@@ -209,5 +216,7 @@ app.UseStaticFiles();
 // Endpoints
 // ======================================
 app.MapControllers();
+
+app.MapHub<MVA_FOOD.API.Services.Hubs.OrderHub>("/hubs/orders");
 
 app.Run();
