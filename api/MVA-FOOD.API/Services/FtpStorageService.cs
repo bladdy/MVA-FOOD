@@ -98,7 +98,7 @@ namespace MVA_FOOD.API.Services
             string folder,
             string fileName)
         {
-            var baseUrl = _configuration["Ftp:UrlBase"];
+            var baseUrl = _configuration["Ftp:UrlBase"]?.TrimEnd('/');
 
             return $"{baseUrl}/{folder}/{fileName}";
         }
