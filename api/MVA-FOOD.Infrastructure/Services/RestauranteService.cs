@@ -194,6 +194,10 @@ namespace MVA_FOOD.Infrastructure.Services
                     .ThenInclude(pr => pr.Plan)
                 .Include(r => r.Menu)
                     .ThenInclude(m => m.Categoria)
+                .Include(r => r.Menu)
+                    .ThenInclude(m => m.VarianteMenus)
+                        .ThenInclude(vm => vm.Variante)
+                            .ThenInclude(v => v.Opciones)
                 .Include(r => r.Horario)
                 .Include(r => r.AmenidadRestaurantes)
                     .ThenInclude(ar => ar.Amenidad)
@@ -225,7 +229,23 @@ namespace MVA_FOOD.Infrastructure.Services
                             },
                         Ingredientes = m.Ingredientes,
                         Precio = m.Precio,
-                        Imagen = m.Imagen
+                        Imagen = m.Imagen,
+                        Variantes = m.VarianteMenus
+                            .Select(vm => new VarianteDto
+                            {
+                                Id = vm.Variante.Id,
+                                Name = vm.Variante.Name,
+                                CategoriaId = vm.Variante.CategoriaId,
+                                Obligatorio = vm.Variante.Obligatorio,
+                                MaxSeleccion = vm.Variante.MaxSeleccion,
+                                Opciones = vm.Variante.Opciones
+                                    .Select(o => new VarianteOpcionDto
+                                    {
+                                        Id = o.Id,
+                                        Nombre = o.Nombre,
+                                        Precio = o.Precio
+                                    }).ToList()
+                            }).ToList()
                     }).ToList(),
 
                     PlanRestauranteDto = r.PlanRestaurante == null

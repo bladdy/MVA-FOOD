@@ -150,6 +150,13 @@ export interface Variante {
   }[];
 }
 
+export interface PedidoItem {
+  producto: Menu;
+  cantidad: number;
+  notas: string;
+  opciones: string;
+}
+
 export interface Plan {
   id: number;
   name: string;

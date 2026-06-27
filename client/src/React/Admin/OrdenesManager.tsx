@@ -112,6 +112,17 @@ function OrdenesManagerInner() {
     }
   };
 
+  const handleEntregar = async (id: string) => {
+    try {
+      await pedidoService.updateEstado(id, 3);
+      setPedidos((prev) =>
+        prev.map((p) => (p.id === id ? { ...p, estado: 3 } : p))
+      );
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   const handleCancelar = async (id: string) => {
     if (!confirm("¿Cancelar este pedido?")) return;
     try {
@@ -130,8 +141,9 @@ function OrdenesManagerInner() {
 
   if (!restauranteId) {
     return (
-      <div className="p-8 text-center text-gray-500">
-        No tienes un restaurante asignado.
+      <div className="flex h-full min-h-[60vh] flex-col items-center justify-center">
+        <div className="h-14 w-14 animate-spin rounded-full border-[6px] border-orange-500 border-t-transparent" />
+        <p className="mt-5 text-base text-gray-500">Cargando...</p>
       </div>
     );
   }
@@ -198,17 +210,36 @@ function OrdenesManagerInner() {
                     </p>
                   )}
 
-                  <ul className="text-sm text-gray-700 space-y-1 mb-3">
-                    {pedido.items?.map((item, i) => (
-                      <li key={i} className="flex justify-between">
-                        <span>
-                          {item.cantidad}x {item.producto.nombre}
-                        </span>
-                        <span className="font-medium">
-                          ${(item.precio * item.cantidad).toFixed(2)}
-                        </span>
-                      </li>
-                    ))}
+                  <ul className="text-sm text-gray-700 space-y-2 mb-3">
+                    {pedido.items?.map((item, i) => {
+                      let opcionesArr: string[] = [];
+                      try {
+                        opcionesArr = JSON.parse(item.opciones || "[]");
+                      } catch {}
+
+                      return (
+                        <li key={i}>
+                          <div className="flex justify-between">
+                            <span className="font-medium">
+                              {item.cantidad}x {item.producto.nombre}
+                            </span>
+                            <span className="font-medium">
+                              ${(item.precio * item.cantidad).toFixed(2)}
+                            </span>
+                          </div>
+                          {opcionesArr.length > 0 && (
+                            <div className="text-xs text-orange-600 ml-4">
+                              + {opcionesArr.join(", ")}
+                            </div>
+                          )}
+                          {item.notas && (
+                            <div className="text-xs text-gray-400 italic ml-4">
+                              {item.notas}
+                            </div>
+                          )}
+                        </li>
+                      );
+                    })}
                   </ul>
 
                   <div className="flex justify-between items-center border-t pt-2">
@@ -232,6 +263,24 @@ function OrdenesManagerInner() {
                         className="flex-1 bg-green-500 hover:bg-green-600 text-white text-sm py-1.5 rounded-lg font-medium"
                       >
                         Completar
+                      </button>
+                    )}
+                    {col.estado === 2 && pedido.clienteTelefono && (
+                      <a
+                        href={`https://wa.me/${pedido.clienteTelefono.replace(/\D/g, "")}?text=${encodeURIComponent(`Hola ${pedido.clienteNombre}, su orden ya está lista.`)}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex-1 bg-green-600 hover:bg-green-700 text-white text-sm py-1.5 rounded-lg font-medium text-center"
+                      >
+                        WhatsApp
+                      </a>
+                    )}
+                    {col.estado === 2 && (
+                      <button
+                        onClick={() => handleEntregar(pedido.id)}
+                        className="flex-1 bg-gray-700 hover:bg-gray-800 text-white text-sm py-1.5 rounded-lg font-medium"
+                      >
+                        Entregado
                       </button>
                     )}
                     {col.estado < 2 && (

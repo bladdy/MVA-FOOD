@@ -17,6 +17,7 @@ const { slug } = Astro.params;
 try {
   if (typeof slug === "string") {
     restaurant = await getRestauranteBySlug(slug);
+    console.log(restaurant)
     if (!restaurant) {
         // Si no se encuentra el restaurante, redireccionar a una página de error o mostrar un mensaje
         window.location.href = "/404"; // Redirige a una página de error personalizada

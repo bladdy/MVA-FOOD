@@ -1,7 +1,6 @@
 import type { Menu, Variante } from "@/Types/Restaurante.ts";
 import CrossIcon from "@/components/Icons/CrossIcon.tsx";
-import { variantesPorCategoria } from "@/consts/variantes.ts";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 
 export default function ModalProducto({
   producto,
@@ -10,10 +9,10 @@ export default function ModalProducto({
 }: {
   producto: Menu;
   onClose: () => void;
-  onAgregar: (notas: string) => void;
+  onAgregar: (notas: string, opciones: string) => void;
 }) {
   const [notas, setNotas] = useState("");
-  const variantes: Variante[] = variantesPorCategoria[producto.categoria] || [];
+  const variantes: Variante[] = producto.variantes || [];
 
   const [selecciones, setSelecciones] = useState<Record<string, string[]>>({});
 
@@ -54,19 +53,35 @@ export default function ModalProducto({
     return total;
   };
 
-  const handleAgregar = () => {
-    const detalles = Object.entries(selecciones)
-      .map(([grupo, opciones]) => `${grupo}: ${opciones.join(", ")}`)
-      .join(" | ");
+  const variantesObligatoriasSinSeleccion = useMemo(() => {
+    return variantes
+      .filter((v) => v.obligatorio)
+      .filter((v) => !selecciones[v.id] || selecciones[v.id].length === 0)
+      .map((v) => v.name);
+  }, [variantes, selecciones]);
 
-    const textoFinal = `${notas ? `Notas: ${notas} | ` : ""}${detalles}`;
-    onAgregar(textoFinal);
+  const handleAgregar = () => {
+    if (variantesObligatoriasSinSeleccion.length > 0) {
+      alert(
+        `Selecciona: ${variantesObligatoriasSinSeleccion.join(", ")}`
+      );
+      return;
+    }
+
+    const opcionesArr: string[] = [];
+    variantes.forEach((grupo) => {
+      const seleccionadas = selecciones[grupo.id] || [];
+      seleccionadas.forEach((nombre) => {
+        opcionesArr.push(nombre);
+      });
+    });
+
+    onAgregar(notas, JSON.stringify(opcionesArr));
   };
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="relative bg-white p-6 rounded-lg max-w-md w-full overflow-y-auto max-h-[90vh] shadow-xl">
-        {/* Botón de cierre */}
         <button
           onClick={onClose}
           className="absolute top-2 right-2 text-lg font-bold bg-orange-500 hover:bg-orange-600 text-white p-2 rounded-full"
@@ -75,75 +90,104 @@ export default function ModalProducto({
           <CrossIcon className="h-4 w-4"/>
         </button>
 
-        <h2 className="text-xl font-bold mb-2 text-orange-600">{producto.nombre}</h2>
-        <p className="text-sm mb-4 text-gray-600">{producto.ingredientes}</p>
-
-        {variantes.map((grupo) => (
-          <div key={grupo.id} className="mb-6">
-            <div className="flex items-center justify-between mb-1">
-              <h4 className="font-semibold">{grupo.name}</h4>
-              <span
-                className={`text-xs px-2 py-0.5 rounded-full ${
-                  grupo.obligatorio
-                    ? "bg-green-100 text-green-700"
-                    : "bg-gray-200 text-gray-600"
-                }`}
-              >
-                {grupo.obligatorio ? "obligatorio" : "opcional"}
-              </span>
-            </div>
-            <p className="text-xs text-gray-500 mb-2">
-              {grupo.maxSeleccion && grupo.maxSeleccion > 1
-                ? `Selecciona máximo ${grupo.maxSeleccion}`
-                : "Selecciona 1"}
+        <div className="flex items-start gap-4 mb-4">
+          {producto.imagen && (
+            <img
+              src={producto.imagen}
+              alt={producto.nombre}
+              className="w-20 h-20 rounded-lg object-cover"
+            />
+          )}
+          <div>
+            <h2 className="text-xl font-bold text-orange-600">{producto.nombre}</h2>
+            <p className="text-sm text-gray-600 mt-1">{producto.ingredientes}</p>
+            <p className="text-lg font-bold text-orange-700 mt-1">
+              ${producto.precio.toLocaleString("es-MX")}
             </p>
-            <ul className="divide-y divide-gray-200 border rounded-md">
-              {grupo.opciones.map((opcion) => {
-                const checked = selecciones[grupo.id]?.includes(opcion.nombre);
-                const isRadio = grupo.maxSeleccion === 1;
-
-                return (
-                  <li
-                    key={opcion.nombre}
-                    className="flex justify-between items-center px-3 py-2 hover:bg-gray-50"
-                  >
-                    <span>{opcion.nombre}</span>
-                    <label className="flex cursor-pointer text-gray items-center gap-1">
-                      {opcion.precio && (
-                        <span className="text-xs px-2 py-0.5 rounded-full bg-gray-300">
-                          ${opcion.precio}
-                        </span>
-                      )}
-                      <input
-                        type={isRadio ? "radio" : "checkbox"}
-                        name={grupo.id}
-                        value={opcion.nombre}
-                        checked={checked}
-                        onChange={() =>
-                          toggleSeleccion(grupo.id, opcion.nombre)
-                        }
-                        className="w-5 h-5 text-orange-500 accent-orange-500"
-                      />
-                    </label>
-                  </li>
-                );
-              })}
-            </ul>
           </div>
-        ))}
+        </div>
+
+        {variantes.length > 0 && (
+          <div className="border-t pt-4 mb-4">
+            <h3 className="text-md font-semibold text-gray-800 mb-3">Personaliza tu pedido</h3>
+            {variantes.map((grupo) => (
+              <div key={grupo.id} className="mb-6">
+                <div className="flex items-center justify-between mb-1">
+                  <h4 className="font-semibold text-gray-800">{grupo.name}</h4>
+                  <span
+                    className={`text-xs px-2 py-0.5 rounded-full ${
+                      grupo.obligatorio
+                        ? "bg-green-100 text-green-700"
+                        : "bg-gray-200 text-gray-600"
+                    }`}
+                  >
+                    {grupo.obligatorio ? "obligatorio" : "opcional"}
+                  </span>
+                </div>
+                {grupo.maxSeleccion && grupo.maxSeleccion > 1 && (
+                  <p className="text-xs text-gray-500 mb-2">
+                    Selecciona hasta {grupo.maxSeleccion}
+                  </p>
+                )}
+                <ul className="divide-y divide-gray-200 border rounded-md">
+                  {grupo.opciones.map((opcion) => {
+                    const checked = selecciones[grupo.id]?.includes(opcion.nombre) || false;
+                    const isRadio = grupo.maxSeleccion === 1;
+                    const inputId = `${grupo.id}-${opcion.nombre}`;
+
+                    return (
+                      <li
+                        key={opcion.nombre}
+                        className={`flex justify-between items-center px-3 py-3 cursor-pointer transition-colors ${
+                          checked
+                            ? "bg-orange-50 border-l-4 border-orange-500"
+                            : "hover:bg-gray-50 border-l-4 border-transparent"
+                        }`}
+                        onClick={() => toggleSeleccion(grupo.id, opcion.nombre)}
+                      >
+                        <div className="flex items-center gap-3">
+                          <input
+                            type={isRadio ? "radio" : "checkbox"}
+                            name={grupo.id}
+                            id={inputId}
+                            value={opcion.nombre}
+                            checked={checked}
+                            onChange={() =>
+                              toggleSeleccion(grupo.id, opcion.nombre)
+                            }
+                            className="w-5 h-5 text-orange-500 accent-orange-500 cursor-pointer"
+                          />
+                          <span className={`${checked ? "font-semibold text-orange-800" : "text-gray-700"}`}>
+                            {opcion.nombre}
+                          </span>
+                        </div>
+                        {opcion.precio && opcion.precio > 0 && (
+                          <span className="text-sm font-medium text-orange-600">
+                            +${opcion.precio}
+                          </span>
+                        )}
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            ))}
+          </div>
+        )}
 
         <textarea
-          className="w-full border border-gray-300 rounded p-2 mb-4 text-sm"
-          placeholder="Notas especiales..."
+          className="w-full border border-gray-300 rounded-lg p-3 text-sm resize-none focus:ring-2 focus:ring-orange-300 focus:border-orange-400 outline-none"
+          placeholder="Notas especiales (ej: sin sal, bien cocido...)"
+          rows={3}
           value={notas}
           onChange={(e) => setNotas(e.target.value)}
         />
 
         <button
-          className="w-full bg-green-600 text-white py-3 rounded font-semibold hover:bg-green-700 transition"
+          className="w-full bg-orange-500 hover:bg-orange-600 text-white py-3 rounded-lg font-bold text-lg transition mt-4"
           onClick={handleAgregar}
         >
-          Agregar producto ${calcularTotal()}
+          Agregar — ${calcularTotal().toLocaleString("es-MX")}
         </button>
       </div>
     </div>

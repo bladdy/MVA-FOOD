@@ -18,5 +18,5 @@ namespace MVA_FOOD.Core.Entities
             Total = Items.Sum(item => item.Precio * item.Cantidad);
         }
     }
-    public enum Estado { Pendiente, EnProceso, Completado }
+    public enum Estado { Pendiente, EnProceso, Completado, Entregado }
 }

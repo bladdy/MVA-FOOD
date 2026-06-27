@@ -6,6 +6,20 @@ import MinusIcon from "@/components/Icons/MinusIcon.tsx";
 import TrashIcon from "@/components/Icons/TrashIcon.tsx";
 import type { PedidoItem } from "@/Types/Restaurante.ts";
 
+function calcularPrecioUnitario(item: PedidoItem): number {
+  const opcionesArr: string[] = JSON.parse(item.opciones || "[]");
+  let extra = 0;
+  if (item.producto.variantes) {
+    item.producto.variantes.forEach((grupo) => {
+      opcionesArr.forEach((nombre) => {
+        const op = grupo.opciones.find((o) => o.nombre === nombre);
+        if (op?.precio) extra += op.precio;
+      });
+    });
+  }
+  return item.producto.precio + extra;
+}
+
 export default function ModalPedido({
   pedido,
   mesa,
@@ -31,10 +45,10 @@ export default function ModalPedido({
   const [telefono, setTelefono] = useState("");
   const metaEnvioGratis = 200;
   const progreso = Math.min((total / metaEnvioGratis) * 100, 100);
-  if (mesa) envioGratis = false; // Si hay mesa, no hay envío Gratis
+  if (mesa) envioGratis = false;
   let progresoColor = "bg-red-500";
   if (total >= 150 && total < 200) progresoColor = "bg-yellow-500";
-  if (total >= 200) progresoColor = "bg-green-500"; 
+  if (total >= 200) progresoColor = "bg-green-500";
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 px-2">
@@ -83,45 +97,55 @@ export default function ModalPedido({
           <p className="text-gray-600">No hay productos en tu pedido.</p>
         ) : (
           <ul className="mb-4 space-y-4">
-            {pedido.map((item, idx) => (
-              <li key={idx} className="flex items-start gap-4 border-b pb-4">
-                <img
-                  src={item.producto.imagen || "/mva-logo-rb.png"}
-                  alt={item.producto.nombre}
-                  className="w-16 h-16 rounded-lg object-cover"
-                />
-                <div className="flex-1">
-                  <div className="text-md font-semibold text-gray-800">{item.producto.nombre}</div>
-                  <div className="text-sm text-gray-600 text-left">{item.notas}</div>
-                </div>
+            {pedido.map((item, idx) => {
+              const precioUnitario = calcularPrecioUnitario(item);
+              const opcionesArr: string[] = JSON.parse(item.opciones || "[]");
 
-                {/* Control cantidad */}
-                <div className="flex flex-col items-center gap-4">
-                  <div className="text-sm font-bold text-gray-900 mt-1">
-                    ${item.producto.precio.toLocaleString("es-MX")} × {item.cantidad}
-                  </div>
-                  <div className="flex justify-center">
-                    {onCantidadChange && (
-                      <>
-                        {item.cantidad === 1 ? (
-                          <button className="text-red-500 hover:text-red-700" onClick={() => onCantidadChange(idx, 0)}>
-                            <TrashIcon className="h-5 w-5" />
-                          </button>
-                        ) : (
-                          <button className="text-gray-600 hover:text-gray-800" onClick={() => onCantidadChange(idx, item.cantidad - 1)}>
-                            <MinusIcon className="h-5 w-5" />
-                          </button>
-                        )}
-                        <span className="text-base px-2">{item.cantidad}</span>
-                        <button className="text-gray-600 hover:text-gray-800" onClick={() => onCantidadChange(idx, item.cantidad + 1)}>
-                          <AddIcon className="h-5 w-5" />
-                        </button>
-                      </>
+              return (
+                <li key={idx} className="flex items-start gap-4 border-b pb-4">
+                  <img
+                    src={item.producto.imagen || "/mva-logo-rb.png"}
+                    alt={item.producto.nombre}
+                    className="w-16 h-16 rounded-lg object-cover"
+                  />
+                  <div className="flex-1">
+                    <div className="text-md font-semibold text-gray-800">{item.producto.nombre}</div>
+                    {opcionesArr.length > 0 && (
+                      <div className="text-xs text-orange-600 mt-1">
+                        + {opcionesArr.join(", ")}
+                      </div>
                     )}
+                    <div className="text-sm text-gray-600 text-left">{item.notas}</div>
                   </div>
-                </div>
-              </li>
-            ))}
+
+                  {/* Control cantidad */}
+                  <div className="flex flex-col items-center gap-4">
+                    <div className="text-sm font-bold text-gray-900 mt-1 whitespace-nowrap">
+                      ${precioUnitario.toLocaleString("es-MX")} × {item.cantidad}
+                    </div>
+                    <div className="flex justify-center">
+                      {onCantidadChange && (
+                        <>
+                          {item.cantidad === 1 ? (
+                            <button className="text-red-500 hover:text-red-700" onClick={() => onCantidadChange(idx, 0)}>
+                              <TrashIcon className="h-5 w-5" />
+                            </button>
+                          ) : (
+                            <button className="text-gray-600 hover:text-gray-800" onClick={() => onCantidadChange(idx, item.cantidad - 1)}>
+                              <MinusIcon className="h-5 w-5" />
+                            </button>
+                          )}
+                          <span className="text-base px-2">{item.cantidad}</span>
+                          <button className="text-gray-600 hover:text-gray-800" onClick={() => onCantidadChange(idx, item.cantidad + 1)}>
+                            <AddIcon className="h-5 w-5" />
+                          </button>
+                        </>
+                      )}
+                    </div>
+                  </div>
+                </li>
+              );
+            })}
           </ul>
         )}
 

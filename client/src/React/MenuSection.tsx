@@ -236,7 +236,7 @@ const API_URL = "https://api.mr-menus.com";//Ajusta según tu estructura de carp
           <ModalProducto
             producto={modalProducto}
             onClose={() => setModalProducto(null)}
-            onAgregar={(notas) => agregarProducto(modalProducto, notas)}
+            onAgregar={(notas, opciones) => agregarProducto(modalProducto, notas, opciones)}
           />
         )}
         {modalPedidoAbierto && (
