@@ -40,7 +40,7 @@ namespace MVA_FOOD.API.Controllers
                 HttpOnly = true,
                 Secure = true,
                 SameSite = SameSiteMode.None,
-                //Domain = ".mr-menus.com",
+                Domain = ".mr-menus.com",
                 Path = "/",
                 Expires = DateTimeOffset.UtcNow.AddDays(7)
             });
@@ -101,7 +101,7 @@ namespace MVA_FOOD.API.Controllers
                 HttpOnly = true,
                 Secure = true,
                 SameSite = SameSiteMode.None,
-                //Domain = ".mr-menus.com",
+                Domain = ".mr-menus.com",
                 Path = "/",
                 Expires = DateTimeOffset.UtcNow.AddDays(-1)
             });
