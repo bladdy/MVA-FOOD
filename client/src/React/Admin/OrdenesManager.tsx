@@ -2,7 +2,7 @@ import { useEffect, useState, useRef, useCallback } from "react";
 import * as signalR from "@microsoft/signalr";
 import { pedidoService, type PedidoResponse } from "@/Services/pedidoService.ts";
 import { UserProvider, useUser } from "@/context/UserContext.tsx";
-import { API_URL } from "@/lib/apiConfig";
+import { HUB_URL } from "@/lib/apiConfig";
 
 const ESTADOS = ["Pendiente", "En Proceso", "Completado"] as const;
 const estadosColores = ["border-yellow-500", "border-blue-500", "border-green-500"];
@@ -33,7 +33,7 @@ function OrdenesManagerInner() {
     console.log("[SignalR] Iniciando para restauranteId:", restauranteId);
     pedidoService.getAll(restauranteId).then(setPedidos).catch(console.error);
 
-    const hubUrl = API_URL.replace("/api", "/hubs/orders");
+    const hubUrl = HUB_URL;
     console.log("[SignalR] Hub URL:", hubUrl);
 
     const connection = new signalR.HubConnectionBuilder()
