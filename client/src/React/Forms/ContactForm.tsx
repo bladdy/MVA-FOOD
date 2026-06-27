@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { ContactService } from "@/Services/contactService";
+import { showAlert } from "@/lib/alert.ts";
 
 export default function ContactForm() {
   const [loading, setLoading] = useState(false);
@@ -47,7 +48,7 @@ export default function ContactForm() {
     }
   } catch (error) {
     console.error(error);
-    alert("No fue posible enviar el formulario.");
+    showAlert("No fue posible enviar el formulario.", "error");
   } finally {
     setLoading(false);
   }

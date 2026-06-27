@@ -8,6 +8,7 @@ import type {
   VarianteFilters,
 } from "@/Types/Restaurante.ts";
 import { menuService } from "@/Services/menuService.ts";
+import { showAlert } from "@/lib/alert.ts";
 
 interface MenuModalProps {
   isOpen: boolean;
@@ -52,6 +53,7 @@ const MenuModal: React.FC<MenuModalProps> = ({
   const [categorias, setCategorias] = useState<Categoria[]>([]);
   const [variantesFiltradas, setVariantesFiltradas] = useState<VarianteCreate[]>([]);
   const [originalImage, setOriginalImage] = useState<string | null>(null);
+  const [submitting, setSubmitting] = useState(false);
 
   // 🔹 Validaciones dinámicas
   const isFormValid = useMemo(() => {
@@ -233,10 +235,12 @@ const MenuModal: React.FC<MenuModalProps> = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!isFormValid) return;
+    if (!isFormValid || submitting) return;
+
+    setSubmitting(true);
 
     try {
-      const dto: MenuCreate = { ...form, restauranteId: restauranteId ?? form.restauranteId }; // <<--- asegurar
+      const dto: MenuCreate = { ...form, restauranteId: restauranteId ?? form.restauranteId };
 
       if (!form.imagen) delete (dto as any).imagen;
 
@@ -252,7 +256,9 @@ const MenuModal: React.FC<MenuModalProps> = ({
       onSave();
     } catch (error) {
       console.error(error);
-      alert("Hubo un error al guardar el menú");
+      showAlert("Hubo un error al guardar el menú", "error");
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -373,8 +379,14 @@ const MenuModal: React.FC<MenuModalProps> = ({
             {/* Botones */}
             <div className="flex justify-end gap-3 mt-6">
               <button type="button" onClick={handleClose} className="px-4 py-2 text-sm text-gray-600 hover:text-gray-800">Cancelar</button>
-              <button type="submit" disabled={!isFormValid} className={`px-4 py-2 text-sm text-white rounded-md ${isFormValid ? "bg-orange-600 hover:bg-orange-700" : "bg-gray-400 cursor-not-allowed"}`}>
-                Guardar
+              <button type="submit" disabled={!isFormValid || submitting} className={`px-4 py-2 text-sm text-white rounded-md flex items-center gap-2 ${isFormValid && !submitting ? "bg-orange-600 hover:bg-orange-700" : "bg-gray-400 cursor-not-allowed"}`}>
+                {submitting && (
+                  <svg className="w-4 h-4 animate-spin" viewBox="0 0 24 24" fill="none">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 00-8 8h4z" />
+                  </svg>
+                )}
+                {submitting ? "Guardando..." : "Guardar"}
               </button>
             </div>
           </form>

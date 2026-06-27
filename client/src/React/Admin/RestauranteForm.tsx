@@ -5,6 +5,7 @@ import {
   getRestaurante,
   updateRestaurante,
 } from "@/Services/restauranteService.ts";
+import { showAlert } from "@/lib/alert.ts";
 import type {
   Amenidad,
   Categoria,
@@ -40,6 +41,7 @@ export default function RestauranteForm({ onSaved }: { onSaved?: () => void }) {
   );
   const [originalImage, setOriginalImage] = useState<string | null>(null);
 
+  const [submitting, setSubmitting] = useState(false);
   const [amenidadesDisponibles, setAmenidadesDisponibles] = useState<
     Amenidad[]
   >([]);
@@ -183,12 +185,14 @@ export default function RestauranteForm({ onSaved }: { onSaved?: () => void }) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!user?.restauranteId) return;
-    // 🚀 Construcción del objeto final para enviar
+    if (!user?.restauranteId || submitting) return;
+
+    setSubmitting(true);
+
     const form: RestauranteDTO = {
       ...restaurante,
-      amenidades: restaurante.amenidades.filter((id) => !!id), // array de strings
-      categorias: restaurante.categorias.filter((id) => !!id), // array de strings
+      amenidades: restaurante.amenidades.filter((id) => !!id),
+      categorias: restaurante.categorias.filter((id) => !!id),
       horarios: restaurante.horarios.map((h) => ({
         id: h.id,
         dia: h.dia,
@@ -202,56 +206,57 @@ export default function RestauranteForm({ onSaved }: { onSaved?: () => void }) {
 
     try {
       await updateRestaurante(user.restauranteId, form);
-      //hay que ponerle un sweet alert
-      alert("Restaurante actualizado correctamente");
+      showAlert("Restaurante actualizado correctamente", "success");
       onSaved && onSaved();
     } catch {
-      alert("Error al actualizar restaurante");
+      showAlert("Error al actualizar restaurante", "error");
+    } finally {
+      setSubmitting(false);
     }
   };
 
   return (<>
   <QRCodeGenerator url={`https://mr-menus.com/menus/${restaurante.slug}` } logo={restaurante.image ?? ""} />
-    <form
-      onSubmit={handleSubmit}
-      className="space-y-8 p-6 bg-white rounded-lg shadow-md"
-    >
-        <h2 className="text-xl font-semibold">
-          Perfil Restaurante
+      <form
+        onSubmit={handleSubmit}
+        className="space-y-8 p-6 bg-white rounded-lg shadow-md"
+      >
+        <h2 className="text-2xl font-bold text-gray-800 border-b border-orange-200 pb-3">
+          Perfil del Restaurante
         </h2>
 
       {/* Información básica */}
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
         <div>
-          <label className="block font-medium">Nombre</label>
+          <label className="block text-sm font-medium text-gray-700">Nombre</label>
           <input
             type="text"
             name="name"
             value={restaurante.name}
             onChange={handleChange}
-            className="w-full mt-1 rounded-md border px-3 py-2"
+            className="w-full mt-1 rounded-md border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-orange-300 focus:border-orange-400 outline-none transition-colors"
           />
         </div>
 
         <div>
-          <label className="block font-medium">Teléfono</label>
+          <label className="block text-sm font-medium text-gray-700">Teléfono</label>
           <input
             type="text"
             name="phone"
             value={restaurante.phone}
             onChange={handleChange}
-            className="w-full mt-1 rounded-md border px-3 py-2"
+            className="w-full mt-1 rounded-md border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-orange-300 focus:border-orange-400 outline-none transition-colors"
           />
         </div>
 
         <div className="sm:col-span-2">
-          <label className="block font-medium">Dirección</label>
+          <label className="block text-sm font-medium text-gray-700">Dirección</label>
           <input
             type="text"
             name="direccion"
             value={restaurante.direccion}
             onChange={handleChange}
-            className="w-full mt-1 rounded-md border px-3 py-2"
+            className="w-full mt-1 rounded-md border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-orange-300 focus:border-orange-400 outline-none transition-colors"
           />
         </div>
 
@@ -310,12 +315,12 @@ export default function RestauranteForm({ onSaved }: { onSaved?: () => void }) {
       </div>
 
       {/* Amenidades */}
-      <fieldset className="space-y-2">
-        <legend className="font-semibold">Amenidades</legend>
+      <fieldset className="border border-gray-200 rounded-lg p-4 space-y-3">
+        <legend className="font-semibold text-orange-700 px-2">Amenidades</legend>
         <div className="flex gap-2">
           <select
             onChange={(e) => handleAddItem("amenidades", e.target.value)}
-            className="border rounded-md p-2"
+            className="border border-gray-300 rounded-md p-2 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400 outline-none"
             defaultValue=""
           >
             <option value="" disabled>
@@ -328,19 +333,19 @@ export default function RestauranteForm({ onSaved }: { onSaved?: () => void }) {
             ))}
           </select>
         </div>
-        <div className="flex flex-wrap gap-2 mt-2">
+        <div className="flex flex-wrap gap-2">
           {restaurante.amenidades.map((id) => {
             const amenidad = amenidadesDisponibles.find((a) => a.id === id);
             return (
               <span
                 key={id}
-                className="px-3 py-1 bg-gray-200 rounded-full flex items-center gap-2"
+                className="px-3 py-1 bg-orange-100 text-orange-800 rounded-full flex items-center gap-2 text-sm"
               >
                 {amenidad?.nombre}
                 <button
                   type="button"
                   onClick={() => handleRemoveItem("amenidades", id)}
-                  className="text-red-500 font-bold"
+                  className="text-red-500 hover:text-red-700 font-bold leading-none"
                 >
                   ×
                 </button>
@@ -351,12 +356,12 @@ export default function RestauranteForm({ onSaved }: { onSaved?: () => void }) {
       </fieldset>
 
       {/* Categorías */}
-      <fieldset className="space-y-2">
-        <legend className="font-semibold">Categorías</legend>
+      <fieldset className="border border-gray-200 rounded-lg p-4 space-y-3">
+        <legend className="font-semibold text-orange-700 px-2">Categorías</legend>
         <div className="flex gap-2">
           <select
             onChange={(e) => handleAddItem("categorias", e.target.value)}
-            className="border rounded-md p-2"
+            className="border border-gray-300 rounded-md p-2 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400 outline-none"
             defaultValue=""
           >
             <option value="" disabled>
@@ -369,19 +374,19 @@ export default function RestauranteForm({ onSaved }: { onSaved?: () => void }) {
             ))}
           </select>
         </div>
-        <div className="flex flex-wrap gap-2 mt-2">
+        <div className="flex flex-wrap gap-2">
           {restaurante.categorias.map((id) => {
             const categoria = categoriasDisponibles.find((c) => c.id === id);
             return (
               <span
                 key={id}
-                className="px-3 py-1 bg-gray-200 rounded-full flex items-center gap-2"
+                className="px-3 py-1 bg-orange-100 text-orange-800 rounded-full flex items-center gap-2 text-sm"
               >
                 {categoria?.nombre}
                 <button
                   type="button"
                   onClick={() => handleRemoveItem("categorias", id)}
-                  className="text-red-500 font-bold"
+                  className="text-red-500 hover:text-red-700 font-bold leading-none"
                 >
                   ×
                 </button>
@@ -392,16 +397,16 @@ export default function RestauranteForm({ onSaved }: { onSaved?: () => void }) {
       </fieldset>
 
       {/* Horarios */}
-      <fieldset className="space-y-2">
-        <legend className="font-semibold">Horarios</legend>
+      <fieldset className="border border-gray-200 rounded-lg p-4 space-y-3">
+        <legend className="font-semibold text-orange-700 px-2">Horarios</legend>
         {restaurante.horarios.map((h, index) => (
-          <div key={index} className="flex items-center gap-2">
+          <div key={index} className="flex flex-wrap items-center gap-2">
             <select
               value={h.dia}
               onChange={(e) =>
                 handleHorarioChange(index, "dia", e.target.value)
               }
-              className="border rounded-md p-2"
+              className="border border-gray-300 rounded-md p-2 text-sm focus:ring-2 focus:ring-orange-300 outline-none"
             >
               {[
                 "Lunes",
@@ -423,7 +428,7 @@ export default function RestauranteForm({ onSaved }: { onSaved?: () => void }) {
               onChange={(e) =>
                 handleHorarioChange(index, "horaApertura", e.target.value)
               }
-              className="border rounded-md p-2"
+              className="border border-gray-300 rounded-md p-2 text-sm focus:ring-2 focus:ring-orange-300 outline-none"
             />
             <input
               type="time"
@@ -431,12 +436,12 @@ export default function RestauranteForm({ onSaved }: { onSaved?: () => void }) {
               onChange={(e) =>
                 handleHorarioChange(index, "horaCierre", e.target.value)
               }
-              className="border rounded-md p-2"
+              className="border border-gray-300 rounded-md p-2 text-sm focus:ring-2 focus:ring-orange-300 outline-none"
             />
             <button
               type="button"
               onClick={() => handleRemoveHorario(index)}
-              className="px-2 py-1 bg-red-500 text-white rounded-md"
+              className="px-3 py-1.5 bg-red-100 text-red-700 hover:bg-red-200 rounded-md text-sm font-medium transition-colors"
             >
               Eliminar
             </button>
@@ -445,7 +450,7 @@ export default function RestauranteForm({ onSaved }: { onSaved?: () => void }) {
         <button
           type="button"
           onClick={handleAddHorario}
-          className="px-3 py-1 bg-green-500 text-white rounded-md"
+          className="px-4 py-1.5 bg-orange-100 text-orange-700 hover:bg-orange-200 rounded-md text-sm font-medium transition-colors"
         >
           + Agregar Horario
         </button>
@@ -455,16 +460,27 @@ export default function RestauranteForm({ onSaved }: { onSaved?: () => void }) {
       <div className="flex justify-end gap-4">
         <button
           type="button"
-          className="px-4 py-2 rounded-md border"
+          className="px-4 py-2 rounded-md border border-gray-300 text-gray-700 hover:bg-gray-50 transition-colors"
           onClick={() => window.history.back()}
         >
           Cancelar
         </button>
         <button
           type="submit"
-          className="px-4 py-2 rounded-md bg-indigo-600 text-white hover:bg-indigo-500"
+          disabled={submitting}
+          className={`px-4 py-2 rounded-md text-white font-medium flex items-center gap-2 transition-colors ${
+            submitting
+              ? "bg-gray-400 cursor-not-allowed"
+              : "bg-orange-600 hover:bg-orange-700"
+          }`}
         >
-          Guardar
+          {submitting && (
+            <svg className="w-4 h-4 animate-spin" viewBox="0 0 24 24" fill="none">
+              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 00-8 8h4z" />
+            </svg>
+          )}
+          {submitting ? "Guardando..." : "Guardar"}
         </button>
       </div>
     </form>

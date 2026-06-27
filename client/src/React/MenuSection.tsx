@@ -6,6 +6,7 @@ import ModalProducto from "@/React/Modales/ModalProducto.tsx";
 import ModalPedido from "@/React/Modales/ModalPedido.tsx";
 import BotonVerPedido from "@/React/Buttons/BotonVerPedido.tsx";
 import { pedidoService } from "@/Services/pedidoService.ts";
+import { showAlert } from "@/lib/alert.ts";
 
 import FoodIcon from "@/components/Icons/FoodIcon.tsx";
 import { categoriaOrden as baseCategorias } from "@/consts/categorias.ts";
@@ -103,10 +104,10 @@ const API_URL = "https://api.mr-menus.com";//Ajusta según tu estructura de carp
       });
       setPedido([]);
       setModalPedidoAbierto(false);
-      alert("¡Pedido enviado con éxito!");
+      showAlert("¡Pedido enviado con éxito!", "success");
     } catch (err) {
       console.error(err);
-      alert("Error al enviar el pedido");
+      showAlert("Error al enviar el pedido", "error");
     } finally {
       setEnviando(false);
     }

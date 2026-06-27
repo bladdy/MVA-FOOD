@@ -1,6 +1,6 @@
 import ShareIcon from "@/components/Icons/ShareIcon.tsx";
+import { showAlert } from "@/lib/alert.ts";
 import React from "react";
- // Asegúrate de que este SVG existe
 
 export default function ShareButton({ title }: { title: string }) {
   const handleShare = () => {
@@ -11,8 +11,7 @@ export default function ShareButton({ title }: { title: string }) {
         url: window.location.href,
       });
     } else {
-      //sweet Alert
-      alert("Tu navegador no soporta la función de compartir.");
+      showAlert("Tu navegador no soporta la función de compartir.", "info");
     }
   };
 

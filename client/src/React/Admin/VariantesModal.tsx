@@ -3,6 +3,7 @@ import React, { useState, useEffect, useMemo } from "react";
 import type { VarianteCreate, Categoria, Variante } from "@/Types/Restaurante.ts";
 import { varianteService } from "@/Services/varianteService.ts";
 import { menuService } from "@/Services/menuService.ts"; // solo para categorias
+import { showAlert } from "@/lib/alert.ts";
 
 interface VariantesModalProps {
   isOpen: boolean;
@@ -28,6 +29,7 @@ const VariantesModal: React.FC<VariantesModalProps> = ({
 }) => {
   const [form, setForm] = useState<VarianteCreate>(initialForm);
   const [categorias, setCategorias] = useState<Categoria[]>([]);
+  const [submitting, setSubmitting] = useState(false);
 
   // Cargar datos iniciales
   useEffect(() => {
@@ -105,7 +107,9 @@ const VariantesModal: React.FC<VariantesModalProps> = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!isFormValid) return;
+    if (!isFormValid || submitting) return;
+
+    setSubmitting(true);
 
     try {
       if (form.id) {
@@ -117,7 +121,9 @@ const VariantesModal: React.FC<VariantesModalProps> = ({
       onSave();
     } catch (error) {
       console.error(error);
-      alert("Hubo un error al guardar la variante");
+      showAlert("Hubo un error al guardar la variante", "error");
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -243,14 +249,20 @@ const VariantesModal: React.FC<VariantesModalProps> = ({
             </button>
             <button
               type="submit"
-              disabled={!isFormValid}
-              className={`px-4 py-2 rounded text-white ${
-                isFormValid
+              disabled={!isFormValid || submitting}
+              className={`px-4 py-2 rounded text-white flex items-center gap-2 ${
+                isFormValid && !submitting
                   ? "bg-orange-500 hover:bg-orange-600"
                   : "bg-gray-400 cursor-not-allowed"
               }`}
             >
-              Guardar
+              {submitting && (
+                <svg className="w-4 h-4 animate-spin" viewBox="0 0 24 24" fill="none">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 00-8 8h4z" />
+                </svg>
+              )}
+              {submitting ? "Guardando..." : "Guardar"}
             </button>
           </div>
         </form>
