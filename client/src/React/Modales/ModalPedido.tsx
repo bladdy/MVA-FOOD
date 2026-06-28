@@ -29,6 +29,7 @@ export default function ModalPedido({
   comentario,
   setComentario,
   envioGratis = true,
+  tipoEntrega,
   onSubmit,
 }: {
   pedido: PedidoItem[];  
@@ -39,10 +40,12 @@ export default function ModalPedido({
   comentario?: string;
   setComentario?: (value: string) => void;
   envioGratis?: boolean;
-  onSubmit?: (nombre: string, telefono: string) => void;
+  tipoEntrega?: string;
+  onSubmit?: (nombre: string, telefono: string, direccion?: string) => void;
 }) {
   const [nombre, setNombre] = useState("");
   const [telefono, setTelefono] = useState("");
+  const [direccion, setDireccion] = useState("");
   const metaEnvioGratis = 200;
   const progreso = Math.min((total / metaEnvioGratis) * 100, 100);
   if (mesa) envioGratis = false;
@@ -184,13 +187,26 @@ export default function ModalPedido({
               onChange={(e) => setTelefono(e.target.value)}
               className="w-full border border-gray-300 rounded-lg p-2 text-sm"
             />
+            {tipoEntrega === "domicilio" && (
+              <input
+                type="text"
+                placeholder="Tu dirección *"
+                value={direccion}
+                onChange={(e) => setDireccion(e.target.value)}
+                className="w-full border border-gray-300 rounded-lg p-2 text-sm"
+              />
+            )}
           </div>
         )}
 
         <button
           className="w-full bg-orange-500 hover:bg-orange-600 text-white py-2 rounded-lg font-semibold disabled:bg-gray-400 disabled:cursor-not-allowed"
-          disabled={!onSubmit || (!mesa && (!nombre.trim() || !telefono.trim()))}
-          onClick={() => onSubmit?.(nombre, telefono)}
+          disabled={
+            !onSubmit ||
+            (!mesa && (!nombre.trim() || !telefono.trim())) ||
+            (!mesa && tipoEntrega === "domicilio" && !direccion.trim())
+          }
+          onClick={() => onSubmit?.(nombre, telefono, direccion)}
         >
           Finalizar Pedido
         </button>

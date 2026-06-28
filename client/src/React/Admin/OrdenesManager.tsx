@@ -194,7 +194,17 @@ function OrdenesManagerInner() {
                       <span className="font-bold text-gray-800">
                         {pedido.clienteNombre}
                       </span>
-                      
+                      <span
+                        className={`ml-2 text-xs font-medium px-2 py-0.5 rounded-full ${
+                          pedido.tipoEntrega === "domicilio"
+                            ? "bg-blue-100 text-blue-700"
+                            : "bg-gray-100 text-gray-700"
+                        }`}
+                      >
+                        {pedido.tipoEntrega === "domicilio"
+                          ? "A domicilio"
+                          : "Para recoger"}
+                      </span>
                     </div>
                     <span className="text-xs text-gray-400">
                       {new Date(pedido.fecha).toLocaleTimeString("es-MX", {
@@ -207,6 +217,12 @@ function OrdenesManagerInner() {
                   {pedido.clienteTelefono && (
                     <p className="text-xs text-gray-500 mb-2">
                       {pedido.clienteTelefono}
+                    </p>
+                  )}
+
+                  {pedido.tipoEntrega === "domicilio" && pedido.direccion && (
+                    <p className="text-xs text-blue-600 mb-2">
+                      {pedido.direccion}
                     </p>
                   )}
 

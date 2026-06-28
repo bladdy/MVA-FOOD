@@ -180,6 +180,8 @@ export interface Horario {
 export interface CreatePedidoDto {
   clienteNombre: string;
   clienteTelefono: string;
+  tipoEntrega: string;
+  direccion?: string;
   restauranteId: string;
   items: {
     menuId: string;

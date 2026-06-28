@@ -67,8 +67,6 @@ export default function MenuSection({ restaurantId,menu, titulo, tomaPedido, mes
   const [tipoEntrega, setTipoEntrega] = useState<"domicilio" | "recoger">("domicilio");
   const [selectedCategoria, setSelectedCategoria] = useState<Categorias>("Todas");
   const [imagenSeleccionada, setImagenSeleccionada] = useState<string | null>(null);
-const API_URL = "https://api.mr-menus.com";//Ajusta según tu estructura de carpetas
-  // ✅ Corrección: asegurar que la categoría se lea como el nombre del objeto (o “Sin categoría”)
   const groupedMenu = menu.reduce(
     (acc, item) => {
       const categoriaKey = (item.categoria?.nombre || "Sin categoría") as Categorias;
@@ -87,13 +85,15 @@ const API_URL = "https://api.mr-menus.com";//Ajusta según tu estructura de carp
 
   const [enviando, setEnviando] = useState(false);
 
-  const handleSubmitPedido = async (nombre: string, telefono: string) => {
+  const handleSubmitPedido = async (nombre: string, telefono: string, direccion?: string) => {
     if (!menu.length) return;
     setEnviando(true);
     try {
       await pedidoService.create({
         clienteNombre: nombre,
         clienteTelefono: telefono,
+        tipoEntrega,
+        direccion: tipoEntrega === "domicilio" ? direccion : undefined,
         restauranteId: restaurantId,
         items: pedido.map((i) => ({
           menuId: i.producto.id,
@@ -189,10 +189,10 @@ const API_URL = "https://api.mr-menus.com";//Ajusta según tu estructura de carp
                           />
                       </td>
                       <td className="py-3 px-0 w-4/6">
-                        <div className="text-base font-semibold text-orange-900">
+                        <div className="text-base font-semibold text-orange-900 capitalize">
                           {item.nombre}
                         </div>
-                        <div className="text-sm text-orange-600">{item.ingredientes}</div>
+                        <div className="text-sm text-orange-600 capitalize">{item.ingredientes}</div>
                       </td>
                       <td className="py-3 px-2 w-1/6 text-right font-semibold text-orange-800 whitespace-nowrap">
                         <div>${item.precio.toLocaleString("es-MX")}</div>
@@ -246,6 +246,7 @@ const API_URL = "https://api.mr-menus.com";//Ajusta según tu estructura de carp
             pedido={pedido}
             total={tipoEntrega === "domicilio" && total < 200 ? total + 20 : total}
             envioGratis={tipoEntrega === "domicilio"}
+            tipoEntrega={tipoEntrega}
             onClose={() => setModalPedidoAbierto(false)}
             onCantidadChange={handleCantidadChange}
             onSubmit={handleSubmitPedido}

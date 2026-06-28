@@ -5,6 +5,8 @@ export interface PedidoResponse {
   id: string;
   clienteNombre: string;
   clienteTelefono: string;
+  tipoEntrega: string;
+  direccion?: string;
   fecha: string;
   estado: number;
   total: number;

@@ -103,6 +103,8 @@ namespace MVA_FOOD.Infrastructure.Services
             {
                 ClienteNombre = dto.ClienteNombre,
                 ClienteTelefono = dto.ClienteTelefono,
+                TipoEntrega = dto.TipoEntrega,
+                Direccion = dto.Direccion,
                 RestauranteId = dto.RestauranteId,
                 Items = items
             };
