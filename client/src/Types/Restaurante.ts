@@ -92,6 +92,7 @@ export interface RestauranteDTO {
   plan?: Plan;
   horario?: string;
   menus?: any[];
+  combos?: ComboResponse[];
 }
 export interface Restaurante {
 
@@ -111,6 +112,7 @@ export interface Restaurante {
   plan?: Plan;
   horario?: string;
   menus?: any[];
+  combos?: ComboResponse[];
 }
 
 
@@ -151,10 +153,15 @@ export interface Variante {
 }
 
 export interface PedidoItem {
-  producto: Menu;
+  producto: Menu | null;
   cantidad: number;
   notas: string;
   opciones: string;
+  precio?: number;
+  esCombo?: boolean;
+  comboId?: string;
+  comboNombre?: string;
+  comboItemsJson?: string;
 }
 
 export interface Plan {
@@ -184,11 +191,55 @@ export interface CreatePedidoDto {
   direccion?: string;
   restauranteId: string;
   items: {
-    menuId: string;
+    menuId?: string;
     cantidad: number;
+    precio?: number;
     notas?: string;
     opciones?: string;
+    esCombo?: boolean;
+    comboId?: string;
+    comboNombre?: string;
+    comboItemsJson?: string;
   }[];
+}
+
+export interface ComboResponse {
+  id: string;
+  nombre: string;
+  descripcion?: string;
+  precio?: number;
+  imagen?: string;
+  activo: boolean;
+  predefinido: boolean;
+  restauranteId: string;
+  items: ComboItemResponse[];
+  sugerencias?: ComboSugerenciaResponse[];
+}
+
+export interface ComboItemResponse {
+  menuId: string;
+  menuNombre: string;
+  menuPrecio: number;
+  menuImagen: string;
+  cantidad: number;
+}
+
+export interface ComboSugerenciaResponse {
+  menuId: string;
+  menuNombre: string;
+  precioAdicional: number;
+}
+
+export interface ComboCreate {
+  nombre: string;
+  descripcion?: string;
+  precio?: number;
+  activo: boolean;
+  predefinido: boolean;
+  restauranteId: string;
+  imagenUrl?: string;
+  items: { menuId: string; cantidad: number }[];
+  sugerencias?: { menuId: string; precioAdicional: number }[];
 }
 
 export type Categorias =
@@ -207,3 +258,6 @@ export type Categorias =
   | "Kids"
   | "Bebidas"
   | "Postres";
+
+
+

@@ -16,6 +16,7 @@ namespace MVA_FOOD.Core.Entities
         public ICollection<Menu> Menu { get; set; } = new List<Menu>();
         public ICollection<CategoriaRestaurantes> CategoriaRestaurantes { get; set; } = new List<CategoriaRestaurantes>();
         public ICollection<AmenidadRestaurantes> AmenidadRestaurantes { get; set; } = new List<AmenidadRestaurantes>();
+        public ICollection<Combo> Combos { get; set; } = new List<Combo>();
     }
 
 }

@@ -1,27 +1,25 @@
 // src/React/MenuSectionWrapper.jsx
 import { useEffect, useState } from "react";
 import MenuSection from "./MenuSection.tsx";
-import type { Menu } from "@/Types/Restaurante.ts";
+import type { Menu, ComboResponse } from "@/Types/Restaurante.ts";
 
 interface MenuSectionWrapperProps {
   restaurantId: string,
-  menu: Menu[]; // arreglo de menús
+  menu: Menu[];
+  combos?: ComboResponse[];
   titulo: string;
   tomaPedido: boolean;
 }
 
-const MenuSectionWrapper = ({ restaurantId, menu, titulo, tomaPedido }: MenuSectionWrapperProps) => {
+const MenuSectionWrapper = ({ restaurantId, menu, combos, titulo, tomaPedido }: MenuSectionWrapperProps) => {
   const [loading, setLoading] = useState(true);
   const [mesa, setMesa] = useState<string | null>(null);
   useEffect(() => {
-    // Leer el número de mesa de los parámetros de la URL
     const params = new URLSearchParams(window.location.search);
     const mesaParam = params.get("mesa");
     if (mesaParam) {
       setMesa(mesaParam);
     }
-
-    // Simular carga (puedes quitar esto si prefieres carga instantánea)
     const timer = setTimeout(() => setLoading(false), 800);
     return () => clearTimeout(timer);
   }, []);
@@ -33,7 +31,6 @@ const MenuSectionWrapper = ({ restaurantId, menu, titulo, tomaPedido }: MenuSect
     </div>
   ) : (
     <div>
-      {/* ✅ Mostrar número de mesa si existe */}
       {mesa && (
         <p className="text-sm mb-4 text-orange-700 font-semibold text-center">
           Número de mesa: <span className="font-bold">{mesa}</span>
@@ -42,9 +39,10 @@ const MenuSectionWrapper = ({ restaurantId, menu, titulo, tomaPedido }: MenuSect
       <MenuSection
         restaurantId ={restaurantId}
         menu={menu}
+        combos={combos}
         titulo={titulo}
         tomaPedido={tomaPedido}
-        mesa={mesa}  //opcional: pásalo si MenuSection lo necesita
+        mesa={mesa}
       />
     </div>
   );

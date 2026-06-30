@@ -55,6 +55,23 @@ namespace MVA_FOOD.Infrastructure.Services
 
             foreach (var itemDto in dto.Items)
             {
+                if (itemDto.EsCombo)
+                {
+                    items.Add(new PedidoItem
+                    {
+                        MenuId = null,
+                        Precio = itemDto.Precio,
+                        Cantidad = itemDto.Cantidad,
+                        Notas = itemDto.Notas,
+                        Opciones = itemDto.Opciones,
+                        EsCombo = true,
+                        ComboId = itemDto.ComboId,
+                        ComboNombre = itemDto.ComboNombre,
+                        ComboItemsJson = itemDto.ComboItemsJson
+                    });
+                    continue;
+                }
+
                 var menu = await _context.Menus.FindAsync(itemDto.MenuId);
                 if (menu == null)
                     throw new Exception($"Menu con ID {itemDto.MenuId} no encontrado");

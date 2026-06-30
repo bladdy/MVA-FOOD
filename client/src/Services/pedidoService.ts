@@ -13,17 +13,21 @@ export interface PedidoResponse {
   restauranteId: string;
   items: {
     id: string;
-    menuId: string;
-    producto: {
+    menuId?: string;
+    producto?: {
       id: string;
       nombre: string;
       precio: number;
       imagen: string;
-    };
+    } | null;
     precio: number;
     cantidad: number;
     notas: string;
     opciones: string;
+    esCombo?: boolean;
+    comboId?: string;
+    comboNombre?: string;
+    comboItemsJson?: string;
   }[];
 }
 
@@ -67,3 +71,4 @@ export const pedidoService = {
     if (!res.ok) throw new Error("Error al eliminar pedido");
   },
 };
+

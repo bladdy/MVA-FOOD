@@ -28,13 +28,13 @@ namespace MVA_FOOD.Infrastructure.Data
         public DbSet<AmenidadRestaurantes> AmenidadRestaurantes { get; set; }
         public DbSet<CategoriaRestaurantes> CategoriaRestaurantes { get; set; }
         public DbSet<VarianteMenus> VarianteMenus { get; set; }
-
-
+        public DbSet<Combo> Combos { get; set; }
+        public DbSet<ComboMenu> ComboMenus { get; set; }
+        public DbSet<MenuComboSugerido> MenuComboSugeridos { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-
 
             modelBuilder.Entity<Restaurante>()
                 .HasIndex(r => r.Name).IsUnique();
@@ -50,16 +50,42 @@ namespace MVA_FOOD.Infrastructure.Data
                 .WithMany(v => v.MenuVariantes)
                 .HasForeignKey(vm => vm.VarianteId)
                 .OnDelete(DeleteBehavior.Cascade);
-                
+
             modelBuilder.Entity<Menu>()
                 .HasOne(m => m.Categoria)
                 .WithMany(c => c.Menus)
                 .OnDelete(DeleteBehavior.Cascade)
-                .HasForeignKey(m => m.CategoriaId);               
-            
+                .HasForeignKey(m => m.CategoriaId);
 
+            modelBuilder.Entity<ComboMenu>()
+                .HasOne(cm => cm.Combo)
+                .WithMany(c => c.Items)
+                .HasForeignKey(cm => cm.ComboId)
+                .OnDelete(DeleteBehavior.Cascade);
 
+            modelBuilder.Entity<ComboMenu>()
+                .HasOne(cm => cm.Menu)
+                .WithMany()
+                .HasForeignKey(cm => cm.MenuId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<MenuComboSugerido>()
+                .HasOne(mcs => mcs.Combo)
+                .WithMany(c => c.Sugerencias)
+                .HasForeignKey(mcs => mcs.ComboId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<MenuComboSugerido>()
+                .HasOne(mcs => mcs.Menu)
+                .WithMany()
+                .HasForeignKey(mcs => mcs.MenuId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<PedidoItem>()
+                .HasOne(pi => pi.Producto)
+                .WithMany()
+                .HasForeignKey(pi => pi.MenuId)
+                .OnDelete(DeleteBehavior.SetNull);
         }
-
     }
 }

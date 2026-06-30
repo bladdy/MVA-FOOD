@@ -1,9 +1,10 @@
 import { useState, type JSX } from "react";
-import type { Menu, Categorias } from "@/Types/Restaurante.ts";
+import type { Menu, Categorias, ComboResponse } from "@/Types/Restaurante.ts";
 
 import { usePedido } from "@/React/hooks/usePedido.ts";
 import ModalProducto from "@/React/Modales/ModalProducto.tsx";
 import ModalPedido from "@/React/Modales/ModalPedido.tsx";
+import ModalCombo from "@/React/Modales/ModalCombo.tsx";
 import BotonVerPedido from "@/React/Buttons/BotonVerPedido.tsx";
 import { pedidoService } from "@/Services/pedidoService.ts";
 import { showAlert } from "@/lib/alert.ts";
@@ -22,13 +23,14 @@ import PastasIcon from "@/components/Icons/PastasIcon.tsx";
 import SteakHouseIcon from "@/components/Icons/SteakHouseIcon.tsx";
 import FriesChickenIcon from "@/components/Icons/FriesChickenIcon.tsx";
 import AddIcon from "@/components/Icons/AddIcon.tsx";
-import CrossIcon from "@/components/Icons/CrossIcon.tsx"; // Para cerrar la galería
+import CrossIcon from "@/components/Icons/CrossIcon.tsx";
 import TipoEntregaSelector from "./TipoEntregaSelector.tsx";
 
 interface Props {
   restaurantId: string;
   titulo: string;
   menu: Menu[];
+  combos?: ComboResponse[];
   tomaPedido?: boolean;
   mesa?: string | null;
 }
@@ -51,7 +53,7 @@ const categoriaIcons: Record<Categorias, JSX.Element> = {
   Pastas: <PastasIcon className="w-6 h-6" />,
 };
 
-export default function MenuSection({ restaurantId,menu, titulo, tomaPedido, mesa }: Props) {
+export default function MenuSection({ restaurantId, menu, combos, titulo, tomaPedido, mesa }: Props) {
 
   const {
     pedido,
@@ -60,6 +62,7 @@ export default function MenuSection({ restaurantId,menu, titulo, tomaPedido, mes
     modalProducto,
     setModalProducto,
     agregarProducto,
+    agregarCombo,
     modalPedidoAbierto,
     setModalPedidoAbierto,
     setPedido,
@@ -67,6 +70,7 @@ export default function MenuSection({ restaurantId,menu, titulo, tomaPedido, mes
   const [tipoEntrega, setTipoEntrega] = useState<"domicilio" | "recoger">("domicilio");
   const [selectedCategoria, setSelectedCategoria] = useState<Categorias>("Todas");
   const [imagenSeleccionada, setImagenSeleccionada] = useState<string | null>(null);
+  const [modalCombo, setModalCombo] = useState<ComboResponse | null>(null);
   const groupedMenu = menu.reduce(
     (acc, item) => {
       const categoriaKey = (item.categoria?.nombre || "Sin categoría") as Categorias;
@@ -96,10 +100,15 @@ export default function MenuSection({ restaurantId,menu, titulo, tomaPedido, mes
         direccion: tipoEntrega === "domicilio" ? direccion : undefined,
         restauranteId: restaurantId,
         items: pedido.map((i) => ({
-          menuId: i.producto.id,
+          menuId: i.esCombo ? undefined : i.producto?.id,
           cantidad: i.cantidad,
+          precio: i.precio,
           notas: i.notas || "",
           opciones: i.opciones || "",
+          esCombo: i.esCombo || false,
+          comboId: i.comboId,
+          comboNombre: i.comboNombre,
+          comboItemsJson: i.comboItemsJson,
         })),
       });
       setPedido([]);
@@ -123,11 +132,48 @@ export default function MenuSection({ restaurantId,menu, titulo, tomaPedido, mes
     setPedido(nuevoPedido);
   };
 
+  const combosPredefinidos = combos?.filter((c) => c.predefinido && c.activo) ?? [];
+
   return (
     <div className="relative">
       <h2 className="text-xl md:text-4xl font-bold text-orange-600 mb-6">
         {titulo}
       </h2>
+
+      {tomaPedido && combosPredefinidos.length > 0 && (
+        <div className="mb-8">
+          <h3 className="text-lg font-bold text-orange-600 mb-3">Combos</h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {combosPredefinidos.map((combo) => (
+              <div key={combo.id} className="border border-orange-200 rounded-xl p-4 bg-orange-50">
+                <div className="flex justify-between items-start mb-2">
+                  <h4 className="font-bold text-orange-800">{combo.nombre}</h4>
+                  <span className="bg-orange-500 text-white text-xs px-2 py-0.5 rounded-full font-bold">
+                    Combo
+                  </span>
+                </div>
+                {combo.descripcion && (
+                  <p className="text-xs text-gray-500 mb-2">{combo.descripcion}</p>
+                )}
+                <div className="text-xs text-gray-600 mb-3">
+                  {combo.items.map((i) => `${i.cantidad}x ${i.menuNombre}`).join(", ")}
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="font-bold text-orange-700">
+                    {combo.precio ? `$${combo.precio.toFixed(2)}` : ""}
+                  </span>
+                  <button
+                    onClick={() => setModalCombo(combo)}
+                    className="bg-orange-500 hover:bg-orange-600 text-white text-sm px-3 py-1.5 rounded-lg font-medium"
+                  >
+                    Personalizar
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Botones de Categoría */}
       <div className="flex flex-wrap justify-center gap-4 mb-6">
@@ -232,12 +278,26 @@ export default function MenuSection({ restaurantId,menu, titulo, tomaPedido, mes
 
         )}
 
+        {/* Modal de combo */}
+        {modalCombo && (
+          <ModalCombo
+            combo={modalCombo}
+            onClose={() => setModalCombo(null)}
+            onAgregar={(comboId, comboNombre, itemsJson) => {
+              agregarCombo(comboId, comboNombre, itemsJson);
+              setModalCombo(null);
+            }}
+          />
+        )}
+
         {/* Modales de pedido */}
         {modalProducto && (
           <ModalProducto
             producto={modalProducto}
+            combosSugeridos={combos?.filter((c) => !c.predefinido && c.activo && c.sugerencias?.some((s) => s.menuId === modalProducto.id))?.flatMap((c) => c.sugerencias?.filter((s) => s.menuId === modalProducto.id) ?? [])}
             onClose={() => setModalProducto(null)}
             onAgregar={(notas, opciones) => agregarProducto(modalProducto, notas, opciones)}
+            onAgregarCombo={(comboId, comboNombre, itemsJson) => agregarCombo(comboId, comboNombre, itemsJson)}
           />
         )}
         {modalPedidoAbierto && (
@@ -265,3 +325,4 @@ export default function MenuSection({ restaurantId,menu, titulo, tomaPedido, mes
     </div>
   );
 }
+

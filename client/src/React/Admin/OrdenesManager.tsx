@@ -233,11 +233,36 @@ function OrdenesManagerInner() {
                         opcionesArr = JSON.parse(item.opciones || "[]");
                       } catch {}
 
+                      if (item.esCombo) {
+                        let internos: { nombre: string; cantidad: number; precio: number; opciones: string[] }[] = [];
+                        try {
+                          internos = JSON.parse(item.comboItemsJson || "[]");
+                        } catch {}
+
+                        return (
+                          <li key={i}>
+                            <div className="font-medium text-orange-700 flex justify-between">
+                              <span>{item.comboNombre || "Combo"}</span> <span>${(item.precio * item.cantidad).toFixed(2)}</span>
+
+                            </div>
+                            {internos.map((int, ii) => (
+                              <div key={ii} className="text-xs text-gray-600 ml-4">
+                                <span className="font-medium">{int.cantidad}x {int.nombre}</span>
+                                {int.opciones?.length > 0 && (
+                                  <span className="text-orange-500"> + {int.opciones.join(", ")}</span>
+                                )}
+                                <span className="ml-2">${(int.precio * int.cantidad).toFixed(2)}</span>
+                              </div>
+                            ))}
+                          </li>
+                        );
+                      }
+
                       return (
                         <li key={i}>
                           <div className="flex justify-between">
                             <span className="font-medium">
-                              {item.cantidad}x {item.producto.nombre}
+                              {item.cantidad}x {item.producto?.nombre || ""}
                             </span>
                             <span className="font-medium">
                               ${(item.precio * item.cantidad).toFixed(2)}
@@ -258,7 +283,7 @@ function OrdenesManagerInner() {
                     })}
                   </ul>
 
-                  <div className="flex justify-between items-center border-t pt-2">
+                  <div className="flex justify-end items-center border-t pt-2">
                     <span className="font-bold text-gray-800">
                       Total: ${pedido.total.toFixed(2)}
                     </span>
@@ -325,3 +350,4 @@ export default function OrdenesManager() {
     </UserProvider>
   );
 }
+

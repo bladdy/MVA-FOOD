@@ -1,17 +1,22 @@
-import type { Menu, Variante } from "@/Types/Restaurante.ts";
+import type { Menu, Variante, ComboSugerido } from "@/Types/Restaurante.ts";
 import CrossIcon from "@/components/Icons/CrossIcon.tsx";
 import { useState, useMemo } from "react";
 
 export default function ModalProducto({
   producto,
+  combosSugeridos,
   onClose,
   onAgregar,
+  onAgregarCombo,
 }: {
   producto: Menu;
+  combosSugeridos?: ComboSugerido[];
   onClose: () => void;
   onAgregar: (notas: string, opciones: string) => void;
+  onAgregarCombo?: (comboId: string, comboNombre: string, comboItemsJson: string) => void;
 }) {
   const [notas, setNotas] = useState("");
+  const [comboSeleccionado, setComboSeleccionado] = useState<string | null>(null);
   const variantes: Variante[] = producto.variantes || [];
 
   const [selecciones, setSelecciones] = useState<Record<string, string[]>>({});
@@ -50,6 +55,11 @@ export default function ModalProducto({
       });
     });
 
+    if (comboSeleccionado) {
+      const cs = combosSugeridos?.find((s) => s.menuId === comboSeleccionado);
+      if (cs) total += cs.precioAdicional;
+    }
+
     return total;
   };
 
@@ -77,6 +87,16 @@ export default function ModalProducto({
     });
 
     onAgregar(notas, JSON.stringify(opcionesArr));
+
+    if (comboSeleccionado && onAgregarCombo) {
+      const cs = combosSugeridos?.find((s) => s.menuId === comboSeleccionado);
+      if (cs) {
+        const itemsJson = JSON.stringify([
+          { menuId: cs.menuId, nombre: cs.menuNombre, cantidad: 1, precio: cs.precioAdicional, opciones: [] },
+        ]);
+        onAgregarCombo(comboSeleccionado, cs.menuNombre, itemsJson);
+      }
+    }
   };
 
   return (
@@ -171,6 +191,40 @@ export default function ModalProducto({
                   })}
                 </ul>
               </div>
+            ))}
+          </div>
+        )}
+
+        {combosSugeridos && combosSugeridos.length > 0 && (
+          <div className="border-t pt-4 mb-4">
+            <h3 className="text-md font-semibold text-gray-800 mb-3">Agregar combo</h3>
+            {combosSugeridos.map((cs) => (
+              <label
+                key={cs.menuId}
+                className={`flex justify-between items-center px-3 py-3 cursor-pointer rounded-lg border mb-2 transition-colors ${
+                  comboSeleccionado === cs.menuId
+                    ? "bg-orange-50 border-orange-500"
+                    : "hover:bg-gray-50 border-gray-200"
+                }`}
+              >
+                <div className="flex items-center gap-3">
+                  <input
+                    type="radio"
+                    name="comboSugerido"
+                    checked={comboSeleccionado === cs.menuId}
+                    onChange={() => setComboSeleccionado(
+                      comboSeleccionado === cs.menuId ? null : cs.menuId
+                    )}
+                    className="w-5 h-5 text-orange-500 accent-orange-500 cursor-pointer"
+                  />
+                  <span className="text-sm font-medium text-gray-700">
+                    {cs.menuNombre}
+                  </span>
+                </div>
+                <span className="text-sm font-medium text-orange-600">
+                  +${cs.precioAdicional.toFixed(2)}
+                </span>
+              </label>
             ))}
           </div>
         )}

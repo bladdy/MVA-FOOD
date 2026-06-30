@@ -9,11 +9,17 @@ interface UsePedidoHook {
   modalProducto: Menu | null;
   setModalProducto: React.Dispatch<React.SetStateAction<Menu | null>>;
   agregarProducto: (producto: Menu, notas?: string, opciones?: string) => void;
+  agregarCombo: (comboId: string, comboNombre: string, comboItemsJson: string) => void;
   modalPedidoAbierto: boolean;
   setModalPedidoAbierto: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 function calcularPrecioItem(item: PedidoItem): number {
+  if (item.esCombo) {
+    const itemsInternos: { precio: number; cantidad: number }[] = JSON.parse(item.comboItemsJson || "[]");
+    return itemsInternos.reduce((sum, si) => sum + si.precio * si.cantidad, 0);
+  }
+  if (!item.producto) return 0;
   const opcionesArr: string[] = JSON.parse(item.opciones || "[]");
   let extra = 0;
   if (item.producto.variantes) {
@@ -37,6 +43,25 @@ export function usePedido(): UsePedidoHook {
     setModalProducto(null);
   }
 
+  function agregarCombo(comboId: string, comboNombre: string, comboItemsJson: string) {
+    const internos: { precio: number; cantidad: number }[] = JSON.parse(comboItemsJson || "[]");
+    const precioCombo = internos.reduce((sum, si) => sum + si.precio * si.cantidad, 0);
+    setPedido((prev) => [
+      ...prev,
+      {
+        producto: null,
+        cantidad: 1,
+        notas: "",
+        opciones: "[]",
+        precio: precioCombo,
+        esCombo: true,
+        comboId,
+        comboNombre,
+        comboItemsJson,
+      },
+    ]);
+  }
+
   const total = useMemo(
     () => pedido.reduce((acc, item) => acc + calcularPrecioItem(item), 0),
     [pedido]
@@ -50,6 +75,7 @@ export function usePedido(): UsePedidoHook {
     modalProducto,
     setModalProducto,
     agregarProducto,
+    agregarCombo,
     modalPedidoAbierto,
     setModalPedidoAbierto,
   };

@@ -96,6 +96,7 @@ const ogImage = restaurant?.image
             restaurantId ={restaurant.id}
             tomaPedido={tomarPedido}
             menu={restaurant?.menu ?? []}
+            combos={restaurant?.combos ?? []}
             titulo="Nuestro Menú"
             client:load
           />
@@ -128,3 +129,4 @@ const ogImage = restaurant?.image
     });
   </script>
 </LayoutMenu>
+

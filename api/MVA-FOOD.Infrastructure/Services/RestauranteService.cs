@@ -203,6 +203,11 @@ namespace MVA_FOOD.Infrastructure.Services
                     .ThenInclude(ar => ar.Amenidad)
                 .Include(r => r.CategoriaRestaurantes)
                     .ThenInclude(cr => cr.Categoria)
+                .Include(r => r.Combos)
+                    .ThenInclude(c => c.Items)
+                        .ThenInclude(ci => ci.Menu)
+                .Include(r => r.Combos)
+                    .ThenInclude(c => c.Sugerencias)
                 .Where(r => r.Slug == slug)
                 .Select(r => new RestauranteDto
                 {
@@ -276,12 +281,12 @@ namespace MVA_FOOD.Infrastructure.Services
 
                     Categorias = r.CategoriaRestaurantes
                         .Where(c => c.Categoria != null)
-                        .Select(c => new CategoriaDto
-                        {
-                            Id = c.Categoria.Id,
-                            Nombre = c.Categoria.Nombre
-                        })
-                        .ToList(),
+                    .Select(c => new CategoriaDto
+                            {
+                                Id = c.Categoria.Id,
+                                Nombre = c.Categoria.Nombre
+                            })
+                            .ToList(),
 
                     Horarios = r.Horario
                         .Select(h => new HorarioDto
@@ -291,7 +296,37 @@ namespace MVA_FOOD.Infrastructure.Services
                             HoraApertura = h.HoraApertura,
                             HoraCierre = h.HoraCierre
                         })
-                        .ToList()
+                        .ToList(),
+
+                    Combos = r.Combos
+                        .Where(c => c.Activo)
+                        .Select(c => new ComboDto
+                        {
+                            Id = c.Id,
+                            Nombre = c.Nombre,
+                            Descripcion = c.Descripcion,
+                            Precio = c.Precio,
+                            Imagen = c.Imagen,
+                            Activo = c.Activo,
+                            Predefinido = c.Predefinido,
+                            RestauranteId = c.RestauranteId,
+                            Items = c.Items
+                                .Select(i => new ComboItemDto
+                                {
+                                    MenuId = i.MenuId,
+                                    MenuNombre = i.Menu.Nombre,
+                                    MenuPrecio = i.Menu.Precio,
+                                    MenuImagen = i.Menu.Imagen,
+                                    Cantidad = i.Cantidad
+                                }).ToList(),
+                            Sugerencias = c.Sugerencias
+                                .Select(s => new ComboSugeridoDto
+                                {
+                                    MenuId = s.MenuId,
+                                    MenuNombre = s.Menu.Nombre,
+                                    PrecioAdicional = s.PrecioAdicional
+                                }).ToList()
+                        }).ToList()
                 })
                 .FirstOrDefaultAsync();
         }
@@ -307,6 +342,11 @@ namespace MVA_FOOD.Infrastructure.Services
                     .ThenInclude(ar => ar.Amenidad)
                 .Include(r => r.CategoriaRestaurantes)
                     .ThenInclude(cr => cr.Categoria)
+                .Include(r => r.Combos)
+                    .ThenInclude(c => c.Items)
+                        .ThenInclude(ci => ci.Menu)
+                .Include(r => r.Combos)
+                    .ThenInclude(c => c.Sugerencias)
                 .Where(r => r.Id == id)
                 .Select(r => new RestauranteDto
                 {
@@ -379,7 +419,37 @@ namespace MVA_FOOD.Infrastructure.Services
                             HoraApertura = h.HoraApertura,
                             HoraCierre = h.HoraCierre
                         })
-                        .ToList()
+                        .ToList(),
+
+                    Combos = r.Combos
+                        .Where(c => c.Activo)
+                        .Select(c => new ComboDto
+                        {
+                            Id = c.Id,
+                            Nombre = c.Nombre,
+                            Descripcion = c.Descripcion,
+                            Precio = c.Precio,
+                            Imagen = c.Imagen,
+                            Activo = c.Activo,
+                            Predefinido = c.Predefinido,
+                            RestauranteId = c.RestauranteId,
+                            Items = c.Items
+                                .Select(i => new ComboItemDto
+                                {
+                                    MenuId = i.MenuId,
+                                    MenuNombre = i.Menu.Nombre,
+                                    MenuPrecio = i.Menu.Precio,
+                                    MenuImagen = i.Menu.Imagen,
+                                    Cantidad = i.Cantidad
+                                }).ToList(),
+                            Sugerencias = c.Sugerencias
+                                .Select(s => new ComboSugeridoDto
+                                {
+                                    MenuId = s.MenuId,
+                                    MenuNombre = s.Menu.Nombre,
+                                    PrecioAdicional = s.PrecioAdicional
+                                }).ToList()
+                        }).ToList()
                 })
                 .FirstOrDefaultAsync();
         }
@@ -674,3 +744,4 @@ namespace MVA_FOOD.Infrastructure.Services
     }
 
 }
+
