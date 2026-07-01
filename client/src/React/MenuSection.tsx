@@ -25,6 +25,7 @@ import FriesChickenIcon from "@/components/Icons/FriesChickenIcon.tsx";
 import AddIcon from "@/components/Icons/AddIcon.tsx";
 import CrossIcon from "@/components/Icons/CrossIcon.tsx";
 import TipoEntregaSelector from "./TipoEntregaSelector.tsx";
+import ChopsticksIcon from "@/components/Icons/ChopsticksIcon.tsx";
 
 interface Props {
   restaurantId: string;
@@ -47,6 +48,8 @@ const categoriaIcons: Record<Categorias, JSX.Element> = {
   "Burger & Street Food": <BurgersIcon className="w-6 h-6" />,
   "Steak House": <SteakHouseIcon className="w-6 h-6" />,
   "Pollo Frito": <FriesChickenIcon className="w-6 h-6" />,
+  "Sushi": <ChopsticksIcon className="w-6 h-6" />,
+  "Comida Japonesa": <ChopsticksIcon className="w-6 h-6" />,
   Sopas: <SopasIcon className="w-6 h-6" />,
   Kids: <KidsIcon className="w-6 h-6" />,
   Bebidas: <BebidasIcon className="w-6 h-6" />,

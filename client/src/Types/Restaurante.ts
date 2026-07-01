@@ -294,6 +294,8 @@ export type Categorias =
   | "Sopas"
   | "Kids"
   | "Bebidas"
+  | "Sushi"
+  | "Comida Japonesa"
   | "Postres";
 
 
