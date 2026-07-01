@@ -532,7 +532,7 @@ namespace MVA_FOOD.Infrastructure.Services
                 var plan = await _context.Planes.FindAsync(dto.PlanId);
 
                 if (plan == null)
-                    throw new ArgumentException("El plan especificado no existe.");
+                    plan = await _context.Planes.FirstOrDefaultAsync(p => p.Precio == 0);
 
                 var fechaInicio = dto.FechaInicio ?? DateTime.UtcNow;
                 var fechaFin = fechaInicio.AddDays(plan.DuracionDias);
