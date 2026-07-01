@@ -11,4 +11,6 @@ export const categoriaOrden: Categorias[] = [
   "Kids",
   "Bebidas",
   "Postres",
+  "Sushi",
+  "Comida Japonesa"
 ];
