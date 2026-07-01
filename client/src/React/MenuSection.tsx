@@ -1,5 +1,5 @@
 import { useState, type JSX } from "react";
-import type { Menu, Categorias, ComboResponse } from "@/Types/Restaurante.ts";
+import type { Menu, Categorias, ComboResponse, TipoEntregaResponse, MetodoPagoResponse } from "@/Types/Restaurante.ts";
 
 import { usePedido } from "@/React/hooks/usePedido.ts";
 import ModalProducto from "@/React/Modales/ModalProducto.tsx";
@@ -31,7 +31,8 @@ interface Props {
   titulo: string;
   menu: Menu[];
   combos?: ComboResponse[];
-  tomaPedido?: boolean;
+  tiposEntrega?: TipoEntregaResponse[];
+  metodosPago?: MetodoPagoResponse[];
   mesa?: string | null;
 }
 
@@ -53,7 +54,9 @@ const categoriaIcons: Record<Categorias, JSX.Element> = {
   Pastas: <PastasIcon className="w-6 h-6" />,
 };
 
-export default function MenuSection({ restaurantId, menu, combos, titulo, tomaPedido, mesa }: Props) {
+const staggerClass = (i: number) => `stagger-${Math.min(i + 1, 8)}`;
+
+export default function MenuSection({ restaurantId, menu, combos, titulo, tiposEntrega, metodosPago, mesa }: Props) {
 
   const {
     pedido,
@@ -67,7 +70,26 @@ export default function MenuSection({ restaurantId, menu, combos, titulo, tomaPe
     setModalPedidoAbierto,
     setPedido,
   } = usePedido();
-  const [tipoEntrega, setTipoEntrega] = useState<"domicilio" | "recoger">("domicilio");
+  const tiposActivos = tiposEntrega?.filter((t) => t.activo) ?? [];
+  const [tipoEntregaId, setTipoEntregaId] = useState<string | null>(
+    tiposActivos.length > 0 ? tiposActivos[0].id : null
+  );
+  const tipoEntregaSel = tiposActivos.find((t) => t.id === tipoEntregaId);
+  const metodosActivos = metodosPago?.filter((m) => m.activo) ?? [];
+  const [metodoPagoId, setMetodoPagoId] = useState<string | null>(
+    metodosActivos.length > 0 ? metodosActivos[0].id : null
+  );
+  const metodoPagoSel = metodosActivos.find((m) => m.id === metodoPagoId);
+
+  const calcularCostoEnvio = (): number => {
+    if (!tipoEntregaSel) return 0;
+    if (tipoEntregaSel.costoFijo != null) return tipoEntregaSel.costoFijo;
+    if (tipoEntregaSel.porcentaje != null) return total * (tipoEntregaSel.porcentaje / 100);
+    return 0;
+  };
+
+  const costoEnvio = calcularCostoEnvio();
+  const totalConEnvio = total + costoEnvio;
   const [selectedCategoria, setSelectedCategoria] = useState<Categorias>("Todas");
   const [imagenSeleccionada, setImagenSeleccionada] = useState<string | null>(null);
   const [modalCombo, setModalCombo] = useState<ComboResponse | null>(null);
@@ -96,8 +118,9 @@ export default function MenuSection({ restaurantId, menu, combos, titulo, tomaPe
       await pedidoService.create({
         clienteNombre: nombre,
         clienteTelefono: telefono,
-        tipoEntrega,
-        direccion: tipoEntrega === "domicilio" ? direccion : undefined,
+        tipoEntrega: tipoEntregaSel?.nombre ?? "recoger",
+        metodoPago: metodoPagoSel?.nombre,
+        direccion: tipoEntregaSel?.nombre === "A domicilio" ? direccion : undefined,
         restauranteId: restaurantId,
         items: pedido.map((i) => ({
           menuId: i.esCombo ? undefined : i.producto?.id,
@@ -136,26 +159,28 @@ export default function MenuSection({ restaurantId, menu, combos, titulo, tomaPe
 
   return (
     <div className="relative">
-      <h2 className="text-xl md:text-4xl font-bold text-orange-600 mb-6">
+      <h2 className="font-display text-2xl md:text-4xl font-bold text-orange-600 mb-8 text-center">
         {titulo}
       </h2>
 
-      {tomaPedido && combosPredefinidos.length > 0 && (
-        <div className="mb-8">
-          <h3 className="text-lg font-bold text-orange-600 mb-3">Combos</h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      {tiposActivos.length > 0 && combosPredefinidos.length > 0 && (
+        <div className="mb-10">
+          <h3 className="text-lg font-bold text-orange-600 mb-4">Combos</h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {combosPredefinidos.map((combo) => (
-              <div key={combo.id} className="border border-orange-200 rounded-xl p-4 bg-orange-50">
+              <div key={combo.id} className="bg-white border border-orange-100 rounded-2xl p-5 shadow-card hover:shadow-card-hover transition-shadow">
                 <div className="flex justify-between items-start mb-2">
-                  <h4 className="font-bold text-orange-800">{combo.nombre}</h4>
-                  <span className="bg-orange-500 text-white text-xs px-2 py-0.5 rounded-full font-bold">
+                  <div>
+                    <h4 className="font-bold text-orange-800">{combo.nombre}</h4>
+                    {combo.descripcion && (
+                      <p className="text-xs text-warm-400 mt-0.5">{combo.descripcion}</p>
+                    )}
+                  </div>
+                  <span className="bg-orange-500 text-white text-[10px] px-2 py-0.5 rounded-full font-bold uppercase">
                     Combo
                   </span>
                 </div>
-                {combo.descripcion && (
-                  <p className="text-xs text-gray-500 mb-2">{combo.descripcion}</p>
-                )}
-                <div className="text-xs text-gray-600 mb-3">
+                <div className="text-xs text-gray-500 mb-3">
                   {combo.items.map((i) => `${i.cantidad}x ${i.menuNombre}`).join(", ")}
                 </div>
                 <div className="flex justify-between items-center">
@@ -164,7 +189,7 @@ export default function MenuSection({ restaurantId, menu, combos, titulo, tomaPe
                   </span>
                   <button
                     onClick={() => setModalCombo(combo)}
-                    className="bg-orange-500 hover:bg-orange-600 text-white text-sm px-3 py-1.5 rounded-lg font-medium"
+                    className="bg-orange-500 hover:bg-orange-600 text-white text-sm px-4 py-1.5 rounded-xl font-medium transition-colors"
                   >
                     Personalizar
                   </button>
@@ -176,7 +201,7 @@ export default function MenuSection({ restaurantId, menu, combos, titulo, tomaPe
       )}
 
       {/* Botones de Categoría */}
-      <div className="flex flex-wrap justify-center gap-4 mb-6">
+      <div className="flex overflow-x-auto gap-3 pb-2 mb-8 scrollbar-none justify-start md:justify-center">
         {categoriasDisponibles.map((categoria) => (
           <CategoriaButton
             key={categoria}
@@ -189,81 +214,83 @@ export default function MenuSection({ restaurantId, menu, combos, titulo, tomaPe
       </div>
 
       {/* Take out o delivery */}
-      {tomaPedido && (
+      {tiposActivos.length > 0 && (
         <TipoEntregaSelector
-          tipoEntrega={tipoEntrega}
-          setTipoEntrega={setTipoEntrega}
+          tipos={tiposEntrega ?? []}
+          selectedId={tipoEntregaId}
+          onChange={setTipoEntregaId}
+          subtotal={total}
         />
       )}
 
       {/* Contenido del Menú */}
-      <div className="mb-10 transition-all duration-1000 ease-in-out" key={selectedCategoria}>
+      <div className="mb-10" key={selectedCategoria}>
         {(selectedCategoria === "Todas"
           ? baseCategorias.filter((cat) => groupedMenu[cat as Categorias]?.length)
           : [selectedCategoria]
         ).map((categoria) => (
-          <div key={categoria} className="mb-8 animate-fade-in">
-            <div className="flex items-center justify-between border-b border-orange-200 pb-1 mb-2">
-              <div className="flex items-center gap-2 text-xl font-semibold text-orange-700">
+          <div key={categoria} className="mb-10">
+            <div className="flex items-center gap-3 mb-5">
+              <div className="flex items-center gap-2">
                 {categoriaIcons[categoria as keyof typeof categoriaIcons]}
-                {categoria}
+                <h3 className="font-display text-xl md:text-2xl font-bold text-gray-800">{categoria}</h3>
               </div>
-              <div className="text-sm font-semibold text-orange-600">Precios</div>
+              <div className="flex-1 h-px bg-gradient-to-r from-orange-200 to-transparent" />
             </div>
 
-            <table className="w-full text-sm text-left">
-              <tbody>
-                {(groupedMenu[categoria as Categorias] ?? [])
-                  .sort((a, b) => a.nombre.localeCompare(b.nombre))
-                  .map((item) => (
-                    <tr
-                      key={item.id}
-                      className="border-b last:border-b-0 hover:bg-orange-50 transition-colors"
-                    >
-                      <td className="w-1/6">
-                        <img
-                            src={ item.imagen || "/mva-logo-rb.png"}
-                            alt={item.nombre}
-                            className="w-16 h-16 object-cover rounded cursor-pointer hover:opacity-90 transition"
-                            onClick={() =>
-                              setImagenSeleccionada(
-                                item.imagen
-                                  ? item.imagen
-                                  : "/mva-logo-rb.png"
-                              )
-                            }
-                          />
-                      </td>
-                      <td className="py-3 px-0 w-4/6">
-                        <div className="text-base font-semibold text-orange-900 capitalize">
-                          {item.nombre}
-                        </div>
-                        <div className="text-sm text-orange-600 capitalize">{item.ingredientes}</div>
-                      </td>
-                      <td className="py-3 px-2 w-1/6 text-right font-semibold text-orange-800 whitespace-nowrap">
-                        <div>${item.precio.toLocaleString("es-MX")}</div>
-                        {(tomaPedido || mesa) && (
-                          <button
-                            className="bg-orange-500 hover:bg-orange-600 text-white p-1 rounded-full mt-1"
-                            onClick={() => setModalProducto(item)}
-                          >
-                            <AddIcon className="w-4 h-4" />
-                          </button>
-                        )}
-                      </td>
-                    </tr>
-                  ))}
-              </tbody>
-            </table>
+            <div className="space-y-3">
+              {(groupedMenu[categoria as Categorias] ?? [])
+                .sort((a, b) => a.nombre.localeCompare(b.nombre))
+                .map((item, idx) => (
+                  <div
+                    key={item.id}
+                    className={`flex items-center gap-4 bg-white rounded-2xl p-3 shadow-card hover:shadow-card-hover transition-all duration-200 animate-slide-up ${staggerClass(idx)}`}
+                  >
+                    <div className="flex-shrink-0">
+                      <img
+                        src={item.imagen || "/mva-logo-rb.png"}
+                        alt={item.nombre}
+                        className="w-20 h-20 md:w-24 md:h-24 rounded-xl object-cover cursor-pointer hover:opacity-90 transition"
+                        onClick={() =>
+                          setImagenSeleccionada(
+                            item.imagen ? item.imagen : "/mva-logo-rb.png"
+                          )
+                        }
+                      />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="text-base md:text-lg font-semibold text-gray-800 capitalize leading-tight">
+                        {item.nombre}
+                      </div>
+                      <div className="text-sm text-warm-400 capitalize mt-0.5 line-clamp-2">
+                        {item.ingredientes}
+                      </div>
+                    </div>
+                    <div className="flex flex-col items-end gap-2 flex-shrink-0">
+                      <span className="font-bold text-orange-600 text-base md:text-lg whitespace-nowrap">
+                        ${item.precio.toLocaleString("es-MX")}
+                      </span>
+                      {(tiposActivos.length > 0 || mesa) && (
+                        <button
+                          className="bg-orange-500 hover:bg-orange-600 text-white p-2 rounded-xl transition-colors shadow-sm"
+                          onClick={() => setModalProducto(item)}
+                        >
+                          <AddIcon className="w-4 h-4" />
+                        </button>
+                      )}
+                    </div>
+                  </div>
+              ))}
+            </div>
           </div>
         ))}
 
         {/* Modal de imagen */}
         {imagenSeleccionada && (
-          <div className="fixed inset-0 z-50 bg-black bg-opacity-80 flex items-center justify-center p-4">
+          <div className="fixed inset-0 z-50 bg-black bg-opacity-80 flex items-center justify-center p-4 animate-fade-in">
             <div className="relative flex items-center justify-center">
               <button
-                className="absolute top-2 right-2 text-white bg-orange-500 hover:bg-orange-600 p-2 rounded-full"
+                className="absolute top-2 right-2 text-white bg-orange-500 hover:bg-orange-600 p-2 rounded-full transition-colors"
                 onClick={() => setImagenSeleccionada(null)}
               >
                 <CrossIcon className="w-5 h-5" />
@@ -275,7 +302,6 @@ export default function MenuSection({ restaurantId, menu, combos, titulo, tomaPe
               />
             </div>
           </div>
-
         )}
 
         {/* Modal de combo */}
@@ -304,9 +330,12 @@ export default function MenuSection({ restaurantId, menu, combos, titulo, tomaPe
           <ModalPedido
             mesa={mesa}
             pedido={pedido}
-            total={tipoEntrega === "domicilio" && total < 200 ? total + 20 : total}
-            envioGratis={tipoEntrega === "domicilio"}
-            tipoEntrega={tipoEntrega}
+            total={totalConEnvio}
+            costoEnvio={costoEnvio}
+            tipoEntrega={tipoEntregaSel?.nombre}
+            metodosPago={metodosPago}
+            metodoPagoId={metodoPagoId}
+            onMetodoPagoChange={setMetodoPagoId}
             onClose={() => setModalPedidoAbierto(false)}
             onCantidadChange={handleCantidadChange}
             onSubmit={handleSubmitPedido}
@@ -325,4 +354,3 @@ export default function MenuSection({ restaurantId, menu, combos, titulo, tomaPe
     </div>
   );
 }
-

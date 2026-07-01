@@ -1,0 +1,12 @@
+---
+import LayoutAdmin from "@/layouts/LayoutAdmin.astro";
+import TipoEntregaManager from "@/React/Admin/TipoEntregaManager.tsx";
+import TipoDeEntregaSetion from "@/React/Auth/TipoDeEntregaSetion";
+---
+
+<LayoutAdmin title="Configuración - Tipos de entrega">
+  <div class="p-6">
+    <TipoDeEntregaSetion client:load/>
+   
+  </div>
+</LayoutAdmin>

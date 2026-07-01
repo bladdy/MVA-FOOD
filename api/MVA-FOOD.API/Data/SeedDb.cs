@@ -50,6 +50,17 @@ public class SeedDb
                     new AmenidadRestaurantes { Amenidad = _context.Amenidades.FirstOrDefault(a => a.Nombre == "WiFi")! },
                     new AmenidadRestaurantes { Amenidad = _context.Amenidades.FirstOrDefault(a => a.Nombre == "Estacionamiento")! }
                 },
+                TiposEntrega = new List<TipoEntregaRestaurante>
+                {
+                    new TipoEntregaRestaurante { Nombre = "A domicilio", TiempoMinutos = 30, CostoFijo = 20, Porcentaje = null, Activo = true },
+                    new TipoEntregaRestaurante { Nombre = "Para recoger", TiempoMinutos = 10, CostoFijo = null, Porcentaje = null, Activo = true }
+                },
+                MetodosPago = new List<MetodoPagoRestaurante>
+                {
+                    new MetodoPagoRestaurante { Nombre = "Efectivo", Activo = true },
+                    new MetodoPagoRestaurante { Nombre = "Tarjeta de crédito/débito", Activo = true },
+                    new MetodoPagoRestaurante { Nombre = "Transferencia", Activo = true }
+                },
                 Usuarios = 
                 {
                     new Usuario

@@ -3,6 +3,7 @@ using System;
 using MVA_FOOD.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MVA_FOOD.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260630180710_AddTipoEntregaRestaurante")]
+    partial class AddTipoEntregaRestaurante
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.28");
@@ -292,31 +295,6 @@ namespace MVA_FOOD.Infrastructure.Migrations
                     b.ToTable("Mesas");
                 });
 
-            modelBuilder.Entity("MVA_FOOD.Core.Entities.MetodoPagoRestaurante", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
-
-                    b.Property<bool>("Activo")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Icono")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Nombre")
-                        .HasColumnType("TEXT");
-
-                    b.Property<Guid>("RestauranteId")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("RestauranteId");
-
-                    b.ToTable("MetodosPagoRestaurante");
-                });
-
             modelBuilder.Entity("MVA_FOOD.Core.Entities.Pedido", b =>
                 {
                     b.Property<Guid>("Id")
@@ -336,9 +314,6 @@ namespace MVA_FOOD.Infrastructure.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("Fecha")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("MetodoPago")
                         .HasColumnType("TEXT");
 
                     b.Property<Guid>("RestauranteId")
@@ -762,17 +737,6 @@ namespace MVA_FOOD.Infrastructure.Migrations
                     b.Navigation("Restaurante");
                 });
 
-            modelBuilder.Entity("MVA_FOOD.Core.Entities.MetodoPagoRestaurante", b =>
-                {
-                    b.HasOne("MVA_FOOD.Core.Entities.Restaurante", "Restaurante")
-                        .WithMany("MetodosPago")
-                        .HasForeignKey("RestauranteId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Restaurante");
-                });
-
             modelBuilder.Entity("MVA_FOOD.Core.Entities.Pedido", b =>
                 {
                     b.HasOne("MVA_FOOD.Core.Entities.Restaurante", "Restaurante")
@@ -934,8 +898,6 @@ namespace MVA_FOOD.Infrastructure.Migrations
                     b.Navigation("Horario");
 
                     b.Navigation("Menu");
-
-                    b.Navigation("MetodosPago");
 
                     b.Navigation("PlanRestaurante");
 

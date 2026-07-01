@@ -11,7 +11,6 @@ export async function getRestaurante(id: string) {
   return await res.json();
 }
 export async function getRestauranteBySlug(slug: string) {
-  console.log("API_URL:", API_URL);
   const res = await fetch(`${API_URL}/restaurantes/${slug}/slug`);
   if (!res.ok) throw new Error("Error al obtener restaurante");
   return await res.json();

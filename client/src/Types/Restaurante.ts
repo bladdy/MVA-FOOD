@@ -93,6 +93,8 @@ export interface RestauranteDTO {
   horario?: string;
   menus?: any[];
   combos?: ComboResponse[];
+  tiposEntrega?: TipoEntregaResponse[];
+  metodosPago?: MetodoPagoResponse[];
 }
 export interface Restaurante {
 
@@ -113,6 +115,8 @@ export interface Restaurante {
   horario?: string;
   menus?: any[];
   combos?: ComboResponse[];
+  tiposEntrega?: TipoEntregaResponse[];
+  metodosPago?: MetodoPagoResponse[];
 }
 
 
@@ -188,6 +192,7 @@ export interface CreatePedidoDto {
   clienteNombre: string;
   clienteTelefono: string;
   tipoEntrega: string;
+  metodoPago?: string;
   direccion?: string;
   restauranteId: string;
   items: {
@@ -228,6 +233,38 @@ export interface ComboSugerenciaResponse {
   menuId: string;
   menuNombre: string;
   precioAdicional: number;
+}
+
+export interface TipoEntregaResponse {
+  id: string;
+  restauranteId: string;
+  nombre: string;
+  tiempoMinutos?: number;
+  costoFijo?: number;
+  porcentaje?: number;
+  activo: boolean;
+}
+
+export interface TipoEntregaCreate {
+  nombre: string;
+  tiempoMinutos?: number;
+  costoFijo?: number;
+  porcentaje?: number;
+  activo: boolean;
+}
+
+export interface MetodoPagoResponse {
+  id: string;
+  restauranteId: string;
+  nombre: string;
+  icono?: string;
+  activo: boolean;
+}
+
+export interface MetodoPagoCreate {
+  nombre: string;
+  icono?: string;
+  activo: boolean;
 }
 
 export interface ComboCreate {

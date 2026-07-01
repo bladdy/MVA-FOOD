@@ -18,10 +18,10 @@ export default function ShareButton({ title }: { title: string }) {
   return (
     <button
       onClick={handleShare}
-      className="p-2 rounded-full hover:bg-orange-100 transition"
+      className="px-3 py-3 text-xs font-medium bg-white/20 backdrop-blur-sm text-white rounded-full"
       title="Compartir menú"
     >
-      <ShareIcon className="w-6 h-6 text-orange-600" />
+      <ShareIcon className="w-6 h-6 text-white" />
     </button>
   );
 }

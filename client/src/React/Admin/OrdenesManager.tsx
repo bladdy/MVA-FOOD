@@ -205,6 +205,11 @@ function OrdenesManagerInner() {
                           ? "A domicilio"
                           : "Para recoger"}
                       </span>
+                      {pedido.metodoPago && (
+                        <span className="ml-2 text-xs font-medium px-2 py-0.5 rounded-full bg-purple-100 text-purple-700">
+                          {pedido.metodoPago}
+                        </span>
+                      )}
                     </div>
                     <span className="text-xs text-gray-400">
                       {new Date(pedido.fecha).toLocaleTimeString("es-MX", {

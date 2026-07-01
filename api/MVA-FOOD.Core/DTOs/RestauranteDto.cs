@@ -21,5 +21,7 @@ namespace MVA_FOOD.Core.DTOs
         public ICollection<HorarioDto> Horarios { get; set; } = new List<HorarioDto>()!;
         public ICollection<MenuDto> Menu { get; set; } = new List<MenuDto>()!;
         public ICollection<ComboDto> Combos { get; set; } = new List<ComboDto>()!;
+        public ICollection<TipoEntregaDto> TiposEntrega { get; set; } = new List<TipoEntregaDto>()!;
+        public ICollection<MetodoPagoDto> MetodosPago { get; set; } = new List<MetodoPagoDto>()!;
     }
 }

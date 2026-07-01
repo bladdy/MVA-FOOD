@@ -1,17 +1,17 @@
-// src/React/MenuSectionWrapper.jsx
 import { useEffect, useState } from "react";
 import MenuSection from "./MenuSection.tsx";
-import type { Menu, ComboResponse } from "@/Types/Restaurante.ts";
+import type { Menu, ComboResponse, TipoEntregaResponse, MetodoPagoResponse } from "@/Types/Restaurante.ts";
 
 interface MenuSectionWrapperProps {
   restaurantId: string,
   menu: Menu[];
   combos?: ComboResponse[];
   titulo: string;
-  tomaPedido: boolean;
+  tiposEntrega?: TipoEntregaResponse[];
+  metodosPago?: MetodoPagoResponse[];
 }
 
-const MenuSectionWrapper = ({ restaurantId, menu, combos, titulo, tomaPedido }: MenuSectionWrapperProps) => {
+const MenuSectionWrapper = ({ restaurantId, menu, combos, titulo, tiposEntrega, metodosPago }: MenuSectionWrapperProps) => {
   const [loading, setLoading] = useState(true);
   const [mesa, setMesa] = useState<string | null>(null);
   useEffect(() => {
@@ -41,7 +41,8 @@ const MenuSectionWrapper = ({ restaurantId, menu, combos, titulo, tomaPedido }: 
         menu={menu}
         combos={combos}
         titulo={titulo}
-        tomaPedido={tomaPedido}
+        tiposEntrega={tiposEntrega}
+        metodosPago={metodosPago}
         mesa={mesa}
       />
     </div>

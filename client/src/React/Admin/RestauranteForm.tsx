@@ -13,7 +13,6 @@ import type {
   Plan,
   Restaurante,
   RestauranteDTO,
-  RestauranteUpdateDto,
 } from "@/Types/Restaurante.ts";
 import { menuService } from "@/Services/menuService.ts";
 //19d76c9b-115d-4470-8c3f-079c7b40f2f4 2e742b46-3756-41c6-87a7-e32df07ff19d
@@ -287,10 +286,10 @@ export default function RestauranteForm({ onSaved }: { onSaved?: () => void }) {
           ) : null}
         </div>
 
-        {/* Imagen Principal */}
+        {/* Imagen Portada */}
         <div>
           <label className="block text-sm font-medium text-gray-700">
-            Imagen Principal
+            Imagen Portada
           </label>
           <input
             name="image"
@@ -306,7 +305,7 @@ export default function RestauranteForm({ onSaved }: { onSaved?: () => void }) {
             />
           ) : originalImage ? (
             <img
-              src={`${restaurante.perfilImage}`}
+              src={`${restaurante.image}`}
               alt="preview"
               className="mt-2 h-16 w-16 object-cover rounded-md"
             />

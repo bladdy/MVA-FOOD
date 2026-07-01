@@ -13,26 +13,29 @@ const CategoriaButton = ({ label, icon, active, onClick }: Props) => {
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setIsClicked(true);
     onClick();
-    setTimeout(() => setIsClicked(false), 200); // duración de la animación
+    setTimeout(() => setIsClicked(false), 200);
   };
   return (
     <button
       onClick={handleClick}
       className={clsx(
-        "flex flex-col items-center justify-center px-2 py-2 rounded-full border transition-colors text-center shadow-sm",
-        "w-20 h-20 ", //sm:w-14 sm:h-16 md:w-20 md:h-20 Tamaños responsivos
+        "flex flex-col items-center justify-center px-3 py-3 rounded-2xl border-2 transition-all text-center flex-shrink-0",
+        "w-24 h-24 md:w-28 md:h-28",
         active
-          ? "border-orange-500 text-orange-700 bg-orange-50"
-          : "border-gray-300 text-gray-600 hover:border-orange-300",
+          ? "border-orange-500 bg-orange-50 text-orange-700 shadow-md"
+          : "border-gray-200 bg-white text-gray-600 hover:border-orange-300 hover:shadow-sm",
         isClicked ? "animate-pop" : ""
       )}
     >
-      <div className="w-4 h-4 sm:w-7 sm:h-7 md:w-8 md:h-8 mb-2 flex items-center justify-center">
+      <div className="w-6 h-6 md:w-7 md:h-7 mb-2 flex items-center justify-center">
         {icon}
       </div>
-      <span className="text-[10px] sm:text-[10px] md:text-[10px] font-semibold break-words leading-tight">
+      <span className="text-[11px] md:text-xs font-semibold break-words leading-tight">
         {label.toUpperCase()}
       </span>
+      {active && (
+        <span className="mt-1 block w-6 h-0.5 bg-orange-500 rounded-full transition-all duration-300" />
+      )}
     </button>
   );
 };

@@ -147,6 +147,8 @@ builder.Services.AddScoped<IPlanService, PlanService>();
 builder.Services.AddScoped<IVarianteService, VarianteService>();
 builder.Services.AddScoped<IComboService, ComboService>();
 builder.Services.AddScoped<IPedidoService, PedidoService>();
+builder.Services.AddScoped<ITipoEntregaService, TipoEntregaService>();
+builder.Services.AddScoped<IMetodoPagoService, MetodoPagoService>();
 builder.Services.AddScoped<IUsuarioService, UsuarioService>();
 builder.Services.AddScoped<TokenService>();
 

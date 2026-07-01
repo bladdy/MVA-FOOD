@@ -122,6 +122,7 @@ namespace MVA_FOOD.Infrastructure.Services
                 ClienteTelefono = dto.ClienteTelefono,
                 TipoEntrega = dto.TipoEntrega,
                 Direccion = dto.Direccion,
+                MetodoPago = dto.MetodoPago,
                 RestauranteId = dto.RestauranteId,
                 Items = items
             };

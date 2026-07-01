@@ -208,6 +208,8 @@ namespace MVA_FOOD.Infrastructure.Services
                         .ThenInclude(ci => ci.Menu)
                 .Include(r => r.Combos)
                     .ThenInclude(c => c.Sugerencias)
+                .Include(r => r.TiposEntrega)
+                .Include(r => r.MetodosPago)
                 .Where(r => r.Slug == slug)
                 .Select(r => new RestauranteDto
                 {
@@ -326,6 +328,28 @@ namespace MVA_FOOD.Infrastructure.Services
                                     MenuNombre = s.Menu.Nombre,
                                     PrecioAdicional = s.PrecioAdicional
                                 }).ToList()
+                        }).ToList(),
+
+                    TiposEntrega = r.TiposEntrega
+                        .Select(t => new TipoEntregaDto
+                        {
+                            Id = t.Id,
+                            RestauranteId = t.RestauranteId,
+                            Nombre = t.Nombre,
+                            TiempoMinutos = t.TiempoMinutos,
+                            CostoFijo = t.CostoFijo,
+                            Porcentaje = t.Porcentaje,
+                            Activo = t.Activo
+                        }).ToList(),
+
+                    MetodosPago = r.MetodosPago
+                        .Select(m => new MetodoPagoDto
+                        {
+                            Id = m.Id,
+                            RestauranteId = m.RestauranteId,
+                            Nombre = m.Nombre,
+                            Icono = m.Icono,
+                            Activo = m.Activo
                         }).ToList()
                 })
                 .FirstOrDefaultAsync();
@@ -347,6 +371,8 @@ namespace MVA_FOOD.Infrastructure.Services
                         .ThenInclude(ci => ci.Menu)
                 .Include(r => r.Combos)
                     .ThenInclude(c => c.Sugerencias)
+                .Include(r => r.TiposEntrega)
+                .Include(r => r.MetodosPago)
                 .Where(r => r.Id == id)
                 .Select(r => new RestauranteDto
                 {
@@ -449,6 +475,28 @@ namespace MVA_FOOD.Infrastructure.Services
                                     MenuNombre = s.Menu.Nombre,
                                     PrecioAdicional = s.PrecioAdicional
                                 }).ToList()
+                        }).ToList(),
+
+                    TiposEntrega = r.TiposEntrega
+                        .Select(t => new TipoEntregaDto
+                        {
+                            Id = t.Id,
+                            RestauranteId = t.RestauranteId,
+                            Nombre = t.Nombre,
+                            TiempoMinutos = t.TiempoMinutos,
+                            CostoFijo = t.CostoFijo,
+                            Porcentaje = t.Porcentaje,
+                            Activo = t.Activo
+                        }).ToList(),
+
+                    MetodosPago = r.MetodosPago
+                        .Select(m => new MetodoPagoDto
+                        {
+                            Id = m.Id,
+                            RestauranteId = m.RestauranteId,
+                            Nombre = m.Nombre,
+                            Icono = m.Icono,
+                            Activo = m.Activo
                         }).ToList()
                 })
                 .FirstOrDefaultAsync();

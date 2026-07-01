@@ -6,6 +6,7 @@ export interface PedidoResponse {
   clienteNombre: string;
   clienteTelefono: string;
   tipoEntrega: string;
+  metodoPago?: string;
   direccion?: string;
   fecha: string;
   estado: number;

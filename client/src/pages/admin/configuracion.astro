@@ -1,8 +1,10 @@
 ---
 import LayoutAdmin from "@/layouts/LayoutAdmin.astro";
-import ConfiguracionSetion from "@/React/Auth/ConfiguracionSetion";
 ---
 
 <LayoutAdmin title="Configuración">
-  <ConfiguracionSetion client:load/>
+  <meta http-equiv="refresh" content="0;url=/admin/configuracion/perfil" />
+  <div class="p-6 text-center text-gray-500">
+    Redirigiendo a Perfil...
+  </div>
 </LayoutAdmin>

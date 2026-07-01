@@ -8,6 +8,7 @@ namespace MVA_FOOD.Core.Entities
         public string ClienteTelefono { get; set; } = null!;
         public string TipoEntrega { get; set; } = "recoger";
         public string? Direccion { get; set; }
+        public string? MetodoPago { get; set; }
         public DateTime Fecha { get; set; } = DateTime.UtcNow;
         public Estado Estado { get; set; } = Estado.Pendiente;
         public decimal Total { get; set; }
