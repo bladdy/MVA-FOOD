@@ -20,6 +20,7 @@ export default function RestauranteForm({ onSaved }: { onSaved?: () => void }) {
   const [restaurante, setRestaurante] = useState<Restaurante>({
     id: "",
     name: "",
+    slogan: "",
     direccion: "",
     phone: "",
     slug:"",
@@ -95,6 +96,7 @@ export default function RestauranteForm({ onSaved }: { onSaved?: () => void }) {
           ...prev,
           id: data.id,
           name: data.name,
+          slogan: data.slogan,
           slug: data.slug,
           direccion: data.direccion,
           phone: data.phone,
@@ -215,7 +217,7 @@ export default function RestauranteForm({ onSaved }: { onSaved?: () => void }) {
   };
 
   return (<>
-  <QRCodeGenerator url={`https://mr-menus.com/menus/${restaurante.slug}` } logo={restaurante.image ?? ""} />
+  <QRCodeGenerator url={`https://mr-menus.com/menus/d/${restaurante.slug}` } logo={restaurante.image ?? ""} />
       <form
         onSubmit={handleSubmit}
         className="space-y-8 p-6 bg-white rounded-lg shadow-md"
@@ -245,6 +247,18 @@ export default function RestauranteForm({ onSaved }: { onSaved?: () => void }) {
             value={restaurante.phone}
             onChange={handleChange}
             className="w-full mt-1 rounded-md border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-orange-300 focus:border-orange-400 outline-none transition-colors"
+          />
+        </div>
+
+        <div className="sm:col-span-2">
+          <label className="block text-sm font-medium text-gray-700">Slogan</label>
+          <input
+            type="text"
+            name="slogan"
+            value={restaurante.slogan}
+            onChange={handleChange}
+            className="w-full mt-1 rounded-md border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-orange-300 focus:border-orange-400 outline-none transition-colors"
+            placeholder="Ej: La mejor comida de la ciudad"
           />
         </div>
 

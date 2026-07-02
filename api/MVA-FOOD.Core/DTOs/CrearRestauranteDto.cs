@@ -8,6 +8,7 @@ public class CrearRestauranteDto
     public string Nombre { get; set; } = null!;
     public string Direccion { get; set; } = null!;
     public string Telefono { get; set; } = null!;
+    public string Slogan { get; set; } = null!;
     public IFormFile Image { get; set; } = null!;
     public IFormFile PerfilImage { get; set; } = null!;
 

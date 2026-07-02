@@ -303,6 +303,16 @@ function OrdenesManagerInner() {
                         Aceptar
                       </button>
                     )}
+                    {col.estado === 0 && pedido.clienteTelefono && (
+                      <a
+                        href={`https://wa.me/${pedido.clienteTelefono.replace(/\D/g, "")}?text=${encodeURIComponent(`Hola ${pedido.clienteNombre}, hemos recibido su pedido. Pronto lo estaremos preparando.`)}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex-1 bg-green-600 hover:bg-green-700 text-white text-sm py-1.5 rounded-lg font-medium text-center"
+                      >
+                        WhatsApp
+                      </a>
+                    )}
                     {col.estado === 1 && (
                       <button
                         onClick={() => handleCompletar(pedido.id)}
@@ -310,6 +320,16 @@ function OrdenesManagerInner() {
                       >
                         Completar
                       </button>
+                    )}
+                    {col.estado === 1 && pedido.clienteTelefono && (
+                      <a
+                        href={`https://wa.me/${pedido.clienteTelefono.replace(/\D/g, "")}?text=${encodeURIComponent(`Hola ${pedido.clienteNombre}, su pedido ya está en proceso.`)}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex-1 bg-green-600 hover:bg-green-700 text-white text-sm py-1.5 rounded-lg font-medium text-center"
+                      >
+                        WhatsApp
+                      </a>
                     )}
                     {col.estado === 2 && pedido.clienteTelefono && (
                       <a

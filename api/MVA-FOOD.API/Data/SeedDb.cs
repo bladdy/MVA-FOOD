@@ -30,6 +30,7 @@ public class SeedDb
                 Slug = GenerateSlug("Restaurante Demo"),
                 Direccion = "Un restaurante de ejemplo para pruebas.",                
                 Phone = "555-1234",
+                Slogan = "Tu restaurante de confianza",
                 Image = "restaurante-demo.jpg",
                 PerfilImage = "restaurante-demo-perfil.jpg",
                 PlanRestaurante = new PlanRestaurante

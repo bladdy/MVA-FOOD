@@ -63,6 +63,7 @@ export interface Categoria {
 export interface RestauranteUpdateDto {
   id?: string
   name: string
+  slogan: string
   direccion: string
   phone: string
   perfilImage: string | File | null
@@ -78,6 +79,7 @@ export interface RestauranteUpdateDto {
 export interface RestauranteDTO {
   id?: string;
   name: string;
+  slogan: string;
   slug: string;
   direccion: string;
   phone: string;
@@ -100,6 +102,7 @@ export interface Restaurante {
 
   id?: string;
   name: string;
+  slogan: string;
   direccion: string;
   slug: string;
   phone: string;

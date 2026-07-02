@@ -1,0 +1,748 @@
+---
+import { getRestauranteBySlug } from '@/Services/restauranteService.ts';
+import LayoutMenu from "@/layouts/LayoutMenu.astro";
+import MenuSectionWrapper from "@/React/MenuSectionWrapper.jsx";
+
+let restaurant: any;
+try {
+  restaurant = await getRestauranteBySlug('sasushi');
+} catch {
+  restaurant = null;
+}
+
+const menuPorCategoria: Record<string, any[]> = {};
+if (restaurant?.menu) {
+  for (const item of restaurant.menu) {
+    const cat = item.categoria?.nombre ?? "General";
+    if (!menuPorCategoria[cat]) menuPorCategoria[cat] = [];
+    menuPorCategoria[cat].push(item);
+  }
+}
+
+function comboSlug(nombre: string): string {
+  const normalized = nombre.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  return "combo-" + normalized.replace(/[^a-z0-9]+/g, "-").replace(/-+/g, "-").replace(/^-|-$/g, "");
+}
+---
+{
+  !restaurant ? (
+    <LayoutMenu title="Mr. Menús - Sasushi" description="Sasushi">
+      <main class="not-found">
+        <div class="not-found-content">
+          <h1>Restaurante no encontrado</h1>
+          <p>El restaurante que buscas no está disponible en este momento.</p>
+        </div>
+      </main>
+      <style>
+        .not-found {
+          min-height: 100vh;
+          background: #050505;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          text-align: center;
+          padding: 2rem;
+        }
+        .not-found-content h1 {
+          color: #8baa2a;
+          font-size: 2.5rem;
+          font-weight: 900;
+          text-transform: uppercase;
+          margin-bottom: 1rem;
+        }
+        .not-found-content p {
+          color: #ccc;
+          font-size: 1.1rem;
+        }
+      </style>
+    </LayoutMenu>
+  ) : (
+    <LayoutMenu
+      title={"Mr. Menús - " + restaurant.name}
+      description={restaurant.name + " - Sasushi"}
+      image={restaurant.image}
+    >
+      <!-- LOADING SCREEN -->
+      <div
+        id="loading-screen"
+        class="fixed inset-0 z-50 flex flex-col items-center justify-center transition-opacity duration-700"
+        style="background: #050505;"
+      >
+        <div class="w-32 h-32 rounded-full bg-gray-800 animate-shimmer mb-6" />
+        <div class="w-48 h-6 rounded bg-gray-800 animate-shimmer mb-2" />
+        <div class="w-32 h-4 rounded bg-gray-800 animate-shimmer" />
+      </div>
+
+      <!-- CONTENIDO -->
+      <div id="main-content" class="opacity-0 transition-opacity duration-700">
+        <main class="menu-page">
+          <section class="hero">
+            <img src={restaurant.perfilImage} alt={restaurant.name} />
+            <h1>{restaurant.name}</h1>
+            {restaurant.slogan && (
+              <p class="hero-slogan">{restaurant.slogan}</p>
+            )}
+          </section>
+
+          {
+            Object.entries(menuPorCategoria).map(([catName, items]) => (
+              <section class="category">
+                <h2>{catName}</h2>
+                <div class="products">
+                  {items.map((item) => (
+                    <article class="product-card">
+                      <div class="product-image">
+                        <img
+                          src={item.imageFullPath}
+                          alt={item.nombre}
+                          loading="lazy"
+                        />
+                      </div>
+                      <div class="product-info">
+                        <h3>{item.nombre}</h3>
+                        <p>{item.ingredientes}</p>
+                        <div class="product-price">
+                          <small>RD\$</small>
+                          <strong>{item.precio.toLocaleString?.() ?? item.precio}</strong>
+                        </div>
+                      </div>
+                    </article>
+                  ))}
+                </div>
+              </section>
+            ))
+          }
+
+          {
+            restaurant.combos && restaurant.combos.length > 0 && (
+              <section class="combos">
+                <h2>Combos Sasushi</h2>
+                <div class="combos-grid">
+                  {restaurant.combos.map((combo) => {
+                    const slug = comboSlug(combo.nombre);
+                    return (
+                      <article class={"combo-card " + slug}>
+                        <div class="combo-header">
+                          {slug.includes("intermedio") && (
+                            <div class="combo-top-badge">⭐ MÁS VENDIDO</div>
+                          )}
+                          {slug.includes("premium") && (
+                            <div class="combo-premium-badge">⭐ PREMIUM</div>
+                          )}
+                          <div class="combo-title">
+                            <h3>{combo.nombre}</h3>
+                          </div>
+                        </div>
+
+                        <div class="combo-image">
+                          <img
+                            src={combo.imagen || combo.imageFullPath}
+                            alt={combo.nombre}
+                            loading="lazy"
+                          />
+                        </div>
+
+                        <ul class="combo-items">
+                          {combo.items && combo.items.map((ci) => (
+                            <li>
+                              {(ci.cantidad > 1 ? ci.cantidad + "x " : "") + ci.menuNombre}
+                            </li>
+                          ))}
+                        </ul>
+
+                        <div class="combo-price">
+                          {combo.precio != null && (
+                            <>
+                              <small>RD\$</small>
+                              <strong>{combo.precio.toLocaleString?.() ?? combo.precio}</strong>
+                            </>
+                          )}
+                        </div>
+
+                        <div class="combo-footer">Incluye salsa especial y palitos</div>
+                      </article>
+                    );
+                  })}
+                </div>
+              </section>
+            )
+          }
+
+          <!-- SECCIÓN INTERACTIVA - PEDIDO EN LÍNEA -->
+          <section class="online-order">
+            <MenuSectionWrapper
+              restaurantId={restaurant.id}
+              tiposEntrega={restaurant.tiposEntrega ?? []}
+              metodosPago={restaurant.metodosPago ?? []}
+              menu={restaurant.menu ?? []}
+              combos={restaurant.combos ?? []}
+              titulo="Pedir en línea"
+              client:load
+            />
+          </section>
+
+          <footer class="menu-footer">
+            <div class="footer-row">
+              <div class="footer-item">
+                <div class="footer-icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-bowl-chopsticks"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M4 11h16a1 1 0 0 1 1 1v.5c0 1.5 -2.517 5.573 -4 6.5v1a1 1 0 0 1 -1 1h-8a1 1 0 0 1 -1 -1v-1c-1.687 -1.054 -4 -5 -4 -6.5v-.5a1 1 0 0 1 1 -1"></path><path d="M19 7l-14 1"></path><path d="M19 2l-14 3"></path></svg>
+                </div>
+                <div>
+                  <small>TODOS LOS ROLLS</small>
+                  <strong>INCLUYEN:</strong>
+                </div>
+              </div>
+              <div class="footer-item">
+                <div>
+                  <small>1 SALSA</small>
+                  <span>Elige tu favorita:</span>
+                  <div class="sauces">
+                    <span>TERIYAKI</span>
+                    <span>SOYA</span>
+                  </div>
+                </div>
+              </div>
+              <div class="footer-item">
+                <div class="footer-icon">🥢</div>
+                <div>
+                  <small>PALILLOS</small>
+                  <strong>CHINOS</strong>
+                </div>
+              </div>
+            </div>
+
+            <div class="footer-row">
+              <div class="footer-item">
+                <div class="footer-icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-truck-delivery"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M5 17a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"></path><path d="M15 17a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"></path><path d="M5 17h-2v-4m-1 -8h11v12m-4 0h6m4 0h2v-6h-8m0 -5h5l3 5"></path><path d="M3 9l4 0"></path></svg>
+                </div>
+                <div>
+                  <small>PEDIDOS</small>
+                  <strong>POR ENCARGO</strong>
+                </div>
+              </div>
+              <div class="footer-item">
+                <div class="footer-icon whatsapp">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-brand-whatsapp"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M3 21l1.65 -3.8a9 9 0 1 1 3.4 2.9l-5.05 .9"></path><path d="M9 10a.5 .5 0 0 0 1 0v-1a.5 .5 0 0 0 -1 0v1a5 5 0 0 0 5 5h1a.5 .5 0 0 0 0 -1h-1a.5 .5 0 0 0 0 1"></path></svg>
+                </div>
+                <a href="https://wa.me/18293042081?text=Hola,%20quiero%20hacer%20un%20pedido" target="_blank" rel="noopener noreferrer" class="whatsapp-link">
+                  <strong>829-304-2081</strong>
+                </a>
+              </div>
+              <div class="footer-item">
+                <div class="footer-icon instagram">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-brand-instagram"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M4 8a4 4 0 0 1 4 -4h8a4 4 0 0 1 4 4v8a4 4 0 0 1 -4 4h-8a4 4 0 0 1 -4 -4l0 -8"></path><path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0"></path><path d="M16.5 7.5v.01"></path></svg>
+                </div>
+                <a href="https://www.instagram.com/sasushi.rd?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" rel="noopener noreferrer" class="whatsapp-link">
+                  <strong>Sasushi.rd</strong>
+                </a>
+              </div>
+            </div>
+          </footer>
+        </main>
+      </div>
+
+      <script>
+        window.addEventListener("load", () => {
+          const loading = document.getElementById("loading-screen");
+          const content = document.getElementById("main-content");
+          setTimeout(() => {
+            loading?.classList.add("opacity-0");
+            setTimeout(() => {
+              loading?.classList.add("hidden");
+              content?.classList.remove("opacity-0");
+            }, 700);
+          }, 1500);
+        });
+      </script>
+    </LayoutMenu>
+  )
+}
+
+<style>
+  .menu-page {
+    min-height: 100vh;
+    background: #050505;
+    color: white;
+    padding: 2rem 1rem 4rem;
+  }
+
+  /* ========== HERO ========== */
+  .hero {
+    text-align: center;
+    padding: 3rem 1rem;
+    position: relative;
+  }
+
+  .hero::after {
+    content: "";
+    display: block;
+    width: 120px;
+    height: 3px;
+    background: linear-gradient(90deg, #8baa2a, transparent);
+    margin: 1rem auto 0;
+    border-radius: 2px;
+  }
+
+  .hero img {
+    width: 140px;
+    max-width: 100%;
+    margin: 0 auto 1.5rem;
+    filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.5));
+  }
+
+  .hero h1 {
+    font-size: 3.5rem;
+    font-weight: 900;
+    letter-spacing: 6px;
+    text-transform: uppercase;
+    margin: 0;
+  }
+
+  .hero-slogan {
+    color: #aaa;
+    font-size: 1.1rem;
+    margin-top: 0.75rem;
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* ========== CATEGORIES ========== */
+  .category {
+    max-width: 1100px;
+    margin: 0 auto 4rem;
+  }
+
+  .category h2,
+  .combos h2 {
+    text-align: center;
+    color: #8baa2a;
+    font-size: 2.8rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    margin-bottom: 2.5rem;
+    position: relative;
+    padding-bottom: 1rem;
+  }
+
+  .category h2::after,
+  .combos h2::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 3px;
+    background: linear-gradient(90deg, #8baa2a, transparent);
+    border-radius: 2px;
+  }
+
+  /* ========== PRODUCTS ========== */
+  .products {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .product-card {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    background: #080808;
+    border: 1px solid #556b1e;
+    border-radius: 18px;
+    overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    will-change: transform;
+  }
+
+  .product-card:hover {
+    transform: scale(1.01);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+  }
+
+  .product-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 12px;
+  }
+
+  .product-info {
+    position: relative;
+    padding: 1.5rem 1rem 4rem;
+    border-left: 4px solid #8baa2a;
+  }
+
+  .product-info h3 {
+    color: white;
+    font-size: 1.7rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    margin: 0;
+  }
+
+  .product-info p {
+    margin-top: 0.75rem;
+    color: #d8d8d8;
+    line-height: 1.5;
+  }
+
+  .product-price {
+    position: absolute;
+    right: 1rem;
+    bottom: 1rem;
+    display: flex;
+    align-items: baseline;
+    gap: 0.25rem;
+    background: rgba(139, 170, 42, 0.15);
+    padding: 0.35rem 0.85rem;
+    border-radius: 8px;
+  }
+
+  .product-price small {
+    color: #8baa2a;
+    font-size: 0.8rem;
+    font-weight: 700;
+  }
+
+  .product-price strong {
+    color: white;
+    font-size: 2rem;
+    font-weight: 900;
+    line-height: 1;
+  }
+
+  /* ========== COMBOS ========== */
+  .combos {
+    max-width: 1100px;
+    margin: 0 auto 4rem;
+  }
+
+  .combos-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+  }
+
+  .combo-card {
+    background: #080808;
+    color: white;
+    padding: 1.5rem;
+    text-align: center;
+    border: 1px solid #556b1e;
+    border-radius: 18px;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    will-change: transform;
+  }
+
+  .combo-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.5);
+  }
+
+  .combo-header {
+    min-height: 80px;
+    margin-bottom: 1rem;
+  }
+
+  .combo-top-badge {
+    display: inline-block;
+    background: #f2b01e;
+    color: #fff;
+    font-size: 0.75rem;
+    font-weight: 800;
+    padding: 0.4rem 1.2rem;
+    border-radius: 999px;
+    margin-bottom: 1rem;
+  }
+
+  .combo-premium-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, #8b5cf6, #f59e0b);
+    color: #fff;
+    font-size: 0.75rem;
+    font-weight: 800;
+    padding: 0.4rem 1.2rem;
+    border-radius: 999px;
+    margin-bottom: 1rem;
+  }
+
+  .combo-title {
+    display: inline-block;
+    background: #8baa2a;
+    padding: 0.5rem 1.5rem;
+    border-radius: 12px;
+  }
+
+  .combo-title h3 {
+    margin: 0;
+    font-size: 2.5rem;
+    line-height: 1;
+    font-weight: 900;
+    text-transform: uppercase;
+    color: #fff;
+  }
+
+  .combo-image {
+    margin: 1rem 0 1.5rem;
+  }
+
+  .combo-image img {
+    width: 100%;
+    display: block;
+    border-radius: 12px;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+  }
+
+  .combo-items {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 1.5rem;
+    text-align: left;
+    flex: 1;
+  }
+
+  .combo-items li {
+    position: relative;
+    padding-left: 1.5rem;
+    margin-bottom: 0.6rem;
+    color: #f3f3f3;
+    font-size: 1.2rem;
+  }
+
+  .combo-items li::before {
+    content: "✓";
+    position: absolute;
+    left: 0;
+    color: #8baa2a;
+    font-weight: bold;
+  }
+
+  .combo-price {
+    display: flex;
+    justify-content: center;
+    align-items: baseline;
+    gap: 0.25rem;
+    margin-bottom: 1rem;
+  }
+
+  .combo-price small {
+    color: #8baa2a;
+    font-size: 1.5rem;
+    line-height: 1;
+    font-weight: 900;
+  }
+
+  .combo-price strong {
+    color: white;
+    font-size: 3.5rem;
+    line-height: 1;
+    font-weight: 900;
+  }
+
+  .combo-footer {
+    padding-top: 1rem;
+    border-top: 1px dashed #8baa2a;
+    color: #cfcfcf;
+    font-size: 0.85rem;
+  }
+
+  /* ========== FOOTER ========== */
+  .menu-footer {
+    max-width: 1100px;
+    margin: 3rem auto 0;
+  }
+
+  .footer-row {
+    display: flex;
+    background: #080808;
+    border: 1px solid #556b1e;
+    border-radius: 14px;
+    overflow: hidden;
+  }
+
+  .footer-row + .footer-row {
+    margin-top: 0.8rem;
+  }
+
+  .footer-item {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.9rem 1.2rem;
+    min-height: 72px;
+  }
+
+  .footer-item:not(:last-child) {
+    border-right: 1px dashed #556b1e;
+  }
+
+  .footer-icon {
+    width: 42px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #556b1e;
+    border-radius: 50%;
+    color: #8baa2a;
+    flex-shrink: 0;
+  }
+
+  .footer-item small {
+    display: block;
+    color: #fff;
+    font-size: 0.75rem;
+    letter-spacing: 1px;
+    line-height: 1.1;
+  }
+
+  .footer-item strong {
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 800;
+    text-transform: uppercase;
+  }
+
+  .footer-item strong:last-child {
+    color: #8baa2a;
+  }
+
+  .sauces {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.4rem;
+  }
+
+  .sauces span {
+    border: 1px solid #556b1e;
+    padding: 0.25rem 0.75rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    color: white;
+  }
+
+  .whatsapp {
+    background: #25d366;
+    color: white;
+    border: none;
+  }
+
+  .instagram {
+    border: none;
+    color: white;
+    background: linear-gradient(45deg, #f58529, #dd2a7b, #8134af, #515bd4);
+  }
+
+  .whatsapp-link {
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .whatsapp-link strong {
+    color: white;
+    transition: color 0.2s ease;
+  }
+
+  .whatsapp-link:hover strong {
+    color: #8baa2a;
+  }
+
+  /* ========== ONLINE ORDER ========== */
+  .online-order {
+    max-width: 1100px;
+    margin: 4rem auto;
+    background: #080808;
+    border: 1px solid #556b1e;
+    border-radius: 18px;
+    padding: 2rem;
+    color: white;
+  }
+
+  .online-order :global(h2) {
+    text-align: center;
+    color: #8baa2a;
+    font-size: 2.5rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    margin-bottom: 2rem;
+  }
+
+  /* ========== RESPONSIVE ========== */
+  @media (max-width: 992px) {
+    .combos-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .hero h1 {
+      font-size: 2.2rem;
+      letter-spacing: 3px;
+    }
+
+    .hero img {
+      width: 100px;
+    }
+
+    .product-card {
+      grid-template-columns: 120px 1fr;
+    }
+
+    .product-image {
+      padding: 0.5rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .product-info {
+      padding: 1rem 0.75rem 3.5rem;
+    }
+
+    .product-info h3 {
+      font-size: 1.2rem;
+    }
+
+    .product-price {
+      right: 0.75rem;
+      bottom: 0.75rem;
+    }
+
+    .product-price strong {
+      font-size: 1.3rem;
+    }
+
+    .category h2,
+    .combos h2 {
+      font-size: 1.8rem;
+    }
+
+    .combos-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .combo-title h3 {
+      font-size: 1.8rem;
+    }
+
+    .combo-price strong {
+      font-size: 2.5rem;
+    }
+
+    .footer-row {
+      flex-direction: column;
+    }
+
+    .footer-item:not(:last-child) {
+      border-right: none;
+      border-bottom: 1px dashed #556b1e;
+    }
+  }
+</style>

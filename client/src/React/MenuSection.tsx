@@ -162,7 +162,7 @@ export default function MenuSection({ restaurantId, menu, combos, titulo, tiposE
 
   return (
     <div className="relative">
-      <h2 className="font-display text-2xl md:text-4xl font-bold text-orange-600 mb-8 text-center">
+      <h2 className="font-display text-2xl md:text-4xl font-bold text-orange-600 mb-8 mt-8 text-center">
         {titulo}
       </h2>
 
@@ -301,7 +301,7 @@ export default function MenuSection({ restaurantId, menu, combos, titulo, tiposE
               <img
                 src={imagenSeleccionada}
                 alt="Imagen del producto"
-                className="h-auto w-[800px] rounded-lg shadow-lg object-fill"
+                className="h-auto w-2/3 rounded-lg shadow-lg object-fill"
               />
             </div>
           </div>

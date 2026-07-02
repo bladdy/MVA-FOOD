@@ -48,6 +48,7 @@ namespace MVA_FOOD.Infrastructure.Services
                 query = query.Where(r =>
                     r.Name.ToLower().Contains(search) ||
                     r.Direccion.ToLower().Contains(search) ||
+                    r.Slogan.ToLower().Contains(search) ||
                     r.CategoriaRestaurantes.Any(c => c.Categoria.Nombre.ToLower().Contains(search))
                 );
             }
@@ -100,6 +101,7 @@ namespace MVA_FOOD.Infrastructure.Services
                     PerfilImage = r.PerfilImage,
                     Direccion = r.Direccion,
                     Phone = r.Phone,
+                    Slogan = r.Slogan,
                     PlanId = r.PlanRestauranteId,
 
                     PlanRestauranteDto = r.PlanRestaurante == null ? null : new PlanRestauranteDto
@@ -162,6 +164,7 @@ namespace MVA_FOOD.Infrastructure.Services
                     Slug = r.Slug,
                     Direccion = r.Direccion,
                     Phone = r.Phone,
+                    Slogan = r.Slogan,
                     PlanId = r.PlanRestauranteId,
                     PlanRestauranteDto = new PlanRestauranteDto
                     {
@@ -219,6 +222,7 @@ namespace MVA_FOOD.Infrastructure.Services
                     PerfilImage = r.PerfilImage,
                     Direccion = r.Direccion,
                     Phone = r.Phone,
+                    Slogan = r.Slogan,
                     PlanId = r.PlanRestauranteId,
                     Slug = r.Slug,
                     Menu = r.Menu.Where(m => m.Activo == true)
@@ -382,6 +386,7 @@ namespace MVA_FOOD.Infrastructure.Services
                     PerfilImage = r.PerfilImage,
                     Direccion = r.Direccion,
                     Phone = r.Phone,
+                    Slogan = r.Slogan,
                     PlanId = r.PlanRestauranteId,
                     Slug = r.Slug,
                     Menu = r.Menu.Where(m => m.Activo == true)
@@ -521,6 +526,7 @@ namespace MVA_FOOD.Infrastructure.Services
                     Direccion = dto.Direccion,
                     Slug = GenerateSlug(dto.Nombre),
                     Phone = dto.Telefono,
+                    Slogan = dto.Slogan,
                     Image = dto.ImageUrl,
                     PerfilImage = dto.PerfilImageUrl
                 };
@@ -625,6 +631,7 @@ namespace MVA_FOOD.Infrastructure.Services
                     PerfilImage = restaurante.PerfilImage,
                     Direccion = restaurante.Direccion,
                     Phone = restaurante.Phone,
+                    Slogan = restaurante.Slogan,
                     PlanId = plan.Id
                 };
             }
@@ -665,6 +672,7 @@ namespace MVA_FOOD.Infrastructure.Services
                 restaurante.Name = dto.Nombre;
                 restaurante.Direccion = dto.Direccion;
                 restaurante.Phone = dto.Telefono;
+                restaurante.Slogan = dto.Slogan;
 
                 if (dto.ImageUrl != null)
                 {

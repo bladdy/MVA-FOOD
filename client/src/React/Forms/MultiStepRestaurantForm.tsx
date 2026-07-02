@@ -19,6 +19,7 @@ export default function RestaurantRegistrationForm({ planId }: Props) {
     nombre: "",
     direccion: "",
     telefono: "",
+    slogan: "",
     nombreUsuario: "",
     username: "",
     password: "",
@@ -76,6 +77,7 @@ useEffect(() => {
       await createRestaurante({
         nombre: form.nombre,
         direccion: form.direccion,
+        slogan: form.slogan,
         telefono: form.telefono,
         nombreUsuario: form.nombreUsuario,
         username: form.username,
@@ -154,6 +156,12 @@ useEffect(() => {
                 <input className="w-full border border-gray-300 rounded-lg p-3 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400 outline-none transition-colors" placeholder="Ej: Calle Principal #123"
                   value={form.direccion}
                   onChange={e => setForm({ ...form, direccion: e.target.value })} required />
+              </div>
+              <div className="sm:col-span-2">
+                <label className="block text-sm font-medium text-gray-700 mb-1">Eslogan</label>
+                <input className="w-full border border-gray-300 rounded-lg p-3 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400 outline-none transition-colors" placeholder="Ej: Lo mejor de la comida mexicana"
+                  value={form.slogan}
+                  onChange={e => setForm({ ...form, slogan: e.target.value })} />
               </div>
             </div>
           </div>
@@ -322,11 +330,11 @@ useEffect(() => {
                 <label className="block text-sm font-medium text-gray-700 mb-1">Logo del Restaurante</label>
                 <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center hover:border-orange-400 transition-colors cursor-pointer">
                   <input type="file" accept="image/*" id="logo-upload"
-                    onChange={e => setForm({ ...form, image: e.target.files?.[0] || null })}
+                    onChange={e => setForm({ ...form, perfilImage: e.target.files?.[0] || null })}
                     className="hidden" />
                   <label htmlFor="logo-upload" className="cursor-pointer">
-                    {form.image ? (
-                      <img src={URL.createObjectURL(form.image)} alt="Logo" className="w-28 h-28 object-cover rounded-lg mx-auto" />
+                    {form.perfilImage ? (
+                      <img src={URL.createObjectURL(form.perfilImage)} alt="Logo" className="w-28 h-28 object-cover rounded-lg mx-auto" />
                     ) : (
                       <div className="py-6 text-gray-400">
                         <svg className="w-10 h-10 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
@@ -340,11 +348,11 @@ useEffect(() => {
                 <label className="block text-sm font-medium text-gray-700 mb-1">Imagen de Portada</label>
                 <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center hover:border-orange-400 transition-colors cursor-pointer">
                   <input type="file" accept="image/*" id="cover-upload"
-                    onChange={e => setForm({ ...form, perfilImage: e.target.files?.[0] || null })}
+                    onChange={e => setForm({ ...form, image: e.target.files?.[0] || null })}
                     className="hidden" />
                   <label htmlFor="cover-upload" className="cursor-pointer">
-                    {form.perfilImage ? (
-                      <img src={URL.createObjectURL(form.perfilImage)} alt="Portada" className="w-full h-28 object-cover rounded-lg" />
+                    {form.image ? (
+                      <img src={URL.createObjectURL(form.image)} alt="Portada" className="w-full h-28 object-cover rounded-lg" />
                     ) : (
                       <div className="py-6 text-gray-400">
                         <svg className="w-10 h-10 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>

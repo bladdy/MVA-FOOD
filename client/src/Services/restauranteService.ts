@@ -32,6 +32,7 @@ export async function updateRestaurante(id: string, data: RestauranteDTO) {
   formData.append("Nombre", data.name);
   formData.append("Direccion", data.direccion);
   formData.append("Telefono", data.phone);
+  formData.append("Slogan", data.slogan);
 
   if (data.perfilImage && data.perfilImage instanceof File) {
     formData.append("PerfilImage", data.perfilImage);
@@ -101,6 +102,7 @@ export async function createRestaurante(data: {
   nombre: string;
   direccion: string;
   telefono: string;
+  slogan?: string;
 
   nombreUsuario: string;
   username: string;
@@ -125,6 +127,9 @@ export async function createRestaurante(data: {
   formData.append("Nombre", data.nombre);
   formData.append("Direccion", data.direccion);
   formData.append("Telefono", data.telefono);
+  if (data.slogan) {
+    formData.append("Slogan", data.slogan);
+  }
 
   formData.append("PlanId", data.planId);
 

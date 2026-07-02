@@ -12,6 +12,7 @@ namespace MVA_FOOD.Core.DTOs
     public string PerfilImage { get; set; }
     public string Direccion { get; set; }
     public string Phone { get; set; }
+    public string Slogan { get; set; }
     public Guid PlanId { get; set; }
 }
 }
