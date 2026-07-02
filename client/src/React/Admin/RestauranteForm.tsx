@@ -21,6 +21,9 @@ export default function RestauranteForm({ onSaved }: { onSaved?: () => void }) {
     id: "",
     name: "",
     slogan: "",
+    instagram: "",
+    facebook: "",
+    whatsapp: "",
     direccion: "",
     phone: "",
     slug:"",
@@ -97,6 +100,9 @@ export default function RestauranteForm({ onSaved }: { onSaved?: () => void }) {
           id: data.id,
           name: data.name,
           slogan: data.slogan,
+          instagram: data.instagram || "",
+          facebook: data.facebook || "",
+          whatsapp: data.whatsapp || "",
           slug: data.slug,
           direccion: data.direccion,
           phone: data.phone,
@@ -272,6 +278,61 @@ export default function RestauranteForm({ onSaved }: { onSaved?: () => void }) {
             className="w-full mt-1 rounded-md border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-orange-300 focus:border-orange-400 outline-none transition-colors"
           />
         </div>
+
+        {/* Redes Sociales */}
+        <fieldset className="border border-gray-200 rounded-lg p-4 space-y-3">
+          <legend className="font-semibold text-orange-700 px-2">Redes Sociales</legend>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Instagram</label>
+              <div className="mt-1 flex rounded-md border border-gray-300 focus-within:ring-2 focus-within:ring-orange-300 focus-within:border-orange-400">
+                <span className="inline-flex items-center px-3 text-gray-400 text-sm bg-gray-50 rounded-l-md border-r border-gray-300">
+                  instagram.com/
+                </span>
+                <input
+                  type="text"
+                  name="instagram"
+                  value={restaurante.instagram}
+                  onChange={handleChange}
+                  placeholder="tu_restaurante"
+                  className="w-full rounded-r-md px-3 py-2 outline-none transition-colors"
+                />
+              </div>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Facebook</label>
+              <div className="mt-1 flex rounded-md border border-gray-300 focus-within:ring-2 focus-within:ring-orange-300 focus-within:border-orange-400">
+                <span className="inline-flex items-center px-3 text-gray-400 text-sm bg-gray-50 rounded-l-md border-r border-gray-300">
+                  facebook.com/
+                </span>
+                <input
+                  type="text"
+                  name="facebook"
+                  value={restaurante.facebook}
+                  onChange={handleChange}
+                  placeholder="TuRestaurante"
+                  className="w-full rounded-r-md px-3 py-2 outline-none transition-colors"
+                />
+              </div>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">WhatsApp</label>
+              <div className="mt-1 flex rounded-md border border-gray-300 focus-within:ring-2 focus-within:ring-orange-300 focus-within:border-orange-400">
+                <span className="inline-flex items-center px-3 text-gray-400 text-sm bg-gray-50 rounded-l-md border-r border-gray-300">
+                  +52
+                </span>
+                <input
+                  type="text"
+                  name="whatsapp"
+                  value={restaurante.whatsapp}
+                  onChange={handleChange}
+                  placeholder="5551234567"
+                  className="w-full rounded-r-md px-3 py-2 outline-none transition-colors"
+                />
+              </div>
+            </div>
+          </div>
+        </fieldset>
 
         {/* Imagen de Perfil */}
         <div>

@@ -3,6 +3,7 @@ export const prerender = false;
 import { getRestauranteBySlug } from '@/Services/restauranteService.ts';
 import LayoutMenu from "@/layouts/LayoutMenu.astro";
 import MenuSectionWrapper from "@/React/MenuSectionWrapper.jsx";
+import FooterRestaurante from "@/React/Footer.jsx";
 import ShareButton from "@/React/Buttons/ShareButton";
 
 let restaurant = null;
@@ -22,7 +23,6 @@ try {
 }
 const description = `Perfil y menú de ${restaurant?.name ?? "Restaurante"}`;
 const defaultImage = "/uploads/defaults/restaurant-default.jpg";
-
 const ogImage = restaurant?.perfilImage
   ? `${restaurant.perfilImage}`
   : defaultImage;
@@ -40,9 +40,16 @@ const ogImage = restaurant?.perfilImage
     id="loading-screen"
     class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-white transition-opacity duration-700"
   >
-    <div class="w-32 h-32 rounded-full bg-gray-200 animate-shimmer mb-6" />
-    <div class="w-48 h-6 rounded bg-gray-200 animate-shimmer mb-2" />
-    <div class="w-32 h-4 rounded bg-gray-200 animate-shimmer" />
+    {restaurant?.perfilImage ? (
+      <img
+        src={restaurant.perfilImage}
+        alt=""
+        class="w-32 h-32 rounded-full object-cover animate-pulse mb-6"
+      />
+    ) : (
+      <div class="w-32 h-32 rounded-full bg-gray-200 animate-shimmer mb-6" />
+    )}
+    
   </div>
 
   <!-- CONTENIDO -->
@@ -95,6 +102,18 @@ const ogImage = restaurant?.perfilImage
             client:load
           />
         </div>
+
+        <FooterRestaurante
+          name={restaurant.name}
+          perfilImage={restaurant.perfilImage}
+          direccion={restaurant.direccion}
+          phone={restaurant.phone}
+          horarios={restaurant.horarios}
+          instagram={restaurant.instagram}
+          facebook={restaurant.facebook}
+          whatsapp={restaurant.whatsapp}
+          client:load
+        />
       </>
     ) : (
       <div class="min-h-screen flex items-center justify-center p-10 text-center text-red-600 text-xl md:text-2xl">

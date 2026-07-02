@@ -24,6 +24,10 @@ public class CrearRestauranteDto
     public List<Guid> CategoriaIds { get; set; } = null!;
     public List<HorarioDto> Horarios { get; set; } = null!;
 
+    public string Instagram { get; set; } = null!;
+    public string Facebook { get; set; } = null!;
+    public string WhatsApp { get; set; } = null!;
+
     public string ImageUrl { get; set; } = null!;
     public string PerfilImageUrl { get; set; } = null!;
 }

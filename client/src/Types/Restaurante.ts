@@ -66,6 +66,9 @@ export interface RestauranteUpdateDto {
   slogan: string
   direccion: string
   phone: string
+  instagram?: string
+  facebook?: string
+  whatsapp?: string
   perfilImage: string | File | null
   image: string | File | null
   amenidadIds?: string[]
@@ -80,6 +83,9 @@ export interface RestauranteDTO {
   id?: string;
   name: string;
   slogan: string;
+  instagram?: string;
+  facebook?: string;
+  whatsapp?: string;
   slug: string;
   direccion: string;
   phone: string;
@@ -103,6 +109,9 @@ export interface Restaurante {
   id?: string;
   name: string;
   slogan: string;
+  instagram?: string;
+  facebook?: string;
+  whatsapp?: string;
   direccion: string;
   slug: string;
   phone: string;

@@ -14,6 +14,9 @@ namespace MVA_FOOD.Core.DTOs
         public string Direccion { get; set; }
         public string Phone { get; set; }
         public string Slogan { get; set; }
+        public string Instagram { get; set; }
+        public string Facebook { get; set; }
+        public string WhatsApp { get; set; }
         public string Slug { get; set; }
         public Guid PlanId { get; set; }
         public PlanRestauranteDto PlanRestauranteDto { get; set; } = null!;

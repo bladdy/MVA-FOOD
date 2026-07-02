@@ -102,6 +102,9 @@ namespace MVA_FOOD.Infrastructure.Services
                     Direccion = r.Direccion,
                     Phone = r.Phone,
                     Slogan = r.Slogan,
+                    Instagram = r.Instagram,
+                    Facebook = r.Facebook,
+                    WhatsApp = r.WhatsApp,
                     PlanId = r.PlanRestauranteId,
 
                     PlanRestauranteDto = r.PlanRestaurante == null ? null : new PlanRestauranteDto
@@ -165,6 +168,9 @@ namespace MVA_FOOD.Infrastructure.Services
                     Direccion = r.Direccion,
                     Phone = r.Phone,
                     Slogan = r.Slogan,
+                    Instagram = r.Instagram,
+                    Facebook = r.Facebook,
+                    WhatsApp = r.WhatsApp,
                     PlanId = r.PlanRestauranteId,
                     PlanRestauranteDto = new PlanRestauranteDto
                     {
@@ -223,6 +229,9 @@ namespace MVA_FOOD.Infrastructure.Services
                     Direccion = r.Direccion,
                     Phone = r.Phone,
                     Slogan = r.Slogan,
+                    Instagram = r.Instagram,
+                    Facebook = r.Facebook,
+                    WhatsApp = r.WhatsApp,
                     PlanId = r.PlanRestauranteId,
                     Slug = r.Slug,
                     Menu = r.Menu.Where(m => m.Activo == true)
@@ -387,6 +396,9 @@ namespace MVA_FOOD.Infrastructure.Services
                     Direccion = r.Direccion,
                     Phone = r.Phone,
                     Slogan = r.Slogan,
+                    Instagram = r.Instagram,
+                    Facebook = r.Facebook,
+                    WhatsApp = r.WhatsApp,
                     PlanId = r.PlanRestauranteId,
                     Slug = r.Slug,
                     Menu = r.Menu.Where(m => m.Activo == true)
@@ -527,6 +539,9 @@ namespace MVA_FOOD.Infrastructure.Services
                     Slug = GenerateSlug(dto.Nombre),
                     Phone = dto.Telefono,
                     Slogan = dto.Slogan,
+                    Instagram = dto.Instagram,
+                    Facebook = dto.Facebook,
+                    WhatsApp = dto.WhatsApp,
                     Image = dto.ImageUrl,
                     PerfilImage = dto.PerfilImageUrl
                 };
@@ -632,6 +647,9 @@ namespace MVA_FOOD.Infrastructure.Services
                     Direccion = restaurante.Direccion,
                     Phone = restaurante.Phone,
                     Slogan = restaurante.Slogan,
+                    Instagram = restaurante.Instagram,
+                    Facebook = restaurante.Facebook,
+                    WhatsApp = restaurante.WhatsApp,
                     PlanId = plan.Id
                 };
             }
@@ -673,6 +691,9 @@ namespace MVA_FOOD.Infrastructure.Services
                 restaurante.Direccion = dto.Direccion;
                 restaurante.Phone = dto.Telefono;
                 restaurante.Slogan = dto.Slogan;
+                restaurante.Instagram = dto.Instagram;
+                restaurante.Facebook = dto.Facebook;
+                restaurante.WhatsApp = dto.WhatsApp;
 
                 if (dto.ImageUrl != null)
                 {

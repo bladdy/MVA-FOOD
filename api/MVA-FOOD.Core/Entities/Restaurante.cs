@@ -10,6 +10,9 @@ namespace MVA_FOOD.Core.Entities
         public string Direccion { get; set; }
         public string Phone { get; set; }
         public string Slogan { get; set; }
+        public string Instagram { get; set; }
+        public string Facebook { get; set; }
+        public string WhatsApp { get; set; }
         public Guid PlanRestauranteId { get; set; }
         public PlanRestaurante PlanRestaurante { get; set; } = null!;
         public ICollection<Usuario> Usuarios { get; set; } = new List<Usuario>();

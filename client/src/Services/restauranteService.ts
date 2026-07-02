@@ -33,6 +33,9 @@ export async function updateRestaurante(id: string, data: RestauranteDTO) {
   formData.append("Direccion", data.direccion);
   formData.append("Telefono", data.phone);
   formData.append("Slogan", data.slogan);
+  formData.append("Instagram", data.instagram || "");
+  formData.append("Facebook", data.facebook || "");
+  formData.append("WhatsApp", data.whatsapp || "");
 
   if (data.perfilImage && data.perfilImage instanceof File) {
     formData.append("PerfilImage", data.perfilImage);
@@ -103,6 +106,8 @@ export async function createRestaurante(data: {
   direccion: string;
   telefono: string;
   slogan?: string;
+  instagram?: string;
+  facebook?: string;
 
   nombreUsuario: string;
   username: string;
@@ -130,6 +135,9 @@ export async function createRestaurante(data: {
   if (data.slogan) {
     formData.append("Slogan", data.slogan);
   }
+  formData.append("Instagram", data.instagram || "");
+  formData.append("Facebook", data.facebook || "");
+  formData.append("WhatsApp", data.whatsapp || "");
 
   formData.append("PlanId", data.planId);
 
