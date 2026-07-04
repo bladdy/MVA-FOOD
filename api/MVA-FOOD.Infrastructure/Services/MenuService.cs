@@ -172,6 +172,7 @@ namespace MVA_FOOD.Infrastructure.Services
                                 Obligatorio = v.Obligatorio,
                                 MaxSeleccion = v.MaxSeleccion ?? 1,
                                 CategoriaId = dto.CategoriaId,
+                                RestauranteId = dto.RestauranteId,
                                 Opciones = v.Opciones?.Select(op => new VarianteOpcion
                                 {
                                     Id = Guid.NewGuid(),
@@ -294,6 +295,7 @@ namespace MVA_FOOD.Infrastructure.Services
                             Obligatorio = vDto.Obligatorio,
                             MaxSeleccion = vDto.MaxSeleccion ?? 1,
                             CategoriaId = dto.CategoriaId,
+                            RestauranteId = menu.RestauranteId,
                             Opciones = vDto.Opciones?.Select(op => new VarianteOpcion
                             {
                                 Id = Guid.NewGuid(),

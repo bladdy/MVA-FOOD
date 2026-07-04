@@ -4,8 +4,11 @@ import { menuService } from "@/Services/menuService.ts";
 import Pagination from "../Buttons/Pagination.tsx";
 import VariantesTable from "./VariantesTable.tsx";
 import VariantesModal from "./VariantesModal.tsx";
+import { useUser } from "@/context/UserContext.tsx";
 
 const VariantesManager: React.FC = () => {
+  const { user } = useUser();
+
   const [pagedResult, setPagedResult] = useState<PagedResult<Variante> | null>(null);
   const [categorias, setCategorias] = useState<Categoria[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -14,13 +17,20 @@ const VariantesManager: React.FC = () => {
   const [filters, setFilters] = useState<VarianteFilters>({
     search: "",
     categoriaId: "",
+    restauranteId: "",
     obligatorio: false,
     maxSeleccion: 1,
     pageNumber: 1,
     pageSize: 10,
-    orderBy: "nombre", // 🔹 inicial
-    orderDirection: "asc", // 🔹 inicial
+    orderBy: "nombre",
+    orderDirection: "asc",
   });
+
+  useEffect(() => {
+    if (user?.restauranteId) {
+      setFilters(prev => ({ ...prev, restauranteId: user.restauranteId }));
+    }
+  }, [user]);
 
   // 🔹 Cargar variantes con filtros + orden
   const fetchVariantes = async () => {
@@ -47,6 +57,7 @@ const VariantesManager: React.FC = () => {
   }, []);
 
   useEffect(() => {
+    if (!filters.restauranteId) return;
     fetchVariantes();
   }, [filters]);
 
@@ -175,6 +186,7 @@ const VariantesManager: React.FC = () => {
           onClose={() => setIsModalOpen(false)}
           onSave={handleSave}
           initialData={selectedMenu || undefined}
+          restauranteId={user?.restauranteId}
         />
       )}
     </div>

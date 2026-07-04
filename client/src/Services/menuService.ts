@@ -90,6 +90,7 @@ export const menuService = {
 
     if (filters.search) params.append("search", filters.search);
     if (filters.categoriaId) params.append("categoriaId", filters.categoriaId);
+    if (filters.restauranteId) params.append("restauranteId", filters.restauranteId);
     if (filters.obligatorio) params.append("obligatorio", String(filters.obligatorio));
     if (filters.maxSeleccion) params.append("maxSeleccion", String(filters.maxSeleccion));
     if (filters.pageNumber) params.append("pageNumber", String(filters.pageNumber));

@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using MVA_FOOD.API.Services.Hubs;
 using MVA_FOOD.Core.DTOs;
 using MVA_FOOD.Core.Entities;
+using MVA_FOOD.Core.Filters;
 using MVA_FOOD.Core.Interfaces;
 
 namespace MVA_FOOD.API.Controllers
@@ -25,6 +26,16 @@ namespace MVA_FOOD.API.Controllers
         public async Task<IActionResult> GetAll([FromQuery] Guid? restauranteId)
         {
             var pedidos = await _service.GetAllAsync(restauranteId);
+            return Ok(pedidos);
+        }
+
+        [HttpGet("historial")]
+        public async Task<IActionResult> GetHistorial([FromQuery] PedidoFilters filters)
+        {
+            if (filters.RestauranteId == Guid.Empty)
+                return BadRequest(new { mensaje = "RestauranteId es requerido" });
+
+            var pedidos = await _service.GetHistorialAsync(filters);
             return Ok(pedidos);
         }
 

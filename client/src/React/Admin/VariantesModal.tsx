@@ -10,12 +10,14 @@ interface VariantesModalProps {
   onClose: () => void;
   onSave: () => void;
   initialData?: Variante;
+  restauranteId?: string;
 }
 
 const initialForm: VarianteCreate = {
   id: "",
   name: "",
   categoriaId: "",
+  restauranteId: "",
   opciones: [],
   obligatorio: false,
   maxSeleccion: 1,
@@ -26,6 +28,7 @@ const VariantesModal: React.FC<VariantesModalProps> = ({
   onClose,
   onSave,
   initialData,
+  restauranteId,
 }) => {
   const [form, setForm] = useState<VarianteCreate>(initialForm);
   const [categorias, setCategorias] = useState<Categoria[]>([]);
@@ -38,6 +41,7 @@ const VariantesModal: React.FC<VariantesModalProps> = ({
         id: initialData.id,
         name: initialData.name,
         categoriaId: initialData.categoriaId,
+        restauranteId: initialData.restauranteId ?? restauranteId ?? "",
         opciones:
           initialData.opciones?.map((op) => ({
             id: op.id,
@@ -48,9 +52,9 @@ const VariantesModal: React.FC<VariantesModalProps> = ({
         maxSeleccion: initialData.maxSeleccion ?? 1,
       });
     } else {
-      setForm(initialForm);
+      setForm({ ...initialForm, restauranteId: restauranteId ?? "" });
     }
-  }, [initialData]);
+  }, [initialData, restauranteId]);
 
   // Cargar categorías
   useEffect(() => {

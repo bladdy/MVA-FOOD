@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -47,6 +48,12 @@ namespace MVA_FOOD.Infrastructure.Data
                 .HasForeignKey<PlanRestaurante>(pr => pr.RestauranteId)
                 .OnDelete(DeleteBehavior.Cascade);
 
+            modelBuilder.Entity<Variante>()
+                .HasOne(v => v.Restaurante)
+                .WithMany()
+                .HasForeignKey(v => v.RestauranteId)
+                .OnDelete(DeleteBehavior.Cascade);
+
             modelBuilder.Entity<VarianteMenus>()
                 .HasOne(vm => vm.Variante)
                 .WithMany(v => v.MenuVariantes)
@@ -88,6 +95,38 @@ namespace MVA_FOOD.Infrastructure.Data
                 .WithMany()
                 .HasForeignKey(pi => pi.MenuId)
                 .OnDelete(DeleteBehavior.SetNull);
+
+            modelBuilder.Entity<Pedido>()
+                .Property(p => p.Fecha)
+                .HasConversion(
+                    v => v.ToString("O"),
+                    v => DateTime.SpecifyKind(
+                        DateTime.Parse(v, null, DateTimeStyles.RoundtripKind),
+                        DateTimeKind.Utc));
+
+            modelBuilder.Entity<PlanRestaurante>()
+                .Property(p => p.FechaInicio)
+                .HasConversion(
+                    v => v.ToString("O"),
+                    v => DateTime.SpecifyKind(
+                        DateTime.Parse(v, null, DateTimeStyles.RoundtripKind),
+                        DateTimeKind.Utc));
+
+            modelBuilder.Entity<PlanRestaurante>()
+                .Property(p => p.FechaFin)
+                .HasConversion(
+                    v => v.ToString("O"),
+                    v => DateTime.SpecifyKind(
+                        DateTime.Parse(v, null, DateTimeStyles.RoundtripKind),
+                        DateTimeKind.Utc));
+
+            modelBuilder.Entity<PlanRestaurante>()
+                .Property(p => p.FechaPago)
+                .HasConversion(
+                    v => v.ToString("O"),
+                    v => DateTime.SpecifyKind(
+                        DateTime.Parse(v, null, DateTimeStyles.RoundtripKind),
+                        DateTimeKind.Utc));
         }
     }
 }

@@ -223,7 +223,7 @@ function DashboardInner() {
         <div className="flex justify-between items-center mb-4">
           <h3 className="text-lg font-semibold text-gray-800">Últimas Órdenes</h3>
           <a
-            href="/admin/ordenes"
+            href="/admin/ordenes/historial"
             className="text-sm text-orange-600 hover:text-orange-700 font-medium"
           >
             Ver todas →
@@ -262,7 +262,7 @@ function DashboardInner() {
                     </span>
                   </td>
                   <td className="py-2.5 text-gray-500">
-                    {format(parseISO(p.fecha), "HH:mm")}
+                    {format(parseISO(p.fecha), "hh:mm a")}
                   </td>
                 </tr>
               ))}

@@ -1,5 +1,13 @@
 import { API_URL } from "@/lib/apiConfig";
-import type { CreatePedidoDto } from "@/Types/Restaurante.ts";
+import type { CreatePedidoDto, PedidoFilters } from "@/Types/Restaurante.ts";
+
+export interface PagedResultPedidos {
+  totalItems: number;
+  pageNumber: number;
+  pageSize: number;
+  totalPages: number;
+  items: PedidoResponse[];
+}
 
 export interface PedidoResponse {
   id: string;
@@ -53,6 +61,22 @@ export const pedidoService = {
       credentials: "include",
     });
     if (!res.ok) throw new Error("Error al obtener pedidos");
+    return res.json();
+  },
+
+  async getHistorial(filters: PedidoFilters): Promise<PagedResultPedidos> {
+    const params = new URLSearchParams();
+    params.append("restauranteId", filters.restauranteId);
+    if (filters.fechaDesde) params.append("fechaDesde", filters.fechaDesde);
+    if (filters.fechaHasta) params.append("fechaHasta", filters.fechaHasta);
+    if (filters.estado !== undefined) params.append("estado", String(filters.estado));
+    if (filters.search) params.append("search", filters.search);
+    if (filters.pageNumber) params.append("pageNumber", String(filters.pageNumber));
+    if (filters.pageSize) params.append("pageSize", String(filters.pageSize));
+    const res = await fetch(`${API_URL}/Pedido/historial?${params.toString()}`, {
+      credentials: "include",
+    });
+    if (!res.ok) throw new Error("Error al obtener historial");
     return res.json();
   },
 

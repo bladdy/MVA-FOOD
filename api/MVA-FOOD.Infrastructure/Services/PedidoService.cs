@@ -2,7 +2,9 @@ using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 using MVA_FOOD.Core.DTOs;
 using MVA_FOOD.Core.Entities;
+using MVA_FOOD.Core.Filters;
 using MVA_FOOD.Core.Interfaces;
+using MVA_FOOD.Core.Wrappers;
 using MVA_FOOD.Infrastructure.Data;
 
 namespace MVA_FOOD.Infrastructure.Services
@@ -30,6 +32,50 @@ namespace MVA_FOOD.Infrastructure.Services
             return await query
                 .OrderByDescending(p => p.Fecha)
                 .ToListAsync();
+        }
+
+        public async Task<PagedResult<Pedido>> GetHistorialAsync(PedidoFilters filters)
+        {
+            var query = _context.Pedidos
+                .Include(p => p.Items)
+                .ThenInclude(i => i.Producto)
+                .Include(p => p.Restaurante)
+                .Where(p => p.RestauranteId == filters.RestauranteId)
+                .AsQueryable();
+
+            if (filters.FechaDesde.HasValue)
+                query = query.Where(p => p.Fecha >= filters.FechaDesde.Value);
+
+            if (filters.FechaHasta.HasValue)
+                query = query.Where(p => p.Fecha <= filters.FechaHasta.Value);
+
+            if (filters.Estado.HasValue)
+                query = query.Where(p => p.Estado == filters.Estado.Value);
+
+            if (!string.IsNullOrWhiteSpace(filters.Search))
+            {
+                var search = filters.Search.ToLower();
+                query = query.Where(p =>
+                    p.ClienteNombre.ToLower().Contains(search) ||
+                    p.ClienteTelefono.ToLower().Contains(search));
+            }
+
+            var totalItems = await query.CountAsync();
+
+            var items = await query
+                .OrderByDescending(p => p.Fecha)
+                .Skip((filters.PageNumber - 1) * filters.PageSize)
+                .Take(filters.PageSize)
+                .ToListAsync();
+
+            return new PagedResult<Pedido>
+            {
+                Items = items,
+                TotalItems = totalItems,
+                PageNumber = filters.PageNumber,
+                PageSize = filters.PageSize,
+                TotalPages = (int)Math.Ceiling(totalItems / (double)filters.PageSize)
+            };
         }
 
         public async Task<Pedido> GetByIdAsync(Guid id)

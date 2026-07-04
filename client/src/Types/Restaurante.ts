@@ -25,6 +25,7 @@ export interface MenuFilters {
 export interface VarianteFilters {
   search?: string;
   categoriaId?: string;
+  restauranteId?: string;
   obligatorio?: boolean;
   maxSeleccion?: number;
   orderBy?: string;
@@ -37,6 +38,7 @@ export interface VarianteCreate {
   id: string;
   name: string;
   categoriaId?: string;
+  restauranteId?: string;
   obligatorio: boolean;
   maxSeleccion: number;
   opciones: VarianteOpcionCreate[];
@@ -159,12 +161,13 @@ export interface Variante {
   name: string;
   categoriaId: string;
   categoria?: Categoria;
+  restauranteId?: string;
   obligatorio: boolean;
   maxSeleccion?: number; 
   opciones: {
     id: string;
     nombre: string;
-    precio: number; // ahora obligatorio para cuadrar con MenuCreate
+    precio: number;
   }[];
 }
 
@@ -200,6 +203,16 @@ export interface Horario {
 
   diaTexto: string;
 }
+export interface PedidoFilters {
+  restauranteId: string;
+  fechaDesde?: string;
+  fechaHasta?: string;
+  estado?: number;
+  search?: string;
+  pageNumber?: number;
+  pageSize?: number;
+}
+
 export interface CreatePedidoDto {
   clienteNombre: string;
   clienteTelefono: string;

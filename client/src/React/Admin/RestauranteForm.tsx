@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useUser } from "@/context/UserContext.tsx";
-import QRCodeGenerator from "@/React/Buttons/QRWithLogoButton";
+import ImageUpload from "@/React/Components/ImageUpload";
 import {
   getRestaurante,
   updateRestaurante,
@@ -15,7 +15,6 @@ import type {
   RestauranteDTO,
 } from "@/Types/Restaurante.ts";
 import { menuService } from "@/Services/menuService.ts";
-//19d76c9b-115d-4470-8c3f-079c7b40f2f4 2e742b46-3756-41c6-87a7-e32df07ff19d
 export default function RestauranteForm({ onSaved }: { onSaved?: () => void }) {
   const [restaurante, setRestaurante] = useState<Restaurante>({
     id: "",
@@ -39,10 +38,6 @@ export default function RestauranteForm({ onSaved }: { onSaved?: () => void }) {
   });
 
   const { user } = useUser();
-  const [originalPerfilImage, setOriginalPerfilImage] = useState<string | null>(
-    null
-  );
-  const [originalImage, setOriginalImage] = useState<string | null>(null);
 
   const [submitting, setSubmitting] = useState(false);
   const [amenidadesDisponibles, setAmenidadesDisponibles] = useState<
@@ -97,15 +92,15 @@ export default function RestauranteForm({ onSaved }: { onSaved?: () => void }) {
 
         setRestaurante((prev) => ({
           ...prev,
-          id: data.id,
-          name: data.name,
-          slogan: data.slogan,
+          id: data.id || "",
+          name: data.name || "",
+          slogan: data.slogan || "",
           instagram: data.instagram || "",
           facebook: data.facebook || "",
           whatsapp: data.whatsapp || "",
-          slug: data.slug,
-          direccion: data.direccion,
-          phone: data.phone,
+          slug: data.slug || "",
+          direccion: data.direccion || "",
+          phone: data.phone || "",
           perfilImage: data.perfilImage || null,
           image: data.image || null,
           amenidades: data.amenidades?.map((a: Amenidad) => a.id) || [],
@@ -128,8 +123,6 @@ export default function RestauranteForm({ onSaved }: { onSaved?: () => void }) {
           menus: data.menus || [],
         }));
 
-        setOriginalPerfilImage(data.perfilImage || null);
-        setOriginalImage(data.image || null);
       });
     }
   }, [user]);
@@ -145,6 +138,14 @@ export default function RestauranteForm({ onSaved }: { onSaved?: () => void }) {
     } else {
       setRestaurante((prev) => ({ ...prev, [name]: value }));
     }
+  };
+
+  const handlePerfilImageChange = (file: File | null) => {
+    setRestaurante((prev) => ({ ...prev, perfilImage: file }));
+  };
+
+  const handleImageChange = (file: File | null) => {
+    setRestaurante((prev) => ({ ...prev, image: file }));
   };
 
   const handleAddItem = (field: "amenidades" | "categorias", id: string) => {
@@ -223,7 +224,6 @@ export default function RestauranteForm({ onSaved }: { onSaved?: () => void }) {
   };
 
   return (<>
-  <QRCodeGenerator url={`https://mr-menus.com/menus/d/${restaurante.slug}` } logo={restaurante.image ?? ""} />
       <form
         onSubmit={handleSubmit}
         className="space-y-8 p-6 bg-white rounded-lg shadow-md"
@@ -334,58 +334,19 @@ export default function RestauranteForm({ onSaved }: { onSaved?: () => void }) {
           </div>
         </fieldset>
 
-        {/* Imagen de Perfil */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700">
-            Imagen de Perfil
-          </label>
-          <input
-            name="perfilImage"
-            type="file"
-            onChange={handleChange}
-            className="mt-1 block w-full border rounded-md p-2 text-sm"
-          />
-          {restaurante.perfilImage &&
-          typeof restaurante.perfilImage !== "string" ? (
-            <img
-              src={URL.createObjectURL(restaurante.perfilImage)}
-              alt="preview"
-              className="mt-2 h-16 w-16 object-cover rounded-md"
-            />
-          ) : originalPerfilImage ? (
-            <img
-              src={`${restaurante.perfilImage}`}
-              alt="preview"
-              className="mt-2 h-16 w-16 object-cover rounded-md"
-            />
-          ) : null}
-        </div>
+        <ImageUpload
+          value={restaurante.perfilImage}
+          onChange={handlePerfilImageChange}
+          label="Imagen de Perfil"
+          id="restaurante-perfil-upload"
+        />
 
-        {/* Imagen Portada */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700">
-            Imagen Portada
-          </label>
-          <input
-            name="image"
-            type="file"
-            onChange={handleChange}
-            className="mt-1 block w-full border rounded-md p-2 text-sm"
-          />
-          {restaurante.image && typeof restaurante.image !== "string" ? (
-            <img
-              src={URL.createObjectURL(restaurante.image)}
-              alt="preview"
-              className="mt-2 h-16 w-16 object-cover rounded-md"
-            />
-          ) : originalImage ? (
-            <img
-              src={`${restaurante.image}`}
-              alt="preview"
-              className="mt-2 h-16 w-16 object-cover rounded-md"
-            />
-          ) : null}
-        </div>
+        <ImageUpload
+          value={restaurante.image}
+          onChange={handleImageChange}
+          label="Imagen Portada"
+          id="restaurante-portada-upload"
+        />
       </div>
 
       {/* Amenidades */}

@@ -9,6 +9,7 @@ import type {
 } from "@/Types/Restaurante.ts";
 import { menuService } from "@/Services/menuService.ts";
 import { showAlert } from "@/lib/alert.ts";
+import ImageUpload from "@/React/Components/ImageUpload";
 
 interface MenuModalProps {
   isOpen: boolean;
@@ -52,7 +53,6 @@ const MenuModal: React.FC<MenuModalProps> = ({
   const [form, setForm] = useState<MenuCreate>(initialForm);
   const [categorias, setCategorias] = useState<Categoria[]>([]);
   const [variantesFiltradas, setVariantesFiltradas] = useState<VarianteCreate[]>([]);
-  const [originalImage, setOriginalImage] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
   // 🔹 Validaciones dinámicas
@@ -87,7 +87,6 @@ const MenuModal: React.FC<MenuModalProps> = ({
       ...initialForm,
       restauranteId: restauranteId ?? "" // <<--- asignamos el restauranteId de las props
       });
-      setOriginalImage(null);
       return;
     }
 
@@ -99,7 +98,7 @@ const MenuModal: React.FC<MenuModalProps> = ({
       activo: (initialData as Menu).activo ?? true,
       categoriaId: initialData.categoriaId,
       restauranteId: initialData.restauranteId ?? restauranteId ?? "", // <<--- fallback
-      imagen: null,
+      imagen: typeof initialData.imagen === "string" ? initialData.imagen : null,
       variantes:
         initialData.variantes?.map((v) => ({
           id: v.id,
@@ -116,7 +115,6 @@ const MenuModal: React.FC<MenuModalProps> = ({
     };
 
     setForm(data);
-    setOriginalImage(typeof initialData.imagen === "string" ? initialData.imagen : null);
 
     if (initialData.categoriaId) {
       setFilters((prev) => ({ ...prev, categoriaId: initialData.categoriaId }));
@@ -136,7 +134,7 @@ const MenuModal: React.FC<MenuModalProps> = ({
     }
 
     menuService
-      .getVariantes(filters)
+      .getVariantes({ ...filters, restauranteId: restauranteId })
       .then((allVariante) => {
         const mapped = allVariante.items.map((v) => ({
           id: v.id,
@@ -153,7 +151,7 @@ const MenuModal: React.FC<MenuModalProps> = ({
         setVariantesFiltradas(mapped);
       })
       .catch(console.error);
-  }, [filters]);
+  }, [filters, restauranteId]);
 
   // 🔹 Handlers
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -229,7 +227,6 @@ const MenuModal: React.FC<MenuModalProps> = ({
 
   const handleClose = () => {
     setForm(initialForm);
-    setOriginalImage(null);
     onClose();
   };
 
@@ -251,7 +248,6 @@ const MenuModal: React.FC<MenuModalProps> = ({
       }
 
       setForm(initialForm);
-      setOriginalImage(null);
       onClose();
       onSave();
     } catch (error) {
@@ -316,16 +312,12 @@ const MenuModal: React.FC<MenuModalProps> = ({
               </label>
             </div>
 
-            {/* Imagen */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Imagen</label>
-              <input name="image" type="file" onChange={handleChange} className="mt-1 block w-full border rounded-md p-2 text-sm" />
-              {form.imagen && typeof form.imagen !== "string" ? (
-                <img src={URL.createObjectURL(form.imagen)} alt="preview" className="mt-2 h-16 w-16 object-cover rounded-md" />
-              ) : originalImage ? (
-                <img src={`${originalImage}`} alt="preview" className="mt-2 h-16 w-16 object-cover rounded-md" />
-              ) : null}
-            </div>
+            <ImageUpload
+              value={form.imagen}
+              onChange={(file) => setForm({ ...form, imagen: file })}
+              label="Imagen"
+              id="menu-imagen-upload"
+            />
 
             {/* Variantes */}
             <div>

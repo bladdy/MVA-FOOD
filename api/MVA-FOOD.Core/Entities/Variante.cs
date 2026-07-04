@@ -1,8 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
 namespace MVA_FOOD.Core.Entities
 {
     public class Variante
@@ -13,8 +8,9 @@ namespace MVA_FOOD.Core.Entities
         public int? MaxSeleccion { get; set; }
         public Guid CategoriaId { get; set; }
         public Categoria Categoria { get; set; } = null!;
+        public Guid RestauranteId { get; set; }
+        public Restaurante Restaurante { get; set; } = null!;
         public ICollection<VarianteMenus> MenuVariantes  { get; set; } = null!;
         public ICollection<VarianteOpcion> Opciones { get; set; } = new List<VarianteOpcion>();
     }
-
 }

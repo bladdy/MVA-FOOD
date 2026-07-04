@@ -4,9 +4,7 @@ import type { Restaurante, RestauranteDTO } from "@/Types/Restaurante.ts";
 import { API_URL } from "@/lib/apiConfig";
 
 export async function getRestaurante(id: string) {
-  console.log("API_URL:", API_URL);
   const res = await fetch(`${API_URL}/restaurantes/${id}`);
-
   if (!res.ok) throw new Error("Error al obtener restaurante");
   return await res.json();
 }
@@ -114,6 +112,7 @@ export async function createRestaurante(data: {
   password: string;
 
   planId: string;
+  whatsapp?: string;
 
   image: File | null;
   perfilImage: File | null;

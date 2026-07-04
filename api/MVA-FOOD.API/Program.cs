@@ -120,6 +120,8 @@ builder.Services.AddControllers()
     {
         options.JsonSerializerOptions.ReferenceHandler =
             System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
+        options.JsonSerializerOptions.Converters.Add(
+            new UtcDateTimeConverter());
     });
 
 // ======================================
@@ -223,3 +225,17 @@ app.MapControllers();
 app.MapHub<MVA_FOOD.API.Services.Hubs.OrderHub>("/hubs/orders");
 
 app.Run();
+
+public class UtcDateTimeConverter : System.Text.Json.Serialization.JsonConverter<DateTime>
+{
+    public override DateTime Read(ref System.Text.Json.Utf8JsonReader reader, Type typeToConvert, System.Text.Json.JsonSerializerOptions options)
+    {
+        return DateTime.Parse(reader.GetString() ?? "");
+    }
+
+    public override void Write(System.Text.Json.Utf8JsonWriter writer, DateTime value, System.Text.Json.JsonSerializerOptions options)
+    {
+        writer.WriteStringValue(
+            DateTime.SpecifyKind(value, DateTimeKind.Utc).ToString("O"));
+    }
+}

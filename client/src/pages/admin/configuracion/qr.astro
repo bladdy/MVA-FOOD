@@ -1,0 +1,10 @@
+---
+import LayoutAdmin from "@/layouts/LayoutAdmin.astro";
+import QRGeneratorSection from "@/React/Auth/QRGeneratorSection";
+---
+
+<LayoutAdmin title="Generador QR">
+  <div class="h-full">
+    <QRGeneratorSection client:load />
+  </div>
+</LayoutAdmin>

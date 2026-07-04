@@ -25,6 +25,9 @@ namespace MVA_FOOD.Infrastructure.Services
         {
             var query = _context.Variantes.Include(v => v.Opciones).Include(c => c.Categoria).AsQueryable();
 
+            if (filters.RestauranteId.HasValue)
+                query = query.Where(v => v.RestauranteId == filters.RestauranteId.Value);
+
             // Apply filters
             query = filters.OrderBy.ToLower() switch
             {
@@ -60,6 +63,7 @@ namespace MVA_FOOD.Infrastructure.Services
             Obligatorio = dto.Obligatorio,
             MaxSeleccion = dto.MaxSeleccion ?? 1,
             CategoriaId = dto.CategoriaId,
+            RestauranteId = dto.RestauranteId ?? Guid.Empty,
             Opciones = dto.Opciones?.Select(op => new VarianteOpcion
             {
                 Id = Guid.NewGuid(),

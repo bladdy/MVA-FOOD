@@ -1,13 +1,24 @@
 // src/Services/varianteService.ts
-import type { VarianteCreate, Variante, PagedResult } from "@/Types/Restaurante.ts";
+import type { VarianteCreate, Variante, PagedResult, VarianteFilters } from "@/Types/Restaurante.ts";
 import { API_URL } from "@/lib/apiConfig";
-//const API_URL = "http://localhost:5147/api";
-//const API_URL = "https://api.mr-menus.com/api";//import.meta.env.PUBLIC_API_URL;
 
 
 export const varianteService = {
-  async getAll(): Promise<PagedResult<Variante>> {
-    const res = await fetch(API_URL);
+  async getAll(filters?: VarianteFilters): Promise<PagedResult<Variante>> {
+    let url = API_URL;
+    if (filters) {
+      const params = new URLSearchParams();
+      if (filters.search) params.append("search", filters.search);
+      if (filters.categoriaId) params.append("categoriaId", filters.categoriaId);
+      if (filters.restauranteId) params.append("restauranteId", filters.restauranteId);
+      if (filters.pageNumber) params.append("pageNumber", String(filters.pageNumber));
+      if (filters.pageSize) params.append("pageSize", String(filters.pageSize));
+      if (filters.orderBy) params.append("orderBy", filters.orderBy);
+      if (filters.orderDirection) params.append("orderDirection", filters.orderDirection);
+      const qs = params.toString();
+      if (qs) url += `?${qs}`;
+    }
+    const res = await fetch(url);
     if (!res.ok) throw new Error("Error al cargar variantes");
     return res.json();
   },
@@ -23,6 +34,9 @@ export const varianteService = {
     formData.append("Name", data.name);
     if (data.categoriaId) {
       formData.append("CategoriaId", data.categoriaId.toString());
+    }
+    if (data.restauranteId) {
+      formData.append("RestauranteId", data.restauranteId.toString());
     }
     formData.append("Obligatorio", data.obligatorio.toString());
     formData.append("MaxSeleccion", data.maxSeleccion.toString());
@@ -45,6 +59,9 @@ export const varianteService = {
     formData.append("Name", data.name);
     if (data.categoriaId) {
       formData.append("CategoriaId", data.categoriaId.toString());
+    }
+    if (data.restauranteId) {
+      formData.append("RestauranteId", data.restauranteId.toString());
     }
     formData.append("Obligatorio", data.obligatorio.toString());
     formData.append("MaxSeleccion", data.maxSeleccion.toString());
