@@ -238,9 +238,33 @@ namespace MVA_FOOD.Infrastructure.Services
 
         public async Task<PlanRestaurante?> ObtenerPlanActivoAsync(Guid restauranteId)
         {
-            return await _context.PlanesRestaurantes
+            var planActivo = await _context.PlanesRestaurantes
                 .Include(pr => pr.Plan)
                 .FirstOrDefaultAsync(pr => pr.RestauranteId == restauranteId && pr.Estado == "Activo");
+
+            if (planActivo != null)
+                return planActivo;
+
+            var planGratuito = await _context.Planes.FirstOrDefaultAsync(p => p.Precio == 0);
+            if (planGratuito == null)
+                return null;
+
+            planActivo = new PlanRestaurante
+            {
+                RestauranteId = restauranteId,
+                PlanId = planGratuito.Id,
+                FechaInicio = DateTime.UtcNow,
+                FechaFin = DateTime.UtcNow.AddDays(planGratuito.DuracionDias),
+                FechaPago = DateTime.UtcNow,
+                Pagado = false,
+                Estado = "Activo"
+            };
+
+            _context.PlanesRestaurantes.Add(planActivo);
+            await _context.SaveChangesAsync();
+
+            planActivo.Plan = planGratuito;
+            return planActivo;
         }
 
         public async Task<Core.Entities.Restaurante?> GetRestauranteAsync(Guid id)
