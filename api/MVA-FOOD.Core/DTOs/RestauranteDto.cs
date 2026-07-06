@@ -27,5 +27,6 @@ namespace MVA_FOOD.Core.DTOs
         public ICollection<ComboDto> Combos { get; set; } = new List<ComboDto>()!;
         public ICollection<TipoEntregaDto> TiposEntrega { get; set; } = new List<TipoEntregaDto>()!;
         public ICollection<MetodoPagoDto> MetodosPago { get; set; } = new List<MetodoPagoDto>()!;
+        public string Pais { get; set; } = "DO";
     }
 }

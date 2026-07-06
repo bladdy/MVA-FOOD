@@ -10,7 +10,8 @@ namespace MVA_FOOD.Core.Entities
         public Guid Id { get; set; }
         public string Nombre { get; set; } = null!;
         public decimal Precio { get; set; }
-        public int DuracionDias { get; set; } // Ejemplo: 30 días
+        public int DuracionDias { get; set; }
+        public string? StripePriceId { get; set; }
 
         public ICollection<PlanRestaurante> PlanesContratados { get; set; } = new List<PlanRestaurante>();
     }

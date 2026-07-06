@@ -16,7 +16,7 @@ import type {
 } from "@/Types/Restaurante.ts";
 import { menuService } from "@/Services/menuService.ts";
 export default function RestauranteForm({ onSaved }: { onSaved?: () => void }) {
-  const [restaurante, setRestaurante] = useState<Restaurante>({
+  const [restaurante, setRestaurante] = useState<Restaurante & { pais?: string }>({
     id: "",
     name: "",
     slogan: "",
@@ -34,7 +34,8 @@ export default function RestauranteForm({ onSaved }: { onSaved?: () => void }) {
     tipos: [],
     plan: "" as unknown as Plan,
     horario: "",
-    menus: []
+    menus: [],
+    pais: "DO"
   });
 
   const { user } = useUser();
@@ -105,6 +106,7 @@ export default function RestauranteForm({ onSaved }: { onSaved?: () => void }) {
           image: data.image || null,
           amenidades: data.amenidades?.map((a: Amenidad) => a.id) || [],
           categorias: data.categorias?.map((c: Categoria) => c.id) || [],
+          pais: data.pais || "DO",
           horarios: (
             data.horarios?.map((h: Horario) => ({
               id: h.id || "",
@@ -347,6 +349,20 @@ export default function RestauranteForm({ onSaved }: { onSaved?: () => void }) {
           label="Imagen Portada"
           id="restaurante-portada-upload"
         />
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700">País</label>
+          <select
+            name="pais"
+            value={restaurante.pais}
+            onChange={handleChange}
+            className="w-full mt-1 rounded-md border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-orange-300 focus:border-orange-400 outline-none transition-colors"
+          >
+            <option value="DO">República Dominicana (RD$)</option>
+            <option value="US">Estados Unidos ($)</option>
+            <option value="MX">México (MX$)</option>
+          </select>
+        </div>
       </div>
 
       {/* Amenidades */}

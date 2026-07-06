@@ -106,6 +106,7 @@ namespace MVA_FOOD.Infrastructure.Services
                     Facebook = r.Facebook,
                     WhatsApp = r.WhatsApp,
                     PlanId = r.PlanRestauranteId,
+                    Pais = r.Pais,
 
                     PlanRestauranteDto = r.PlanRestaurante == null ? null : new PlanRestauranteDto
                     {
@@ -172,6 +173,7 @@ namespace MVA_FOOD.Infrastructure.Services
                     Facebook = r.Facebook,
                     WhatsApp = r.WhatsApp,
                     PlanId = r.PlanRestauranteId,
+                    Pais = r.Pais,
                     PlanRestauranteDto = new PlanRestauranteDto
                     {
                         Id = r.PlanRestaurante.Id,
@@ -234,7 +236,10 @@ namespace MVA_FOOD.Infrastructure.Services
                     WhatsApp = r.WhatsApp,
                     PlanId = r.PlanRestauranteId,
                     Slug = r.Slug,
-                    Menu = r.Menu.Where(m => m.Activo == true)
+                    Pais = r.Pais,
+                    Menu = r.PlanRestaurante != null && r.PlanRestaurante.Estado == "Vencido"
+                        ? new List<MenuDto>()
+                        : r.Menu.Where(m => m.Activo == true)
                     .Select(m => new MenuDto
                     {
                         Id = m.Id,
@@ -401,6 +406,7 @@ namespace MVA_FOOD.Infrastructure.Services
                     WhatsApp = r.WhatsApp,
                     PlanId = r.PlanRestauranteId,
                     Slug = r.Slug,
+                    Pais = r.Pais,
                     Menu = r.Menu.Where(m => m.Activo == true)
                     .Select(m => new MenuDto
                     {
@@ -543,7 +549,8 @@ namespace MVA_FOOD.Infrastructure.Services
                     Facebook = dto.Facebook,
                     WhatsApp = dto.WhatsApp,
                     Image = dto.ImageUrl,
-                    PerfilImage = dto.PerfilImageUrl
+                    PerfilImage = dto.PerfilImageUrl,
+                    Pais = dto.Pais ?? "DO"
                 };
 
                 _context.Restaurantes.Add(restaurante);
@@ -650,7 +657,8 @@ namespace MVA_FOOD.Infrastructure.Services
                     Instagram = restaurante.Instagram,
                     Facebook = restaurante.Facebook,
                     WhatsApp = restaurante.WhatsApp,
-                    PlanId = plan.Id
+                    PlanId = plan.Id,
+                    Pais = restaurante.Pais
                 };
             }
             catch
@@ -704,6 +712,8 @@ namespace MVA_FOOD.Infrastructure.Services
                 {
                     restaurante.PerfilImage = dto.PerfilImageUrl;
                 }
+                if (!string.IsNullOrEmpty(dto.Pais))
+                    restaurante.Pais = dto.Pais;
 
                 // Actualizar Categorías
                 var categoriasActuales = restaurante.CategoriaRestaurantes.ToList();

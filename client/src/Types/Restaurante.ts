@@ -105,6 +105,7 @@ export interface RestauranteDTO {
   combos?: ComboResponse[];
   tiposEntrega?: TipoEntregaResponse[];
   metodosPago?: MetodoPagoResponse[];
+  pais?: string;
 }
 export interface Restaurante {
 
@@ -131,6 +132,7 @@ export interface Restaurante {
   combos?: ComboResponse[];
   tiposEntrega?: TipoEntregaResponse[];
   metodosPago?: MetodoPagoResponse[];
+  pais?: string;
 }
 
 
@@ -184,8 +186,103 @@ export interface PedidoItem {
 }
 
 export interface Plan {
-  id: number;
-  name: string;
+  id: string;
+  nombre: string;
+  precio: number;
+  duracionDias: number;
+  stripePriceId?: string;
+  moneda: string;
+}
+
+export interface PlanRestaurante {
+  id: string;
+  nombre: string;
+  precio: number;
+  fechaInicio: string;
+  fechaFin: string;
+  fechaPago: string;
+  pagado: boolean;
+  stripeSubscriptionId?: string;
+  moneda?: string;
+}
+
+export interface FacturaDto {
+  id: string;
+  restauranteId: string;
+  numeroFactura: string;
+  monto: number;
+  fechaEmision: string;
+  fechaPago?: string;
+  pagado: boolean;
+  concepto: string;
+  pdfPath?: string;
+  planNombre: string;
+  periodo: string;
+  moneda: string;
+}
+
+export interface FacturaDetalleDto extends FacturaDto {
+  stripePaymentIntentId?: string;
+  restauranteNombre: string;
+  restauranteDireccion: string;
+  restauranteRnc?: string;
+}
+
+export interface DashboardInfoDto {
+  planNombre: string;
+  planPrecio: number;
+  moneda: string;
+  fechaFin: string;
+  diasRestantes: number;
+  esGratuito: boolean;
+  tieneFacturaPendiente: boolean;
+  montoPendiente?: number;
+  facturaPendienteId?: string;
+  estado: string;
+}
+
+export interface PagarFacturaResponseDto {
+  checkoutUrl: string;
+}
+
+export interface CambiarPlanDto {
+  restauranteId: string;
+  nuevoPlanId: string;
+}
+
+export interface CambioPlanResponseDto {
+  checkoutUrl: string;
+  sessionId: string;
+}
+
+export interface CreatePaymentIntentDto {
+  facturaId: string;
+}
+
+export interface PaymentIntentResponseDto {
+  clientSecret: string;
+  facturaId: string;
+  monto: number;
+}
+
+export interface CreateSubscriptionDto {
+  restauranteId: string;
+  planId: string;
+}
+
+export interface CreateSubscriptionResponseDto {
+  clientSecret: string;
+  facturaId: string;
+  subscriptionId: string;
+}
+
+export interface UpdateSubscriptionResponseDto {
+  requierePago: boolean;
+  clientSecret?: string;
+  facturaId?: string;
+  montoAPagar: number;
+  mensaje: string;
+  moneda: string;
 }
 
 export interface Amnidades {
@@ -300,6 +397,7 @@ export interface ComboCreate {
   predefinido: boolean;
   restauranteId: string;
   imagenUrl?: string;
+  imagenFile?: File | null;
   items: { menuId: string; cantidad: number }[];
   sugerencias?: { menuId: string; precioAdicional: number }[];
 }

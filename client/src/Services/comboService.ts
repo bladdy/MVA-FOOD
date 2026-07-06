@@ -28,6 +28,7 @@ export const comboService = {
     formData.append("Predefinido", String(data.predefinido));
     formData.append("RestauranteId", data.restauranteId);
     if (data.imagenUrl) formData.append("ImagenUrl", data.imagenUrl);
+    if (data.imagenFile) formData.append("ImagenFile", data.imagenFile);
 
     data.items.forEach((item, i) => {
       formData.append(`Items[${i}].MenuId`, item.menuId);
@@ -62,6 +63,7 @@ export const comboService = {
     formData.append("Predefinido", String(data.predefinido));
     formData.append("RestauranteId", data.restauranteId);
     if (data.imagenUrl) formData.append("ImagenUrl", data.imagenUrl);
+    if (data.imagenFile) formData.append("ImagenFile", data.imagenFile);
 
     data.items.forEach((item, i) => {
       formData.append(`Items[${i}].MenuId`, item.menuId);

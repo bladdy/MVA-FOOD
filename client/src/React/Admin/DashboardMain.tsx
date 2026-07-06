@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
 import { pedidoService, type PedidoResponse } from "@/Services/pedidoService.ts";
 import { menuService } from "@/Services/menuService.ts";
+import { planService } from "@/Services/planService";
 import { UserProvider, useUser } from "@/context/UserContext.tsx";
 import { isToday, format, parseISO } from "date-fns";
+import type { DashboardInfoDto } from "@/Types/Restaurante";
 
 const ESTADOS = ["Pendiente", "En Proceso", "Completado", "Entregado"] as const;
 
@@ -73,6 +75,7 @@ function DashboardInner() {
 
   const [pedidos, setPedidos] = useState<PedidoResponse[]>([]);
   const [totalMenus, setTotalMenus] = useState(0);
+  const [dashboardInfo, setDashboardInfo] = useState<DashboardInfoDto | null>(null);
 
   useEffect(() => {
     if (!restauranteId) return;
@@ -81,6 +84,7 @@ function DashboardInner() {
       .getMenus({ restauranteId, pageSize: 1, activo: true })
       .then((r) => setTotalMenus(r.totalItems))
       .catch(console.error);
+    planService.getDashboardInfo(restauranteId).then(setDashboardInfo).catch(() => {});
   }, [restauranteId]);
 
   const pendientes = pedidos.filter((p) => p.estado === 0);
@@ -121,6 +125,23 @@ function DashboardInner() {
   return (
     <div className="space-y-6">
       <h1 className="text-2xl font-bold text-gray-800">Dashboard</h1>
+
+      {dashboardInfo?.esGratuito && (
+        <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 flex items-center justify-between">
+          <div>
+            <p className="text-blue-800 font-semibold">Plan Gratuito</p>
+            <p className="text-blue-600 text-sm mt-1">
+              Estás usando el plan gratuito. Actualiza a un plan de pago para acceder a todas las funciones.
+            </p>
+          </div>
+          <a
+            href="/admin/facturacion/planes"
+            className="shrink-0 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition text-sm font-medium"
+          >
+            Ver Planes
+          </a>
+        </div>
+      )}
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4">
         <div className="bg-white rounded-xl shadow p-5 border-l-4 border-yellow-500">

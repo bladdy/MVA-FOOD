@@ -15,6 +15,8 @@ namespace MVA_FOOD.Core.Entities
         public string WhatsApp { get; set; }
         public Guid PlanRestauranteId { get; set; }
         public PlanRestaurante PlanRestaurante { get; set; } = null!;
+        public string? StripeCustomerId { get; set; }
+        public string Pais { get; set; } = "DO";
         public ICollection<Usuario> Usuarios { get; set; } = new List<Usuario>();
         public ICollection<Horario> Horario { get; set; } = new List<Horario>();
         public ICollection<Menu> Menu { get; set; } = new List<Menu>();
@@ -23,6 +25,8 @@ namespace MVA_FOOD.Core.Entities
         public ICollection<Combo> Combos { get; set; } = new List<Combo>();
         public ICollection<TipoEntregaRestaurante> TiposEntrega { get; set; } = new List<TipoEntregaRestaurante>();
         public ICollection<MetodoPagoRestaurante> MetodosPago { get; set; } = new List<MetodoPagoRestaurante>();
-    }
+
+
+}
 
 }

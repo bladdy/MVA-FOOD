@@ -34,6 +34,7 @@ export async function updateRestaurante(id: string, data: RestauranteDTO) {
   formData.append("Instagram", data.instagram || "");
   formData.append("Facebook", data.facebook || "");
   formData.append("WhatsApp", data.whatsapp || "");
+  if (data.pais) formData.append("Pais", data.pais);
 
   if (data.perfilImage && data.perfilImage instanceof File) {
     formData.append("PerfilImage", data.perfilImage);

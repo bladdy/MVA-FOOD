@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import type { ComboResponse, Menu } from "@/Types/Restaurante.ts";
 import { comboService } from "@/Services/comboService.ts";
+import ImageUpload from "@/React/Components/ImageUpload";
 
 interface Props {
   combo?: ComboResponse | null;
@@ -23,6 +24,7 @@ export default function ComboModal({ combo, restauranteId, onClose, onSave }: Pr
   );
   const [menus, setMenus] = useState<Menu[]>([]);
   const [buscando, setBuscando] = useState(false);
+  const [imagenFile, setImagenFile] = useState<File | null>(null);
 
   const cargarMenus = async () => {
     if (menus.length > 0) return;
@@ -37,6 +39,8 @@ export default function ComboModal({ combo, restauranteId, onClose, onSave }: Pr
       setBuscando(false);
     }
   };
+
+  useEffect(() => { cargarMenus(); }, []);
 
   const handleAgregarItem = () => {
     setItems([...items, { menuId: "", menuNombre: "", cantidad: 1 }]);
@@ -90,6 +94,8 @@ export default function ComboModal({ combo, restauranteId, onClose, onSave }: Pr
       activo,
       predefinido,
       restauranteId,
+      imagenFile: imagenFile || undefined,
+      imagenUrl: !imagenFile && combo?.imagen ? combo.imagen : undefined,
       items: items.map((i) => ({ menuId: i.menuId, cantidad: i.cantidad })),
       sugerencias: sugerencias.length > 0
         ? sugerencias.map((s) => ({ menuId: s.menuId, precioAdicional: s.precioAdicional }))
@@ -136,6 +142,13 @@ export default function ComboModal({ combo, restauranteId, onClose, onSave }: Pr
             />
           </div>
 
+          <ImageUpload
+            value={imagenFile || combo?.imagen || null}
+            onChange={(file) => setImagenFile(file)}
+            label="Imagen"
+            id="combo-imagen-upload"
+          />
+
           <div className="flex gap-4">
             <div className="flex-1">
               <label className="block text-sm font-medium text-gray-700">Precio (opcional)</label>
@@ -163,7 +176,7 @@ export default function ComboModal({ combo, restauranteId, onClose, onSave }: Pr
           <div>
             <div className="flex justify-between items-center mb-2">
               <label className="block text-sm font-medium text-gray-700">Productos del combo *</label>
-              <button type="button" onClick={handleAgregarItem} onFocus={cargarMenus} className="text-sm text-orange-600 hover:text-orange-700 font-medium">
+              <button type="button" onClick={handleAgregarItem} className="text-sm text-orange-600 hover:text-orange-700 font-medium">
                 + Agregar producto
               </button>
             </div>

@@ -9,6 +9,7 @@ using MVA_FOOD.Core.DTOs;
 using MVA_FOOD.Core.Interfaces;
 using MVA_FOOD.Infrastructure.Data;
 using MVA_FOOD.Infrastructure.Services;
+using Stripe;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -145,14 +146,22 @@ builder.Services.AddScoped<IMesaService, MesaService>();
 builder.Services.AddScoped<IContactService, ContactService>();
 builder.Services.AddScoped<IHorarioService, HorarioService>();
 builder.Services.AddScoped<IEmpleadoService, EmpleadoService>();
-builder.Services.AddScoped<IPlanService, PlanService>();
+builder.Services.AddScoped<IPlanService, MVA_FOOD.Infrastructure.Services.PlanService>();
 builder.Services.AddScoped<IVarianteService, VarianteService>();
 builder.Services.AddScoped<IComboService, ComboService>();
 builder.Services.AddScoped<IPedidoService, PedidoService>();
 builder.Services.AddScoped<ITipoEntregaService, TipoEntregaService>();
 builder.Services.AddScoped<IMetodoPagoService, MetodoPagoService>();
 builder.Services.AddScoped<IUsuarioService, UsuarioService>();
-builder.Services.AddScoped<TokenService>();
+builder.Services.AddHttpClient();
+builder.Services.AddMemoryCache();
+builder.Services.AddScoped<IFacturaService, FacturaService>();
+StripeConfiguration.ApiKey = builder.Configuration["Stripe:SecretKey"];
+builder.Services.AddScoped<IStripePaymentService, StripePaymentService>();
+builder.Services.AddScoped<ITipoCambioService, TipoCambioService>();
+builder.Services.AddScoped<IVencimientoService, VencimientoService>();
+builder.Services.AddHostedService<RenovacionHostedService>();
+builder.Services.AddScoped<MVA_FOOD.Infrastructure.Services.TokenService>();
 
 // ======================================
 // Authorization

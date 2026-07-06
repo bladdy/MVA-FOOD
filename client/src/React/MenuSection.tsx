@@ -169,32 +169,46 @@ export default function MenuSection({ restaurantId, menu, combos, titulo, tiposE
       {tiposActivos.length > 0 && combosPredefinidos.length > 0 && (
         <div className="mb-10">
           <h3 className="text-lg font-bold text-orange-600 mb-4">Combos</h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {combosPredefinidos.map((combo) => (
-              <div key={combo.id} className="bg-white border border-orange-100 rounded-2xl p-5 shadow-card hover:shadow-card-hover transition-shadow">
-                <div className="flex justify-between items-start mb-2">
-                  <div>
-                    <h4 className="font-bold text-orange-800">{combo.nombre}</h4>
-                    {combo.descripcion && (
-                      <p className="text-xs text-warm-400 mt-0.5">{combo.descripcion}</p>
-                    )}
+          <div className="space-y-3">
+            {combosPredefinidos.map((combo, idx) => (
+              <div
+                key={combo.id}
+                className={`flex items-center gap-4 bg-white rounded-2xl p-3 shadow-card hover:shadow-card-hover transition-all duration-200 animate-slide-up ${staggerClass(idx)}`}
+              >
+                <div className="flex-shrink-0">
+                  <img
+                    src={combo.imagen || "/mva-logo-rb.png"}
+                    alt={combo.nombre}
+                    className="w-20 h-20 md:w-24 md:h-24 rounded-xl object-cover"
+                  />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="text-base md:text-lg font-semibold text-gray-800 capitalize leading-tight">
+                    {combo.nombre}
                   </div>
-                  <span className="bg-orange-500 text-white text-[10px] px-2 py-0.5 rounded-full font-bold uppercase">
-                    Combo
-                  </span>
+                  {combo.descripcion && (
+                    <div className="text-sm text-warm-400 capitalize mt-0.5 line-clamp-2">
+                      {combo.descripcion}
+                    </div>
+                  )}
+                  <div className="text-xs text-gray-500 mt-1 space-y-0.5">
+                    {combo.items.map((i) => (
+                      <div key={i.menuId} className="flex items-center gap-1">
+                        <span className="text-orange-400 leading-none">•</span>
+                        <span>{i.cantidad}x {i.menuNombre}</span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-                <div className="text-xs text-gray-500 mb-3">
-                  {combo.items.map((i) => `${i.cantidad}x ${i.menuNombre}`).join(", ")}
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="font-bold text-orange-700">
-                    {combo.precio ? `$${combo.precio.toFixed(2)}` : ""}
+                <div className="flex flex-col items-end gap-2 flex-shrink-0">
+                  <span className="font-bold text-orange-600 text-base md:text-lg whitespace-nowrap">
+                    {combo.precio ? `$${combo.precio.toLocaleString("es-MX")}` : ""}
                   </span>
                   <button
+                    className="bg-orange-500 hover:bg-orange-600 text-white p-2 rounded-xl transition-colors shadow-sm"
                     onClick={() => setModalCombo(combo)}
-                    className="bg-orange-500 hover:bg-orange-600 text-white text-sm px-4 py-1.5 rounded-xl font-medium transition-colors"
                   >
-                    Personalizar
+                    <AddIcon className="w-4 h-4" />
                   </button>
                 </div>
               </div>

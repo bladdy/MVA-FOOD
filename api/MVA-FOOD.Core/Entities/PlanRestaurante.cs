@@ -17,6 +17,8 @@ namespace MVA_FOOD.Core.Entities
         public DateTime FechaFin { get; set; }
         public DateTime FechaPago { get; set; }
         public bool Pagado { get; set; }
-
+        public string Estado { get; set; } = "Activo";
+        public string? StripeSubscriptionId { get; set; }
+        public ICollection<Factura> Facturas { get; set; } = new List<Factura>();
     }
 }

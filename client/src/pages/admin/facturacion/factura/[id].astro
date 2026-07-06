@@ -1,0 +1,9 @@
+---
+import LayoutAdmin from "@/layouts/LayoutAdmin.astro";
+import InvoiceViewer from "@/React/Admin/InvoiceViewer";
+const { id } = Astro.params;
+---
+
+<LayoutAdmin title={`Factura ${id}`}>
+  <InvoiceViewer facturaId={id!} client:load />
+</LayoutAdmin>

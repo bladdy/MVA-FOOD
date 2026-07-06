@@ -30,4 +30,5 @@ public class CrearRestauranteDto
 
     public string ImageUrl { get; set; } = null!;
     public string PerfilImageUrl { get; set; } = null!;
+    public string? Pais { get; set; }
 }

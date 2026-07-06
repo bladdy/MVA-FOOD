@@ -34,6 +34,7 @@ namespace MVA_FOOD.Infrastructure.Data
         public DbSet<MenuComboSugerido> MenuComboSugeridos { get; set; }
         public DbSet<TipoEntregaRestaurante> TiposEntregaRestaurante { get; set; }
         public DbSet<MetodoPagoRestaurante> MetodosPagoRestaurante { get; set; }
+        public DbSet<Factura> Facturas { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

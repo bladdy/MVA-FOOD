@@ -28,19 +28,21 @@ public class SeedDb
             {
                 Name = "Restaurante Demo",
                 Slug = GenerateSlug("Restaurante Demo"),
-                Direccion = "Un restaurante de ejemplo para pruebas.",                
+                Direccion = "Un restaurante de ejemplo para pruebas.",
                 Phone = "555-1234",
                 Slogan = "Tu restaurante de confianza",
                 Image = "restaurante-demo.jpg",
                 PerfilImage = "restaurante-demo-perfil.jpg",
-                PlanRestaurante = new PlanRestaurante
-                {
-                    Plan = _context.Planes.FirstOrDefault(p => p.Nombre == "Plan Gratuito")!,
-                    FechaInicio = DateTime.UtcNow,
-                    FechaFin = DateTime.UtcNow.AddDays(30),
-                    FechaPago = DateTime.UtcNow,
-                    Pagado = true
-                },
+                Pais = "DO",
+                    PlanRestaurante = new PlanRestaurante
+                    {
+                        Plan = _context.Planes.FirstOrDefault(p => p.Nombre == "Plan Gratuito")!,
+                        FechaInicio = DateTime.UtcNow,
+                        FechaFin = DateTime.UtcNow.AddDays(7),
+                        FechaPago = DateTime.UtcNow,
+                        Pagado = true,
+                        Estado = "Activo"
+                    },
                 CategoriaRestaurantes = new List<CategoriaRestaurantes>
                 {
                     new CategoriaRestaurantes { Categoria = _context.Categorias.FirstOrDefault(c => c.Nombre == "Plato Fuerte")! },
@@ -105,10 +107,10 @@ public class SeedDb
     {
         if (!_context.Planes.Any())
         {
-            _context.Planes.Add(new Plan { Nombre = "Plan Gratuito", Precio = 0m , DuracionDias = 7});
-            _context.Planes.Add(new Plan { Nombre = "Plan Básico",  Precio = 9.99m , DuracionDias = 30});
-            _context.Planes.Add(new Plan { Nombre = "Plan Premium", Precio = 19.99m , DuracionDias = 30});
-            _context.Planes.Add(new Plan { Nombre = "Plan Empresarial", Precio = 49.99m , DuracionDias = 30});
+            _context.Planes.Add(new Plan { Nombre = "Plan Gratuito", Precio = 0m, DuracionDias = 7 });
+            _context.Planes.Add(new Plan { Nombre = "Plan Básico", Precio = 9.99m, DuracionDias = 30, StripePriceId = "price_basico" });
+            _context.Planes.Add(new Plan { Nombre = "Plan Premium", Precio = 19.99m, DuracionDias = 30, StripePriceId = "price_premium" });
+            _context.Planes.Add(new Plan { Nombre = "Plan Empresarial", Precio = 49.99m, DuracionDias = 30, StripePriceId = "price_empresarial" });
             await _context.SaveChangesAsync();
         }
     }
