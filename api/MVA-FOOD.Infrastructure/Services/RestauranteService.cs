@@ -674,9 +674,38 @@ namespace MVA_FOOD.Infrastructure.Services
             var r = await _context.Restaurantes.FindAsync(id);
             if (r == null) return false;
 
-            _context.Restaurantes.Remove(r);
-            await _context.SaveChangesAsync();
-            return true;
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                await _context.Database.ExecuteSqlRawAsync("DELETE FROM PedidoItems WHERE PedidoId IN (SELECT Id FROM Pedidos WHERE RestauranteId = {0})", id);
+                await _context.Database.ExecuteSqlRawAsync("DELETE FROM Pedidos WHERE RestauranteId = {0}", id);
+                await _context.Database.ExecuteSqlRawAsync("DELETE FROM Facturas WHERE RestauranteId = {0}", id);
+                await _context.Database.ExecuteSqlRawAsync("DELETE FROM VarianteOpciones WHERE VarianteId IN (SELECT Id FROM Variantes WHERE RestauranteId = {0})", id);
+                await _context.Database.ExecuteSqlRawAsync("DELETE FROM VarianteMenus WHERE MenuId IN (SELECT Id FROM Menus WHERE RestauranteId = {0}) OR VarianteId IN (SELECT Id FROM Variantes WHERE RestauranteId = {0})", id);
+                await _context.Database.ExecuteSqlRawAsync("DELETE FROM Variantes WHERE RestauranteId = {0}", id);
+                await _context.Database.ExecuteSqlRawAsync("DELETE FROM ComboMenus WHERE ComboId IN (SELECT Id FROM Combos WHERE RestauranteId = {0})", id);
+                await _context.Database.ExecuteSqlRawAsync("DELETE FROM MenuComboSugeridos WHERE ComboId IN (SELECT Id FROM Combos WHERE RestauranteId = {0})", id);
+                await _context.Database.ExecuteSqlRawAsync("DELETE FROM Combos WHERE RestauranteId = {0}", id);
+                await _context.Database.ExecuteSqlRawAsync("DELETE FROM Menus WHERE RestauranteId = {0}", id);
+                await _context.Database.ExecuteSqlRawAsync("DELETE FROM Horarios WHERE RestauranteId = {0}", id);
+                await _context.Database.ExecuteSqlRawAsync("DELETE FROM CategoriaRestaurantes WHERE RestauranteId = {0}", id);
+                await _context.Database.ExecuteSqlRawAsync("DELETE FROM AmenidadRestaurantes WHERE RestauranteId = {0}", id);
+                await _context.Database.ExecuteSqlRawAsync("DELETE FROM TiposEntregaRestaurante WHERE RestauranteId = {0}", id);
+                await _context.Database.ExecuteSqlRawAsync("DELETE FROM MetodosPagoRestaurante WHERE RestauranteId = {0}", id);
+                await _context.Database.ExecuteSqlRawAsync("DELETE FROM Empleados WHERE RestauranteId = {0}", id);
+                await _context.Database.ExecuteSqlRawAsync("DELETE FROM Mesas WHERE RestauranteId = {0}", id);
+                await _context.Database.ExecuteSqlRawAsync("DELETE FROM PlanesRestaurantes WHERE RestauranteId = {0}", id);
+                await _context.Database.ExecuteSqlRawAsync("UPDATE Usuarios SET RestauranteId = NULL WHERE RestauranteId = {0}", id);
+                await _context.Database.ExecuteSqlRawAsync("DELETE FROM Restaurantes WHERE Id = {0}", id);
+
+                await transaction.CommitAsync();
+                return true;
+            }
+            catch
+            {
+                await transaction.RollbackAsync();
+                throw;
+            }
         }
 
         public async Task<RestauranteDto> UpdateAsync(Guid id, CrearRestauranteDto dto)

@@ -113,6 +113,26 @@ namespace MVA_FOOD.API.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
+            var restaurante = await _service.GetByIdAsync(id);
+            if (restaurante == null) return NotFound();
+
+            if (!string.IsNullOrEmpty(restaurante.Image))
+                await _ftp.DeleteFileAsync("restaurant", Path.GetFileName(restaurante.Image));
+            if (!string.IsNullOrEmpty(restaurante.PerfilImage))
+                await _ftp.DeleteFileAsync("restaurant", Path.GetFileName(restaurante.PerfilImage));
+
+            foreach (var menu in restaurante.Menu)
+            {
+                if (!string.IsNullOrEmpty(menu.Imagen))
+                    await _ftp.DeleteFileAsync("menus", Path.GetFileName(menu.Imagen));
+            }
+
+            foreach (var combo in restaurante.Combos)
+            {
+                if (!string.IsNullOrEmpty(combo.Imagen))
+                    await _ftp.DeleteFileAsync("menus", Path.GetFileName(combo.Imagen));
+            }
+
             var success = await _service.DeleteAsync(id);
             if (!success) return NotFound();
             return NoContent();

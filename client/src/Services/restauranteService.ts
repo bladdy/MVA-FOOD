@@ -113,6 +113,7 @@ export async function createRestaurante(data: {
   password: string;
 
   planId: string;
+  pais: string;
   whatsapp?: string;
 
   image: File | null;
@@ -138,6 +139,8 @@ export async function createRestaurante(data: {
   formData.append("Instagram", data.instagram || "");
   formData.append("Facebook", data.facebook || "");
   formData.append("WhatsApp", data.whatsapp || "");
+
+  formData.append("Pais", data.pais);
 
   formData.append("PlanId", data.planId);
 

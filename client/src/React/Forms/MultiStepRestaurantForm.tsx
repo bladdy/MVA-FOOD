@@ -25,6 +25,7 @@ export default function RestaurantRegistrationForm({ planId }: Props) {
     password: "",
     image: null as File | null,
     perfilImage: null as File | null,
+    pais: "DO",
     categoriaIds: [] as string[],
     amenidadIds: [] as string[],
     horarioGeneral: { apertura: "08:00", cierre: "22:00" },
@@ -79,6 +80,7 @@ useEffect(() => {
         direccion: form.direccion,
         slogan: form.slogan,
         telefono: form.telefono,
+        pais: form.pais,
         nombreUsuario: form.nombreUsuario,
         username: form.username,
         password: form.password,
@@ -150,6 +152,19 @@ useEffect(() => {
                 <input className="w-full border border-gray-300 rounded-lg p-3 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400 outline-none transition-colors" placeholder="Ej: 5512345678"
                   value={form.telefono}
                   onChange={e => setForm({ ...form, telefono: e.target.value })} required />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">País</label>
+                <select
+                  className="w-full border border-gray-300 rounded-lg p-3 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400 outline-none transition-colors"
+                  value={form.pais}
+                  onChange={e => setForm({ ...form, pais: e.target.value })}
+                  required
+                >
+                  <option value="DO">República Dominicana</option>
+                  <option value="US">Estados Unidos</option>
+                  <option value="MX">México</option>
+                </select>
               </div>
               <div className="sm:col-span-2">
                 <label className="block text-sm font-medium text-gray-700 mb-1">Dirección</label>
