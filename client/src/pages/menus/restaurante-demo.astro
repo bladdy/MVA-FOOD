@@ -18,9 +18,8 @@ try {
   if (typeof slug === "string") {
     restaurant = await getRestauranteBySlug(slug);
     if (!restaurant) {
-        // Si no se encuentra el restaurante, redireccionar a una página de error o mostrar un mensaje
-        window.location.href = "/404"; // Redirige a una página de error personalizada
       console.warn("⚠️ Restaurante no encontrado para slug:", slug);
+      return Astro.redirect("/404");
     }
 
     // Si el restaurante tiene plan "Estándar" o "Premium" → permite pedidos

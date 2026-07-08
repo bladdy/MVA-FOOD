@@ -12,8 +12,8 @@ try {
   if (typeof slug === "string") {
     restaurant = await getRestauranteBySlug(slug);
     if (!restaurant) {
-        window.location.href = "/404";
       console.warn("Restaurante no encontrado para slug:", slug);
+      return Astro.redirect("/404");
     }
   } else {
     console.warn("Parámetro 'slug' ausente o no válido:", slug);
@@ -33,6 +33,7 @@ const ogImage = restaurant?.perfilImage
   description={description}
   image={ogImage}
   icon={ogImage}
+  restaurantName={restaurant?.name}
 >
 
   <!-- LOADING SCREEN -->
@@ -43,7 +44,7 @@ const ogImage = restaurant?.perfilImage
     {restaurant?.perfilImage ? (
       <img
         src={restaurant.perfilImage}
-        alt=""
+        alt={restaurant.name}
         class="w-32 h-32 rounded-full object-cover animate-pulse mb-6"
       />
     ) : (

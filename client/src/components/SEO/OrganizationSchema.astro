@@ -1,0 +1,21 @@
+---
+export interface Props {
+  name: string;
+  description?: string;
+  url?: string;
+  image?: string;
+  sameAs?: string[];
+}
+
+const { name, description, url, image, sameAs } = Astro.props;
+const data = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name,
+  ...(description && { description }),
+  ...(url && { url }),
+  ...(image && { image }),
+  ...(sameAs && sameAs.length && { sameAs }),
+};
+---
+<script type="application/ld+json" set:html={JSON.stringify(data)} />

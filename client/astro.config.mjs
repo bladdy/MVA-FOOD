@@ -5,10 +5,12 @@ import react from '@astrojs/react';
 import vercel from '@astrojs/vercel';
 import svgr from 'vite-plugin-svgr';
 import node from '@astrojs/node';
+import sitemap from '@astrojs/sitemap';
 
 // https://astro.build/config
 export default defineConfig({
-  integrations: [tailwind(), react()],
+  site: 'https://mr-menus.com',
+  integrations: [tailwind(), react(), sitemap()],
   output: 'server',
   adapter: node({ mode: 'standalone' }), // Use this for docker production with Node.js
   

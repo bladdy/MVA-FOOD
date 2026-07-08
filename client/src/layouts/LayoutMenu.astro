@@ -1,22 +1,25 @@
 ---
 import "@/styles/global.css"
+import OrganizationSchema from "@/components/SEO/OrganizationSchema.astro";
 
 interface Props {
   title: string
   description?: string
   image?: string
   icon?: string
+  restaurantName?: string
 }
 const {
   title = "",
   description = "",
   image = "/mr_menus.png",
   icon = "/mr_menus.png",
+  restaurantName,
 } = Astro.props
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="es">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
@@ -41,6 +44,17 @@ const {
     <meta property="og:description" content={description} />
     <meta property="og:image" content={image} />
     <meta property="og:type" content="website" />
+
+    <link rel="canonical" href={Astro.url} />
+
+    {restaurantName && (
+      <OrganizationSchema
+        name={restaurantName}
+        description={description}
+        url={Astro.url.toString()}
+        image={image}
+      />
+    )}
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />

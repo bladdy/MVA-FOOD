@@ -1,11 +1,16 @@
 ---
-const { title = 'Flyer Canvas App' } = Astro.props;
+const { title = 'Flyer Canvas App', description = 'Editor de flyers y menús digitales para restaurantes.' } = Astro.props;
 ---
 <html lang="es">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
     <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <link rel="canonical" href={Astro.url} />
     <link rel="preconnect" href="https://rsms.me/" />
     <style>
       /* Tailwind base en línea si no quieres CSS externo */

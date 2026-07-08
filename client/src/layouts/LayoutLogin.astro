@@ -14,7 +14,7 @@ interface Props {
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="es">
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width" />
@@ -22,6 +22,12 @@ interface Props {
 		<meta name="generator" content={Astro.generator} />
 		<meta name="keywords" content="menus, comida, comida rapida, delivery, comida saludable" />
 		<meta name="author" content="Bladdy Almanzar" />
+		<meta name="description" content={description} />
+		<meta property="og:title" content={title} />
+		<meta property="og:description" content={description} />
+		<meta property="og:type" content="website" />
+		<meta property="og:image" content="/mr_menus_no.png" />
+		<link rel="canonical" href={Astro.url} />
 		<title>{title}</title>
 	</head>
 	<body>

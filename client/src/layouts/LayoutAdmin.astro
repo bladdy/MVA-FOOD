@@ -24,7 +24,9 @@ const stripePk = import.meta.env.PUBLIC_STRIPE_PK || "";
 		<link rel="icon" type="image/svg+xml" href="/mr_menus_no.png" />
     <title>{title}</title>
     <meta property="og:title" content={title} />
+    <meta name="robots" content="noindex, nofollow" />
     <meta name="description" content={description} />
+    <link rel="canonical" href={Astro.url} />
     <link rel="stylesheet" href="/src/styles/global.css" />
   </head>
   <body class="bg-white">
