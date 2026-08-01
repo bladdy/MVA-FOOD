@@ -1,5 +1,11 @@
-import { useState, type JSX } from "react";
+import { useState, useEffect, type JSX } from "react";
 import type { Menu, Categorias, ComboResponse, TipoEntregaResponse, MetodoPagoResponse } from "@/Types/Restaurante.ts";
+
+declare global {
+  interface Window {
+    __menuMode?: "view" | "order";
+  }
+}
 
 import { usePedido } from "@/React/hooks/usePedido.ts";
 import ModalProducto from "@/React/Modales/ModalProducto.tsx";
@@ -35,6 +41,7 @@ interface Props {
   tiposEntrega?: TipoEntregaResponse[];
   metodosPago?: MetodoPagoResponse[];
   mesa?: string | null;
+  mode?: "view" | "order";
 }
 
 const categoriaIcons: Record<Categorias, JSX.Element> = {
@@ -59,7 +66,20 @@ const categoriaIcons: Record<Categorias, JSX.Element> = {
 
 const staggerClass = (i: number) => `stagger-${Math.min(i + 1, 8)}`;
 
-export default function MenuSection({ restaurantId, menu, combos, titulo, tiposEntrega, metodosPago, mesa }: Props) {
+export default function MenuSection({ restaurantId, menu, combos, titulo, tiposEntrega, metodosPago, mesa, mode: initialMode }: Props) {
+  const [mode, setMode] = useState<"view" | "order">(initialMode || "order");
+  const mostrarOrden = mode !== "view";
+
+  useEffect(() => {
+    if (typeof window !== "undefined" && window.__menuMode === "view") {
+      setMode("view");
+    }
+    const handler = (e: CustomEvent) => {
+      setMode(e.detail.mode);
+    };
+    window.addEventListener("menuModeChange", handler as EventListener);
+    return () => window.removeEventListener("menuModeChange", handler as EventListener);
+  }, []);
 
   const {
     pedido,
@@ -204,12 +224,14 @@ export default function MenuSection({ restaurantId, menu, combos, titulo, tiposE
                   <span className="font-bold text-orange-600 text-base md:text-lg whitespace-nowrap">
                     {combo.precio ? `$${combo.precio.toLocaleString("es-MX")}` : ""}
                   </span>
-                  <button
-                    className="bg-orange-500 hover:bg-orange-600 text-white p-2 rounded-xl transition-colors shadow-sm"
-                    onClick={() => setModalCombo(combo)}
-                  >
-                    <AddIcon className="w-4 h-4" />
-                  </button>
+                  {mostrarOrden && (
+                    <button
+                      className="bg-orange-500 hover:bg-orange-600 text-white p-2 rounded-xl transition-colors shadow-sm"
+                      onClick={() => setModalCombo(combo)}
+                    >
+                      <AddIcon className="w-4 h-4" />
+                    </button>
+                  )}
                 </div>
               </div>
             ))}
@@ -231,7 +253,7 @@ export default function MenuSection({ restaurantId, menu, combos, titulo, tiposE
       </div>
 
       {/* Take out o delivery */}
-      {tiposActivos.length > 0 && (
+      {tiposActivos.length > 0 && mostrarOrden && (
         <TipoEntregaSelector
           tipos={tiposEntrega ?? []}
           selectedId={tipoEntregaId}
@@ -287,7 +309,7 @@ export default function MenuSection({ restaurantId, menu, combos, titulo, tiposE
                       <span className="font-bold text-orange-600 text-base md:text-lg whitespace-nowrap">
                         ${item.precio.toLocaleString("es-MX")}
                       </span>
-                      {(tiposActivos.length > 0 || mesa) && (
+                      {mostrarOrden && (tiposActivos.length > 0 || mesa) && (
                         <button
                           className="bg-orange-500 hover:bg-orange-600 text-white p-2 rounded-xl transition-colors shadow-sm"
                           onClick={() => setModalProducto(item)}
@@ -360,7 +382,7 @@ export default function MenuSection({ restaurantId, menu, combos, titulo, tiposE
         )}
 
         {/* Botón flotante de ver pedido */}
-        {cantidad > 0 && (
+        {cantidad > 0 && mostrarOrden && (
           <BotonVerPedido
             total={total}
             cantidad={cantidad}

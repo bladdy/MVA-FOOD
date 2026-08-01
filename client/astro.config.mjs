@@ -12,9 +12,7 @@ export default defineConfig({
   site: 'https://mr-menus.com',
   integrations: [tailwind(), react(), sitemap()],
   output: 'server',
-  adapter: node({ mode: 'standalone' }), // Use this for docker production with Node.js
-  
-  //adapter: vercel(), // Use this for deployment on Vercel
+  adapter: node({ mode: 'standalone' }),
   vite: {
     plugins: [svgr()],
     resolve: {

@@ -50,7 +50,15 @@ const ogImage = restaurant?.perfilImage
     ) : (
       <div class="w-32 h-32 rounded-full bg-gray-200 animate-shimmer mb-6" />
     )}
-    
+
+    <div class="flex gap-3 mt-4">
+      <button id="btn-ver-menu" class="px-6 py-2.5 rounded-xl text-sm font-semibold bg-orange-500 text-white shadow-md hover:bg-orange-600 transition-colors">
+        Ver Menú
+      </button>
+      <button id="btn-pedir" class="px-6 py-2.5 rounded-xl text-sm font-semibold bg-white text-orange-600 border-2 border-orange-500 shadow-md hover:bg-orange-50 transition-colors">
+        Pedir
+      </button>
+    </div>
   </div>
 
   <!-- CONTENIDO -->
@@ -125,18 +133,22 @@ const ogImage = restaurant?.perfilImage
     </div>
 
   <script>
-    window.addEventListener("load", () => {
+    function dismissLoading(mode:any) {
+      window.__menuMode = mode || "order";
+      window.dispatchEvent(new CustomEvent("menuModeChange", { detail: { mode: window.__menuMode } }));
+
       const loading = document.getElementById("loading-screen");
       const content = document.getElementById("main-content");
-
+      if (!loading) return;
+      loading.classList.add("opacity-0");
       setTimeout(() => {
-        loading?.classList.add("opacity-0");
+        loading.classList.add("hidden");
+        content?.classList.remove("opacity-0");
+      }, 700);
+    }
 
-        setTimeout(() => {
-          loading?.classList.add("hidden");
-          content?.classList.remove("opacity-0");
-        }, 700);
-      }, 1500);
-    });
+    document.getElementById("btn-ver-menu")?.addEventListener("click", () => dismissLoading("view"));
+    document.getElementById("btn-pedir")?.addEventListener("click", () => dismissLoading("order"));
+
   </script>
 </LayoutMenu>

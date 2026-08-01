@@ -9,9 +9,10 @@ interface MenuSectionWrapperProps {
   titulo: string;
   tiposEntrega?: TipoEntregaResponse[];
   metodosPago?: MetodoPagoResponse[];
+  mode?: "view" | "order";
 }
 
-const MenuSectionWrapper = ({ restaurantId, menu, combos, titulo, tiposEntrega, metodosPago }: MenuSectionWrapperProps) => {
+const MenuSectionWrapper = ({ restaurantId, menu, combos, titulo, tiposEntrega, metodosPago, mode }: MenuSectionWrapperProps) => {
   const [loading, setLoading] = useState(true);
   const [mesa, setMesa] = useState<string | null>(null);
   useEffect(() => {
@@ -44,6 +45,7 @@ const MenuSectionWrapper = ({ restaurantId, menu, combos, titulo, tiposEntrega, 
         tiposEntrega={tiposEntrega}
         metodosPago={metodosPago}
         mesa={mesa}
+        mode={mode}
       />
     </div>
   );
