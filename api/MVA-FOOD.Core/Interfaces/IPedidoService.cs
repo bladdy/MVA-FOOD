@@ -11,8 +11,10 @@ namespace MVA_FOOD.Core.Interfaces
         Task<PagedResult<Pedido>> GetHistorialAsync(PedidoFilters filters);
         Task<Pedido> GetByIdAsync(Guid id);
         Task<Pedido> GetByIdSignalRAsync(Guid id);
+        Task<List<Pedido>> GetByMesaAsync(Guid mesaId);
         Task<Pedido> CreateAsync(PedidoDto dto);
         Task<bool> UpdateEstadoAsync(Guid id, Estado estado);
+        Task<(bool success, bool promovido)> UpdateItemEstadoAsync(Guid pedidoId, Guid itemId, Estado estado);
         Task<bool> DeleteAsync(Guid id);
     }
 }

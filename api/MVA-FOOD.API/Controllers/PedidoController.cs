@@ -39,6 +39,13 @@ namespace MVA_FOOD.API.Controllers
             return Ok(pedidos);
         }
 
+        [HttpGet("mesa/{mesaId}")]
+        public async Task<IActionResult> GetByMesa(Guid mesaId)
+        {
+            var pedidos = await _service.GetByMesaAsync(mesaId);
+            return Ok(pedidos);
+        }
+
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(Guid id)
         {
@@ -83,6 +90,30 @@ namespace MVA_FOOD.API.Controllers
                 await _hubContext.Clients
                     .Group($"restaurant_{pedido.RestauranteId}")
                     .SendAsync("EstadoPedidoActualizado", pedido);
+            }
+
+            return NoContent();
+        }
+
+        [HttpPatch("{id}/item/{itemId}/estado")]
+        public async Task<IActionResult> UpdateItemEstado(Guid id, Guid itemId, [FromQuery] Estado estado)
+        {
+            var resultado = await _service.UpdateItemEstadoAsync(id, itemId, estado);
+            if (!resultado.success) return NotFound();
+
+            var pedido = await _service.GetByIdSignalRAsync(id);
+            if (pedido != null)
+            {
+                await _hubContext.Clients
+                    .Group($"restaurant_{pedido.RestauranteId}")
+                    .SendAsync("EstadoItemActualizado", new { pedidoId = id, itemId, estado = (int)estado });
+
+                if (resultado.promovido)
+                {
+                    await _hubContext.Clients
+                        .Group($"restaurant_{pedido.RestauranteId}")
+                        .SendAsync("EstadoPedidoActualizado", pedido);
+                }
             }
 
             return NoContent();

@@ -126,10 +126,10 @@ import TruckDelivery from "@assets/svg/truck-delivery.svg";
             </ul>
           </div>
 
-          <!-- Dropdown Facturación -->
+          <!-- Dropdown Facturación (POS) -->
           <div class="relative">
             <button
-              id="billing-toggle"
+              id="facturacion-toggle"
               class="flex items-center gap-4 px-4 py-3 w-full text-white rounded-lg hover:bg-white/10 focus:outline-none"
             >
               <svg xmlns="http://www.w3.org/2000/svg" class="text-sm mr-2 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -146,7 +146,57 @@ import TruckDelivery from "@assets/svg/truck-delivery.svg";
               </svg>
             </button>
             <ul
-              id="billing-dropdown"
+              id="facturacion-dropdown"
+              class="hidden flex-col mt-1 text-white"
+            >
+              <li>
+                <a href="/admin/facturacion/ventas" class="flex items-center px-4 py-2 pl-8 text-sm rounded-lg hover:bg-white/10">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="text-sm mr-2 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                  </svg>
+                  Punto de venta
+                </a>
+              </li>
+              <li>
+                <a href="/admin/facturacion/reporte" class="flex items-center px-4 py-2 pl-8 text-sm rounded-lg hover:bg-white/10">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="text-sm mr-2 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                  </svg>
+                  Reporte de ventas
+                </a>
+              </li>
+              <li>
+                <a href="/admin/facturacion/facturas" class="flex items-center px-4 py-2 pl-8 text-sm rounded-lg hover:bg-white/10">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="text-sm mr-2 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                  </svg>
+                  Facturas
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Dropdown Suscripción -->
+          <div class="relative">
+            <button
+              id="suscripcion-toggle"
+              class="flex items-center gap-4 px-4 py-3 w-full text-white rounded-lg hover:bg-white/10 focus:outline-none"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" class="text-sm mr-2 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
+              </svg>
+              <p class="text-base font-medium">Suscripción</p>
+              <svg
+                class="ml-auto h-4 w-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+            <ul
+              id="suscripcion-dropdown"
               class="hidden flex-col mt-1 text-white"
             >
               <li>
@@ -154,7 +204,7 @@ import TruckDelivery from "@assets/svg/truck-delivery.svg";
                   <svg xmlns="http://www.w3.org/2000/svg" class="text-sm mr-2 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                   </svg>
-                  Dashboard
+                  Mi suscripción
                 </a>
               </li>
               <li>
@@ -171,6 +221,48 @@ import TruckDelivery from "@assets/svg/truck-delivery.svg";
                     <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                   </svg>
                   Planes
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Dropdown Servicio (mesero + cocina) -->
+          <div class="relative">
+            <button
+              id="servicio-toggle"
+              class="flex items-center gap-4 px-4 py-3 w-full text-white rounded-lg hover:bg-white/10 focus:outline-none"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" class="text-sm mr-2 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M18.364 5.636a9 9 0 010 12.728m-3.536-3.536a4.5 4.5 0 010-5.657M12 2v4m0 12v4M2 12h4m12 0h4" />
+              </svg>
+              <p class="text-base font-medium">Servicio</p>
+              <svg
+                class="ml-auto h-4 w-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+            <ul
+              id="servicio-dropdown"
+              class="hidden flex-col mt-1 text-white"
+            >
+              <li>
+                <a href="/admin/mesero" class="flex items-center px-4 py-2 pl-8 text-sm rounded-lg hover:bg-white/10">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="text-sm mr-2 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M12 5v14" />
+                  </svg>
+                  Mesero
+                </a>
+              </li>
+              <li>
+                <a href="/admin/cocina" class="flex items-center px-4 py-2 pl-8 text-sm rounded-lg hover:bg-white/10">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="text-sm mr-2 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                  </svg>
+                  Cocina
                 </a>
               </li>
             </ul>
@@ -235,8 +327,16 @@ import TruckDelivery from "@assets/svg/truck-delivery.svg";
                       <path d="M14 20l3 0" /><path d="M17 17l3 0" />
                       <path d="M20 17l0 3" />
                     </svg>
-                    Generar QR
+                      Generar QR
                   </a>
+              </li>
+              <li>
+                <a href="/admin/mesas" class="flex items-center px-4 py-2 pl-8 text-sm rounded-lg hover:bg-white/10">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="text-sm mr-2 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 6h18M3 6v6a2 2 0 002 2h14a2 2 0 002-2V6M3 12v6m18-6v6" />
+                  </svg>
+                  Mesas
+                </a>
               </li>
             </ul>
           </div>
@@ -289,11 +389,27 @@ import TruckDelivery from "@assets/svg/truck-delivery.svg";
   });
 
   // Dropdown Facturación
-  const billingToggle = document.getElementById("billing-toggle");
-  const billingDropdown = document.getElementById("billing-dropdown");
+  const facturacionToggle = document.getElementById("facturacion-toggle");
+  const facturacionDropdown = document.getElementById("facturacion-dropdown");
 
-  billingToggle?.addEventListener("click", () => {
-    billingDropdown?.classList.toggle("hidden");
+  facturacionToggle?.addEventListener("click", () => {
+    facturacionDropdown?.classList.toggle("hidden");
+  });
+
+  // Dropdown Suscripción
+  const suscripcionToggle = document.getElementById("suscripcion-toggle");
+  const suscripcionDropdown = document.getElementById("suscripcion-dropdown");
+
+  suscripcionToggle?.addEventListener("click", () => {
+    suscripcionDropdown?.classList.toggle("hidden");
+  });
+
+  // Dropdown Servicio
+  const servicioToggle = document.getElementById("servicio-toggle");
+  const servicioDropdown = document.getElementById("servicio-dropdown");
+
+  servicioToggle?.addEventListener("click", () => {
+    servicioDropdown?.classList.toggle("hidden");
   });
 
   // Dropdown Configuración
@@ -312,8 +428,14 @@ import TruckDelivery from "@assets/svg/truck-delivery.svg";
     if (!ordenToggle?.contains(target) && !ordenDropdown?.contains(target)) {
       ordenDropdown?.classList.add("hidden");
     }
-    if (!billingToggle?.contains(target) && !billingDropdown?.contains(target)) {
-      billingDropdown?.classList.add("hidden");
+    if (!facturacionToggle?.contains(target) && !facturacionDropdown?.contains(target)) {
+      facturacionDropdown?.classList.add("hidden");
+    }
+    if (!suscripcionToggle?.contains(target) && !suscripcionDropdown?.contains(target)) {
+      suscripcionDropdown?.classList.add("hidden");
+    }
+    if (!servicioToggle?.contains(target) && !servicioDropdown?.contains(target)) {
+      servicioDropdown?.classList.add("hidden");
     }
     if (!configToggle?.contains(target) && !configDropdown?.contains(target)) {
       configDropdown?.classList.add("hidden");

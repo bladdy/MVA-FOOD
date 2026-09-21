@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { pedidoService, type PedidoResponse, type PagedResultPedidos } from "@/Services/pedidoService.ts";
 import { useUser } from "@/context/UserContext.tsx";
+import FacturaModal from "@/React/Admin/FacturaModal";
 
 const ESTADOS = ["Pendiente", "En Proceso", "Completado", "Entregado"];
 
@@ -27,6 +28,7 @@ export default function OrdenesHistorial() {
     pageNumber: 1,
     pageSize: 10,
   });
+  const [facturarPedidoId, setFacturarPedidoId] = useState<string | null>(null);
 
   const restauranteId = user?.restauranteId;
 
@@ -231,6 +233,16 @@ export default function OrdenesHistorial() {
                             <div className="text-right font-bold text-gray-800 pt-2 border-t">
                               Total: ${pedido.total.toFixed(2)}
                             </div>
+                            {(pedido.estado === 3 || (pedido.estado === 2 && !pedido.mesaId)) && (
+                              <div className="pt-2">
+                                <button
+                                  onClick={() => setFacturarPedidoId(pedido.id)}
+                                  className="px-3 py-1.5 bg-orange-500 hover:bg-orange-600 text-white text-sm rounded-md font-medium"
+                                >
+                                  Facturar
+                                </button>
+                              </div>
+                            )}
                           </div>
                         </td>
                       </tr>
@@ -264,6 +276,16 @@ export default function OrdenesHistorial() {
             </div>
           </div>
         </>
+      )}
+      {facturarPedidoId && (
+        <FacturaModal
+          pedidoIdInicial={facturarPedidoId}
+          onClose={() => setFacturarPedidoId(null)}
+          onFacturaCreada={() => {
+            setFacturarPedidoId(null);
+            fetchHistorial();
+          }}
+        />
       )}
     </div>
   );

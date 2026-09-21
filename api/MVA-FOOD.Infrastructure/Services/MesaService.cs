@@ -9,21 +9,32 @@ namespace MVA_FOOD.Infrastructure.Services
     public class MesaService : IMesaService
     {
         private readonly AppDbContext _context;
+        private readonly ICuentaMesaService _cuentaMesaService;
 
-        public MesaService(AppDbContext context)
+        public MesaService(AppDbContext context, ICuentaMesaService cuentaMesaService)
         {
             _context = context;
+            _cuentaMesaService = cuentaMesaService;
         }
 
-        public async Task<IEnumerable<MesaDto>> GetAllAsync()
+        public async Task<IEnumerable<MesaDto>> GetAllAsync(Guid? restauranteId = null)
         {
-            return await _context.Mesas
+            var query = _context.Mesas
                 .Include(m => m.Restaurante)
+                .AsQueryable();
+
+            if (restauranteId.HasValue)
+                query = query.Where(m => m.RestauranteId == restauranteId.Value);
+
+            return await query
+                .OrderBy(m => m.Numero)
                 .Select(m => new MesaDto
                 {
                     Id = m.Id,
                     Codigo = m.Codigo,
+                    Numero = m.Numero,
                     Capacidad = m.Capacidad,
+                    EstaOcupada = m.EstaOcupada,
                     RestauranteId = m.RestauranteId,
                     RestauranteNombre = m.Restaurante.Name
                 }).ToListAsync();
@@ -38,7 +49,9 @@ namespace MVA_FOOD.Infrastructure.Services
             {
                 Id = mesa.Id,
                 Codigo = mesa.Codigo,
+                Numero = mesa.Numero,
                 Capacidad = mesa.Capacidad,
+                EstaOcupada = mesa.EstaOcupada,
                 RestauranteId = mesa.RestauranteId,
                 RestauranteNombre = mesa.Restaurante.Name
             };
@@ -49,7 +62,9 @@ namespace MVA_FOOD.Infrastructure.Services
             var mesa = new Mesa
             {
                 Codigo = dto.Codigo,
+                Numero = dto.Numero,
                 Capacidad = dto.Capacidad,
+                EstaOcupada = dto.EstaOcupada,
                 RestauranteId = dto.RestauranteId
             };
 
@@ -62,7 +77,9 @@ namespace MVA_FOOD.Infrastructure.Services
             {
                 Id = mesa.Id,
                 Codigo = mesa.Codigo,
+                Numero = mesa.Numero,
                 Capacidad = mesa.Capacidad,
+                EstaOcupada = mesa.EstaOcupada,
                 RestauranteId = mesa.RestauranteId,
                 RestauranteNombre = restaurante?.Name ?? ""
             };
@@ -90,6 +107,29 @@ namespace MVA_FOOD.Infrastructure.Services
             if (mesa == null) return false;
 
             _context.Mesas.Remove(mesa);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<bool> LiberarAsync(Guid id)
+        {
+            var mesa = await _context.Mesas.FindAsync(id);
+            if (mesa == null) return false;
+
+            var pedidos = await _context.Pedidos
+                .Where(p => p.MesaId == id && p.Activo)
+                .ToListAsync();
+
+            foreach (var pedido in pedidos)
+            {
+                pedido.Activo = false;
+                pedido.Estado = Estado.Entregado;
+            }
+
+            await _cuentaMesaService.LiberarMesaAsync(id);
+
+            mesa.EstaOcupada = false;
+            _context.Mesas.Update(mesa);
             await _context.SaveChangesAsync();
             return true;
         }

@@ -38,6 +38,9 @@ namespace MVA_FOOD.Infrastructure.Services
             if (filter.CategoriaId.HasValue)
                 query = query.Where(m => m.CategoriaId == filter.CategoriaId.Value);
 
+            if (filter.Activo.HasValue)
+                query = query.Where(m => m.Activo == filter.Activo.Value);
+
             var orderBy = string.IsNullOrWhiteSpace(filter.OrderBy) ? "Nombre" : filter.OrderBy;
             orderBy = orderBy switch
             {

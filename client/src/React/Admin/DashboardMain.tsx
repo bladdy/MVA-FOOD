@@ -2,9 +2,11 @@ import { useEffect, useState } from "react";
 import { pedidoService, type PedidoResponse } from "@/Services/pedidoService.ts";
 import { menuService } from "@/Services/menuService.ts";
 import { planService } from "@/Services/planService";
+import { facturaVentaService } from "@/Services/facturaVentaService";
+import { getCurrencySymbol } from "@/lib/currency";
 import { UserProvider, useUser } from "@/context/UserContext.tsx";
 import { isToday, format, parseISO } from "date-fns";
-import type { DashboardInfoDto } from "@/Types/Restaurante";
+import type { DashboardInfoDto, ResumenFacturacionHoyDto } from "@/Types/Restaurante";
 
 const ESTADOS = ["Pendiente", "En Proceso", "Completado", "Entregado"] as const;
 
@@ -76,6 +78,7 @@ function DashboardInner() {
   const [pedidos, setPedidos] = useState<PedidoResponse[]>([]);
   const [totalMenus, setTotalMenus] = useState(0);
   const [dashboardInfo, setDashboardInfo] = useState<DashboardInfoDto | null>(null);
+  const [resumenHoy, setResumenHoy] = useState<ResumenFacturacionHoyDto | null>(null);
 
   useEffect(() => {
     if (!restauranteId) return;
@@ -85,6 +88,7 @@ function DashboardInner() {
       .then((r) => setTotalMenus(r.totalItems))
       .catch(console.error);
     planService.getDashboardInfo(restauranteId).then(setDashboardInfo).catch(() => {});
+    facturaVentaService.getResumenHoy(restauranteId).then(setResumenHoy).catch(console.error);
   }, [restauranteId]);
 
   const pendientes = pedidos.filter((p) => p.estado === 0);
@@ -143,7 +147,7 @@ function DashboardInner() {
         </div>
       )}
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-7 gap-4">
         <div className="bg-white rounded-xl shadow p-5 border-l-4 border-yellow-500">
           <p className="text-sm text-gray-500 font-medium">Pendientes</p>
           <p className="text-3xl font-bold text-gray-800 mt-1">{pendientes.length}</p>
@@ -165,6 +169,13 @@ function DashboardInner() {
           <p className="text-3xl font-bold text-gray-800 mt-1">${ingresosHoy.toFixed(2)}</p>
         </div>
         <div className="bg-white rounded-xl shadow p-5 border-l-4 border-orange-500">
+          <p className="text-sm text-gray-500 font-medium">Facturado Hoy</p>
+          <p className="text-3xl font-bold text-gray-800 mt-1">
+            {resumenHoy ? `${getCurrencySymbol(resumenHoy.moneda || "DOP")}${resumenHoy.ingresos.toFixed(2)}` : "—"}
+          </p>
+          <p className="text-xs text-gray-400 mt-1">{resumenHoy?.cantidadVentas ?? 0} factura(s)</p>
+        </div>
+        <div className="bg-white rounded-xl shadow p-5 border-l-4 border-purple-500">
           <p className="text-sm text-gray-500 font-medium">Menús Activos</p>
           <p className="text-3xl font-bold text-gray-800 mt-1">{totalMenus}</p>
         </div>

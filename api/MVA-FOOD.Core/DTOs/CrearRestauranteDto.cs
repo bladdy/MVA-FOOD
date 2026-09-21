@@ -31,4 +31,10 @@ public class CrearRestauranteDto
     public string ImageUrl { get; set; } = null!;
     public string PerfilImageUrl { get; set; } = null!;
     public string? Pais { get; set; }
+    public string? NumeroFiscal { get; set; }
+    public string? PrefijoFactura { get; set; }
+    public int? SecuenciaFactura { get; set; }
+    public decimal? PorcentajeImpuesto { get; set; }
+    public bool? ImpuestoIncluido { get; set; }
+    public string? MensajePieFactura { get; set; }
 }

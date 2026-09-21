@@ -16,7 +16,14 @@ import type {
 } from "@/Types/Restaurante.ts";
 import { menuService } from "@/Services/menuService.ts";
 export default function RestauranteForm({ onSaved }: { onSaved?: () => void }) {
-  const [restaurante, setRestaurante] = useState<Restaurante & { pais?: string }>({
+  const [restaurante, setRestaurante] = useState<Restaurante & { pais?: string } & {
+    numeroFiscal?: string;
+    prefijoFactura?: string;
+    secuenciaFactura?: number;
+    porcentajeImpuesto?: number;
+    impuestoIncluido?: boolean;
+    mensajePieFactura?: string;
+  }>({
     id: "",
     name: "",
     slogan: "",
@@ -35,7 +42,13 @@ export default function RestauranteForm({ onSaved }: { onSaved?: () => void }) {
     plan: "" as unknown as Plan,
     horario: "",
     menus: [],
-    pais: "DO"
+    pais: "DO",
+    numeroFiscal: "",
+    prefijoFactura: "F",
+    secuenciaFactura: 1,
+    porcentajeImpuesto: 0,
+    impuestoIncluido: true,
+    mensajePieFactura: ""
   });
 
   const { user } = useUser();
@@ -123,6 +136,12 @@ export default function RestauranteForm({ onSaved }: { onSaved?: () => void }) {
           plan: data.plan || "",
           horario: data.horario || "",
           menus: data.menus || [],
+          numeroFiscal: data.numeroFiscal || "",
+          prefijoFactura: data.prefijoFactura || "F",
+          secuenciaFactura: data.secuenciaFactura ?? 1,
+          porcentajeImpuesto: data.porcentajeImpuesto ?? 0,
+          impuestoIncluido: data.impuestoIncluido ?? true,
+          mensajePieFactura: data.mensajePieFactura || "",
         }));
 
       });
@@ -505,6 +524,103 @@ export default function RestauranteForm({ onSaved }: { onSaved?: () => void }) {
         >
           + Agregar Horario
         </button>
+      </fieldset>
+
+      {/* Facturación */}
+      <fieldset className="border border-gray-200 rounded-lg p-4 space-y-3">
+        <legend className="font-semibold text-orange-700 px-2">Facturación (Punto de Venta)</legend>
+        <p className="text-xs text-gray-500">
+          Configuración usada para el ticket térmico que se imprime al facturar.
+        </p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              {restaurante.pais === "MX" ? "RFC (México)" : restaurante.pais === "DO" ? "RNC (Rep. Dominicana)" : "Nº fiscal"}
+            </label>
+            <input
+              type="text"
+              name="numeroFiscal"
+              value={restaurante.numeroFiscal || ""}
+              onChange={handleChange}
+              placeholder="Opcional"
+              className="w-full mt-1 rounded-md border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-orange-300 focus:border-orange-400 outline-none transition-colors"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Prefijo de factura</label>
+            <input
+              type="text"
+              name="prefijoFactura"
+              value={restaurante.prefijoFactura || "F"}
+              onChange={handleChange}
+              className="w-full mt-1 rounded-md border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-orange-300 focus:border-orange-400 outline-none transition-colors"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Próxima secuencia</label>
+            <input
+              type="number"
+              name="secuenciaFactura"
+              min={1}
+              value={restaurante.secuenciaFactura ?? 1}
+              onChange={(e) =>
+                setRestaurante((prev) => ({
+                  ...prev,
+                  secuenciaFactura: Math.max(1, parseInt(e.target.value, 10) || 1),
+                }))
+              }
+              className="w-full mt-1 rounded-md border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-orange-300 focus:border-orange-400 outline-none transition-colors"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              % Impuesto (ITBIS/IVA)
+            </label>
+            <input
+              type="number"
+              name="porcentajeImpuesto"
+              min={0}
+              step="0.01"
+              value={restaurante.porcentajeImpuesto ?? 0}
+              onChange={(e) =>
+                setRestaurante((prev) => ({
+                  ...prev,
+                  porcentajeImpuesto: parseFloat(e.target.value) || 0,
+                }))
+              }
+              placeholder="0 = sin impuesto"
+              className="w-full mt-1 rounded-md border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-orange-300 focus:border-orange-400 outline-none transition-colors"
+            />
+          </div>
+          <div className="sm:col-span-2 flex items-center gap-3">
+            <input
+              type="checkbox"
+              id="impuestoIncluido"
+              checked={restaurante.impuestoIncluido ?? true}
+              onChange={(e) =>
+                setRestaurante((prev) => ({
+                  ...prev,
+                  impuestoIncluido: e.target.checked,
+                }))
+              }
+              className="h-4 w-4 text-orange-600 border-gray-300 rounded focus:ring-orange-500"
+            />
+            <label htmlFor="impuestoIncluido" className="text-sm font-medium text-gray-700">
+              Los precios del menú ya incluyen el impuesto
+            </label>
+          </div>
+          <div className="sm:col-span-2">
+            <label className="block text-sm font-medium text-gray-700">Mensaje del pie del ticket</label>
+            <input
+              type="text"
+              name="mensajePieFactura"
+              value={restaurante.mensajePieFactura || ""}
+              onChange={handleChange}
+              placeholder="Ej: ¡Gracias por su compra! Síguenos en Instagram"
+              className="w-full mt-1 rounded-md border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-orange-300 focus:border-orange-400 outline-none transition-colors"
+            />
+          </div>
+        </div>
       </fieldset>
 
       {/* Botones */}

@@ -162,20 +162,44 @@ namespace MVA_FOOD.Infrastructure.Services
                 });
             }
 
+            Mesa mesa = null;
+            if (dto.MesaId.HasValue)
+            {
+                mesa = await _context.Mesas.FirstOrDefaultAsync(m => m.Id == dto.MesaId.Value);
+                if (mesa == null)
+                    throw new Exception($"Mesa con ID {dto.MesaId} no encontrada");
+
+                if (mesa.RestauranteId != dto.RestauranteId)
+                    throw new Exception("La mesa no pertenece al restaurante indicado");
+            }
+
             var pedido = new Pedido
             {
-                ClienteNombre = dto.ClienteNombre,
+                ClienteNombre = string.IsNullOrWhiteSpace(dto.ClienteNombre) && mesa != null
+                    ? $"Mesa {mesa.Numero}"
+                    : dto.ClienteNombre,
                 ClienteTelefono = dto.ClienteTelefono,
-                TipoEntrega = dto.TipoEntrega,
+                TipoEntrega = string.IsNullOrWhiteSpace(dto.TipoEntrega) && mesa != null
+                    ? "en mesa"
+                    : dto.TipoEntrega,
                 Direccion = dto.Direccion,
                 MetodoPago = dto.MetodoPago,
                 RestauranteId = dto.RestauranteId,
+                MesaId = dto.MesaId,
+                NumeroMesa = mesa?.Numero,
                 Items = items
             };
 
             pedido.CalcularTotal();
 
             _context.Pedidos.Add(pedido);
+
+            if (mesa != null)
+            {
+                mesa.EstaOcupada = true;
+                _context.Mesas.Update(mesa);
+            }
+
             await _context.SaveChangesAsync();
             return pedido;
         }
@@ -186,8 +210,47 @@ namespace MVA_FOOD.Infrastructure.Services
             if (pedido == null) return false;
 
             pedido.Estado = estado;
+
             await _context.SaveChangesAsync();
             return true;
+        }
+
+        public async Task<List<Pedido>> GetByMesaAsync(Guid mesaId)
+        {
+            return await _context.Pedidos
+                .Include(p => p.Items)
+                .ThenInclude(i => i.Producto)
+                .Include(p => p.Restaurante)
+                .Where(p => p.MesaId == mesaId && p.Activo)
+                .OrderBy(p => p.Fecha)
+                .ToListAsync();
+        }
+
+        public async Task<(bool success, bool promovido)> UpdateItemEstadoAsync(Guid pedidoId, Guid itemId, Estado estado)
+        {
+            var pedido = await _context.Pedidos
+                .Include(p => p.Items)
+                .FirstOrDefaultAsync(p => p.Id == pedidoId);
+
+            if (pedido == null) return (false, false);
+
+            var item = pedido.Items.FirstOrDefault(i => i.Id == itemId);
+            if (item == null) return (false, false);
+
+            item.Estado = estado;
+
+            var promovido = false;
+            if (estado == Estado.Completado
+                && pedido.Estado != Estado.Completado
+                && pedido.Estado != Estado.Entregado
+                && pedido.Items.All(i => i.Estado == Estado.Completado || i.Estado == Estado.Entregado))
+            {
+                pedido.Estado = Estado.Completado;
+                promovido = true;
+            }
+
+            await _context.SaveChangesAsync();
+            return (true, promovido);
         }
 
         public async Task<bool> DeleteAsync(Guid id)

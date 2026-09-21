@@ -17,6 +17,12 @@ namespace MVA_FOOD.Core.Entities
         public PlanRestaurante PlanRestaurante { get; set; } = null!;
         public string? StripeCustomerId { get; set; }
         public string Pais { get; set; } = "DO";
+        public string? NumeroFiscal { get; set; }
+        public string PrefijoFactura { get; set; } = "F";
+        public int SecuenciaFactura { get; set; } = 1;
+        public decimal PorcentajeImpuesto { get; set; }
+        public bool ImpuestoIncluido { get; set; } = true;
+        public string? MensajePieFactura { get; set; }
         public ICollection<Usuario> Usuarios { get; set; } = new List<Usuario>();
         public ICollection<Horario> Horario { get; set; } = new List<Horario>();
         public ICollection<Menu> Menu { get; set; } = new List<Menu>();

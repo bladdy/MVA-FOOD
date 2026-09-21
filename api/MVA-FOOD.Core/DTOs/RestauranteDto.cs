@@ -28,5 +28,11 @@ namespace MVA_FOOD.Core.DTOs
         public ICollection<TipoEntregaDto> TiposEntrega { get; set; } = new List<TipoEntregaDto>()!;
         public ICollection<MetodoPagoDto> MetodosPago { get; set; } = new List<MetodoPagoDto>()!;
         public string Pais { get; set; } = "DO";
+        public string? NumeroFiscal { get; set; }
+        public string PrefijoFactura { get; set; } = "F";
+        public int SecuenciaFactura { get; set; } = 1;
+        public decimal PorcentajeImpuesto { get; set; }
+        public bool ImpuestoIncluido { get; set; } = true;
+        public string? MensajePieFactura { get; set; }
     }
 }

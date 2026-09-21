@@ -107,6 +107,12 @@ namespace MVA_FOOD.Infrastructure.Services
                     WhatsApp = r.WhatsApp,
                     PlanId = r.PlanRestauranteId,
                     Pais = r.Pais,
+                    NumeroFiscal = r.NumeroFiscal,
+                    PrefijoFactura = r.PrefijoFactura,
+                    SecuenciaFactura = r.SecuenciaFactura,
+                    PorcentajeImpuesto = r.PorcentajeImpuesto,
+                    ImpuestoIncluido = r.ImpuestoIncluido,
+                    MensajePieFactura = r.MensajePieFactura,
 
                     PlanRestauranteDto = r.PlanRestaurante == null ? null : new PlanRestauranteDto
                     {
@@ -174,6 +180,12 @@ namespace MVA_FOOD.Infrastructure.Services
                     WhatsApp = r.WhatsApp,
                     PlanId = r.PlanRestauranteId,
                     Pais = r.Pais,
+                    NumeroFiscal = r.NumeroFiscal,
+                    PrefijoFactura = r.PrefijoFactura,
+                    SecuenciaFactura = r.SecuenciaFactura,
+                    PorcentajeImpuesto = r.PorcentajeImpuesto,
+                    ImpuestoIncluido = r.ImpuestoIncluido,
+                    MensajePieFactura = r.MensajePieFactura,
                     PlanRestauranteDto = new PlanRestauranteDto
                     {
                         Id = r.PlanRestaurante.Id,
@@ -237,6 +249,12 @@ namespace MVA_FOOD.Infrastructure.Services
                     PlanId = r.PlanRestauranteId,
                     Slug = r.Slug,
                     Pais = r.Pais,
+                    NumeroFiscal = r.NumeroFiscal,
+                    PrefijoFactura = r.PrefijoFactura,
+                    SecuenciaFactura = r.SecuenciaFactura,
+                    PorcentajeImpuesto = r.PorcentajeImpuesto,
+                    ImpuestoIncluido = r.ImpuestoIncluido,
+                    MensajePieFactura = r.MensajePieFactura,
                     Menu = r.PlanRestaurante != null && r.PlanRestaurante.Estado == "Vencido"
                         ? new List<MenuDto>()
                         : r.Menu.Where(m => m.Activo == true)
@@ -407,6 +425,12 @@ namespace MVA_FOOD.Infrastructure.Services
                     PlanId = r.PlanRestauranteId,
                     Slug = r.Slug,
                     Pais = r.Pais,
+                    NumeroFiscal = r.NumeroFiscal,
+                    PrefijoFactura = r.PrefijoFactura,
+                    SecuenciaFactura = r.SecuenciaFactura,
+                    PorcentajeImpuesto = r.PorcentajeImpuesto,
+                    ImpuestoIncluido = r.ImpuestoIncluido,
+                    MensajePieFactura = r.MensajePieFactura,
                     Menu = r.Menu.Where(m => m.Activo == true)
                     .Select(m => new MenuDto
                     {
@@ -550,7 +574,13 @@ namespace MVA_FOOD.Infrastructure.Services
                     WhatsApp = dto.WhatsApp,
                     Image = dto.ImageUrl,
                     PerfilImage = dto.PerfilImageUrl,
-                    Pais = dto.Pais ?? "DO"
+                    Pais = dto.Pais ?? "DO",
+                    NumeroFiscal = dto.NumeroFiscal,
+                    PrefijoFactura = string.IsNullOrWhiteSpace(dto.PrefijoFactura) ? "F" : dto.PrefijoFactura!,
+                    SecuenciaFactura = dto.SecuenciaFactura ?? 1,
+                    PorcentajeImpuesto = dto.PorcentajeImpuesto ?? 0,
+                    ImpuestoIncluido = dto.ImpuestoIncluido ?? true,
+                    MensajePieFactura = dto.MensajePieFactura
                 };
 
                 _context.Restaurantes.Add(restaurante);
@@ -658,7 +688,13 @@ namespace MVA_FOOD.Infrastructure.Services
                     Facebook = restaurante.Facebook,
                     WhatsApp = restaurante.WhatsApp,
                     PlanId = plan.Id,
-                    Pais = restaurante.Pais
+                    Pais = restaurante.Pais,
+                    NumeroFiscal = restaurante.NumeroFiscal,
+                    PrefijoFactura = restaurante.PrefijoFactura,
+                    SecuenciaFactura = restaurante.SecuenciaFactura,
+                    PorcentajeImpuesto = restaurante.PorcentajeImpuesto,
+                    ImpuestoIncluido = restaurante.ImpuestoIncluido,
+                    MensajePieFactura = restaurante.MensajePieFactura
                 };
             }
             catch
@@ -680,6 +716,8 @@ namespace MVA_FOOD.Infrastructure.Services
                 await _context.Database.ExecuteSqlRawAsync("DELETE FROM PedidoItems WHERE PedidoId IN (SELECT Id FROM Pedidos WHERE RestauranteId = {0})", id);
                 await _context.Database.ExecuteSqlRawAsync("DELETE FROM Pedidos WHERE RestauranteId = {0}", id);
                 await _context.Database.ExecuteSqlRawAsync("DELETE FROM Facturas WHERE RestauranteId = {0}", id);
+                await _context.Database.ExecuteSqlRawAsync("DELETE FROM FacturaVentaItems WHERE FacturaVentaId IN (SELECT Id FROM FacturasVentas WHERE RestauranteId = {0})", id);
+                await _context.Database.ExecuteSqlRawAsync("DELETE FROM FacturasVentas WHERE RestauranteId = {0}", id);
                 await _context.Database.ExecuteSqlRawAsync("DELETE FROM VarianteOpciones WHERE VarianteId IN (SELECT Id FROM Variantes WHERE RestauranteId = {0})", id);
                 await _context.Database.ExecuteSqlRawAsync("DELETE FROM VarianteMenus WHERE MenuId IN (SELECT Id FROM Menus WHERE RestauranteId = {0}) OR VarianteId IN (SELECT Id FROM Variantes WHERE RestauranteId = {0})", id);
                 await _context.Database.ExecuteSqlRawAsync("DELETE FROM Variantes WHERE RestauranteId = {0}", id);
@@ -743,6 +781,19 @@ namespace MVA_FOOD.Infrastructure.Services
                 }
                 if (!string.IsNullOrEmpty(dto.Pais))
                     restaurante.Pais = dto.Pais;
+
+                if (dto.NumeroFiscal != null)
+                    restaurante.NumeroFiscal = dto.NumeroFiscal;
+                if (dto.PrefijoFactura != null)
+                    restaurante.PrefijoFactura = dto.PrefijoFactura!;
+                if (dto.SecuenciaFactura.HasValue)
+                    restaurante.SecuenciaFactura = dto.SecuenciaFactura.Value;
+                if (dto.PorcentajeImpuesto.HasValue)
+                    restaurante.PorcentajeImpuesto = dto.PorcentajeImpuesto.Value;
+                if (dto.ImpuestoIncluido.HasValue)
+                    restaurante.ImpuestoIncluido = dto.ImpuestoIncluido.Value;
+                if (dto.MensajePieFactura != null)
+                    restaurante.MensajePieFactura = dto.MensajePieFactura;
 
                 // Actualizar Categorías
                 var categoriasActuales = restaurante.CategoriaRestaurantes.ToList();

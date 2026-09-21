@@ -3,6 +3,7 @@ import * as signalR from "@microsoft/signalr";
 import { pedidoService, type PedidoResponse } from "@/Services/pedidoService.ts";
 import { UserProvider, useUser } from "@/context/UserContext.tsx";
 import { HUB_URL } from "@/lib/apiConfig";
+import FacturaModal from "@/React/Admin/FacturaModal";
 
 const ESTADOS = ["Pendiente", "En Proceso", "Completado"] as const;
 const estadosColores = ["border-yellow-500", "border-blue-500", "border-green-500"];
@@ -12,6 +13,7 @@ function OrdenesManagerInner() {
   const [pedidos, setPedidos] = useState<PedidoResponse[]>([]);
   const connectionRef = useRef<signalR.HubConnection | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [facturarPedidoId, setFacturarPedidoId] = useState<string | null>(null);
 
   const restauranteId = user?.restauranteId;
 
@@ -349,6 +351,14 @@ function OrdenesManagerInner() {
                         Entregado
                       </button>
                     )}
+                    {col.estado === 2 && !pedido.mesaId && (
+                      <button
+                        onClick={() => setFacturarPedidoId(pedido.id)}
+                        className="flex-1 bg-orange-500 hover:bg-orange-600 text-white text-sm py-1.5 rounded-lg font-medium"
+                      >
+                        Facturar
+                      </button>
+                    )}
                     {col.estado < 2 && (
                       <button
                         onClick={() => handleCancelar(pedido.id)}
@@ -364,6 +374,17 @@ function OrdenesManagerInner() {
           </div>
         ))}
       </div>
+
+      {facturarPedidoId && (
+        <FacturaModal
+          pedidoIdInicial={facturarPedidoId}
+          onClose={() => setFacturarPedidoId(null)}
+          onFacturaCreada={() => {
+            setFacturarPedidoId(null);
+            pedidoService.getAll(restauranteId).then(setPedidos).catch(console.error);
+          }}
+        />
+      )}
     </div>
   );
 }

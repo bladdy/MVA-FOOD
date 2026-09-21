@@ -40,7 +40,7 @@ namespace MVA_FOOD.API.Controllers
                 HttpOnly = true,
                 Secure = true,
                 SameSite = SameSiteMode.None,
-                Domain = ".mr-menus.com",
+                //Domain = ".mr-menus.com",
                 Path = "/",
                 Expires = DateTimeOffset.UtcNow.AddDays(7)
             });
@@ -93,15 +93,12 @@ namespace MVA_FOOD.API.Controllers
         public IActionResult Logout()
         {
             var tokenAntes = Request.Cookies["token"];
-
-            Console.WriteLine($"TOKEN ANTES DE BORRAR: {tokenAntes}");
-
             Response.Cookies.Append("token", "", new CookieOptions
             {
                 HttpOnly = true,
                 Secure = true,
                 SameSite = SameSiteMode.None,
-                Domain = ".mr-menus.com",
+                //Domain = ".mr-menus.com",
                 Path = "/",
                 Expires = DateTimeOffset.UtcNow.AddDays(-1)
             });

@@ -79,6 +79,12 @@ export interface RestauranteUpdateDto {
   tipos?: string[]
   plan?: Plan
   horario?: string
+  numeroFiscal?: string
+  prefijoFactura?: string
+  secuenciaFactura?: number
+  porcentajeImpuesto?: number
+  impuestoIncluido?: boolean
+  mensajePieFactura?: string
 }
 
 export interface RestauranteDTO {
@@ -106,6 +112,12 @@ export interface RestauranteDTO {
   tiposEntrega?: TipoEntregaResponse[];
   metodosPago?: MetodoPagoResponse[];
   pais?: string;
+  numeroFiscal?: string;
+  prefijoFactura?: string;
+  secuenciaFactura?: number;
+  porcentajeImpuesto?: number;
+  impuestoIncluido?: boolean;
+  mensajePieFactura?: string;
 }
 export interface Restaurante {
 
@@ -133,6 +145,12 @@ export interface Restaurante {
   tiposEntrega?: TipoEntregaResponse[];
   metodosPago?: MetodoPagoResponse[];
   pais?: string;
+  numeroFiscal?: string;
+  prefijoFactura?: string;
+  secuenciaFactura?: number;
+  porcentajeImpuesto?: number;
+  impuestoIncluido?: boolean;
+  mensajePieFactura?: string;
 }
 
 
@@ -174,6 +192,7 @@ export interface Variante {
 }
 
 export interface PedidoItem {
+  id?: string;
   producto: Menu | null;
   cantidad: number;
   notas: string;
@@ -183,6 +202,25 @@ export interface PedidoItem {
   comboId?: string;
   comboNombre?: string;
   comboItemsJson?: string;
+  estado?: number;
+}
+
+export interface Mesa {
+  id: string;
+  codigo: string;
+  numero: number;
+  capacidad: number;
+  estaOcupada: boolean;
+  restauranteId: string;
+  restauranteNombre: string;
+}
+
+export interface MesaCreate {
+  codigo: string;
+  numero: number;
+  capacidad: number;
+  estaOcupada: boolean;
+  restauranteId: string;
 }
 
 export interface Plan {
@@ -226,6 +264,189 @@ export interface FacturaDetalleDto extends FacturaDto {
   restauranteNombre: string;
   restauranteDireccion: string;
   restauranteRnc?: string;
+}
+
+// ---- Facturación Punto de Venta (POS) ----
+
+export interface FacturaVentaItemDto {
+  nombre: string;
+  precio: number;
+  cantidad: number;
+  opciones?: string;
+  esCombo?: boolean;
+  comboNombre?: string;
+  comboItemsJson?: string;
+}
+
+export interface FacturaVentaDto {
+  id: string;
+  restauranteId: string;
+  pedidoId?: string;
+  numeroMesa?: number;
+  numeroFactura: string;
+  fechaEmision: string;
+  clienteNombre: string;
+  clienteTelefono: string;
+  metodoPago?: string;
+  subtotal: number;
+  impuesto: number;
+  total: number;
+  porcentajeImpuesto: number;
+  impuestoIncluido: boolean;
+  estado: number;
+  moneda: string;
+}
+
+export interface FacturaVentaDetalleDto extends FacturaVentaDto {
+  clienteNumeroFiscal?: string;
+  tipoEntrega: string;
+  nota?: string;
+  items: FacturaVentaItemDto[];
+  pedidoIds: string[];
+  restauranteNombre: string;
+  restauranteDireccion: string;
+  restauranteTelefono: string;
+  restauranteNumeroFiscal?: string;
+  mensajePieFactura?: string;
+}
+
+export interface CrearFacturaVentaDto {
+  pedidoId?: string;
+  pedidosIds?: string[];
+  clienteNombre: string;
+  clienteTelefono: string;
+  clienteNumeroFiscal?: string;
+  tipoEntrega: string;
+  metodoPago?: string;
+  nota?: string;
+  items: FacturaVentaItemDto[];
+}
+
+export interface PedidoFacturableDto {
+  id: string;
+  clienteNombre: string;
+  clienteTelefono: string;
+  tipoEntrega: string;
+  metodoPago?: string;
+  fecha: string;
+  total: number;
+  estado: number;
+  mesaId?: string;
+  numeroMesa?: number;
+  items: {
+    nombre: string;
+    cantidad: number;
+    precio: number;
+    notas?: string;
+    opciones?: string;
+    esCombo?: boolean;
+    comboNombre?: string;
+    comboItemsJson?: string;
+  }[];
+}
+
+export interface ConfigFacturacionDto {
+  prefijoFactura: string;
+  secuenciaFactura: number;
+  porcentajeImpuesto: number;
+  impuestoIncluido: boolean;
+  moneda: string;
+  numeroFiscal?: string;
+  mensajePieFactura?: string;
+  siguienteNumero: string;
+}
+
+export interface CuentaMesaItemDto {
+  nombre: string;
+  cantidad: number;
+  precio: number;
+  opciones: string;
+  esCombo: boolean;
+  comboNombre?: string;
+  comboItemsJson?: string;
+}
+
+export interface CuentaMesaPedidoDto {
+  id: string;
+  clienteNombre: string;
+  estado: number;
+  total: number;
+  cantidadItems: number;
+}
+
+export interface CuentaMesaDetalleDto {
+  id: string;
+  restauranteId: string;
+  mesaId: string;
+  numeroMesa: number;
+  estado: number;
+  fechaApertura: string;
+  fechaCierre?: string;
+  clienteNombre: string;
+  clienteTelefono: string;
+  metodoPago?: string;
+  tipoEntrega: string;
+  subtotal: number;
+  impuesto: number;
+  total: number;
+  facturaVentaId?: string;
+  cantidadPedidos: number;
+  pedidos: CuentaMesaPedidoDto[];
+  items: CuentaMesaItemDto[];
+}
+
+export interface CerrarCuentaMesaDto {
+  clienteNombre: string;
+  clienteTelefono: string;
+  clienteNumeroFiscal?: string;
+  tipoEntrega: string;
+  metodoPago?: string;
+  nota?: string;
+}
+
+export interface ResumenFacturacionHoyDto {
+  desde: string;
+  hasta: string;
+  cantidadVentas: number;
+  cantidadAnuladas: number;
+  ingresos: number;
+  moneda: string;
+}
+
+export type RangoReporteVentas = "hoy" | "semana" | "mes";
+
+export interface ReporteVentasPorDiaDto {
+  fecha: string;
+  cantidad: number;
+  total: number;
+}
+
+export interface ReporteVentasPorMetodoPagoDto {
+  metodoPago: string;
+  cantidad: number;
+  total: number;
+}
+
+export interface ReporteVentasPorProductoDto {
+  nombre: string;
+  cantidad: number;
+  total: number;
+}
+
+export interface ReporteVentasDto {
+  desde: string;
+  hasta: string;
+  rango: RangoReporteVentas;
+  moneda: string;
+  cantidadVentas: number;
+  cantidadAnuladas: number;
+  ingresos: number;
+  impuestos: number;
+  montoAnulado: number;
+  ticketPromedio: number;
+  ventasPorDia: ReporteVentasPorDiaDto[];
+  ventasPorMetodoPago: ReporteVentasPorMetodoPagoDto[];
+  topProductos: ReporteVentasPorProductoDto[];
 }
 
 export interface DashboardInfoDto {
@@ -317,6 +538,7 @@ export interface CreatePedidoDto {
   metodoPago?: string;
   direccion?: string;
   restauranteId: string;
+  mesaId?: string;
   items: {
     menuId?: string;
     cantidad: number;

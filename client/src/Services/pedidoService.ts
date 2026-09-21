@@ -20,6 +20,8 @@ export interface PedidoResponse {
   estado: number;
   total: number;
   restauranteId: string;
+  mesaId?: string;
+  numeroMesa?: number;
   items: {
     id: string;
     menuId?: string;
@@ -37,6 +39,7 @@ export interface PedidoResponse {
     comboId?: string;
     comboNombre?: string;
     comboItemsJson?: string;
+    estado?: number;
   }[];
 }
 
@@ -52,6 +55,22 @@ export const pedidoService = {
       const err = await res.text();
       throw new Error(err);
     }
+    return res.json();
+  },
+
+  async getById(id: string): Promise<PedidoResponse> {
+    const res = await fetch(`${API_URL}/Pedido/${id}`, {
+      credentials: "include",
+    });
+    if (!res.ok) throw new Error("Error al obtener pedido");
+    return res.json();
+  },
+
+  async getByMesa(mesaId: string): Promise<PedidoResponse[]> {
+    const res = await fetch(`${API_URL}/Pedido/mesa/${mesaId}`, {
+      credentials: "include",
+    });
+    if (!res.ok) throw new Error("Error al obtener pedidos de la mesa");
     return res.json();
   },
 
@@ -86,6 +105,17 @@ export const pedidoService = {
       credentials: "include",
     });
     if (!res.ok) throw new Error("Error al actualizar estado");
+  },
+
+  async updateItemEstado(pedidoId: string, itemId: string, estado: number): Promise<void> {
+    const res = await fetch(
+      `${API_URL}/Pedido/${pedidoId}/item/${itemId}/estado?estado=${estado}`,
+      {
+        method: "PATCH",
+        credentials: "include",
+      },
+    );
+    if (!res.ok) throw new Error("Error al actualizar estado del producto");
   },
 
   async delete(id: string): Promise<void> {

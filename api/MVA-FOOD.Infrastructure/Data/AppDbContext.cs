@@ -17,6 +17,7 @@ namespace MVA_FOOD.Infrastructure.Data
         public DbSet<Restaurante> Restaurantes { get; set; }
         public DbSet<Menu> Menus { get; set; }
         public DbSet<Mesa> Mesas { get; set; }
+        public DbSet<CuentaMesa> CuentasMesas { get; set; }
         public DbSet<Horario> Horarios { get; set; }
         public DbSet<Empleado> Empleados { get; set; }
         public DbSet<Plan> Planes { get; set; }
@@ -35,6 +36,8 @@ namespace MVA_FOOD.Infrastructure.Data
         public DbSet<TipoEntregaRestaurante> TiposEntregaRestaurante { get; set; }
         public DbSet<MetodoPagoRestaurante> MetodosPagoRestaurante { get; set; }
         public DbSet<Factura> Facturas { get; set; }
+        public DbSet<FacturaVenta> FacturasVentas { get; set; }
+        public DbSet<FacturaVentaItem> FacturaVentaItems { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -104,6 +107,36 @@ namespace MVA_FOOD.Infrastructure.Data
                     v => DateTime.SpecifyKind(
                         DateTime.Parse(v, null, DateTimeStyles.RoundtripKind),
                         DateTimeKind.Utc));
+
+            modelBuilder.Entity<FacturaVenta>()
+                .HasOne(f => f.Pedido)
+                .WithMany()
+                .HasForeignKey(f => f.PedidoId)
+                .OnDelete(DeleteBehavior.SetNull);
+
+            modelBuilder.Entity<Pedido>()
+                .HasOne(p => p.FacturaVenta)
+                .WithMany()
+                .HasForeignKey(p => p.FacturaVentaId)
+                .OnDelete(DeleteBehavior.SetNull);
+
+            modelBuilder.Entity<CuentaMesa>()
+                .HasOne(c => c.Mesa)
+                .WithMany()
+                .HasForeignKey(c => c.MesaId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<CuentaMesa>()
+                .HasOne(c => c.FacturaVenta)
+                .WithMany()
+                .HasForeignKey(c => c.FacturaVentaId)
+                .OnDelete(DeleteBehavior.SetNull);
+
+            modelBuilder.Entity<Pedido>()
+                .HasOne(p => p.CuentaMesa)
+                .WithMany(c => c.Pedidos)
+                .HasForeignKey(p => p.CuentaMesaId)
+                .OnDelete(DeleteBehavior.SetNull);
 
             modelBuilder.Entity<PlanRestaurante>()
                 .Property(p => p.FechaInicio)

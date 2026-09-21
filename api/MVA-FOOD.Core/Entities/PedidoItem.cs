@@ -15,5 +15,6 @@ namespace MVA_FOOD.Core.Entities
         public Guid? ComboId { get; set; }
         public string? ComboNombre { get; set; }
         public string? ComboItemsJson { get; set; }
+        public Estado Estado { get; set; } = Estado.Pendiente;
     }
 }

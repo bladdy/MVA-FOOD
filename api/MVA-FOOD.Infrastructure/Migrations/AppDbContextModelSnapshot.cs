@@ -148,6 +148,62 @@ namespace MVA_FOOD.Infrastructure.Migrations
                     b.ToTable("ComboMenus");
                 });
 
+            modelBuilder.Entity("MVA_FOOD.Core.Entities.CuentaMesa", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ClienteNombre")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ClienteTelefono")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Estado")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<Guid?>("FacturaVentaId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("FechaApertura")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("FechaCierre")
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal>("Impuesto")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("MesaId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("MetodoPago")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("RestauranteId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal>("Subtotal")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("TipoEntrega")
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal>("Total")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FacturaVentaId");
+
+                    b.HasIndex("MesaId");
+
+                    b.HasIndex("RestauranteId");
+
+                    b.ToTable("CuentasMesas");
+                });
+
             modelBuilder.Entity("MVA_FOOD.Core.Entities.Empleado", b =>
                 {
                     b.Property<Guid>("Id")
@@ -228,6 +284,109 @@ namespace MVA_FOOD.Infrastructure.Migrations
                     b.HasIndex("RestauranteId");
 
                     b.ToTable("Facturas");
+                });
+
+            modelBuilder.Entity("MVA_FOOD.Core.Entities.FacturaVenta", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ClienteNombre")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ClienteNumeroFiscal")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ClienteTelefono")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Estado")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("FechaEmision")
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal>("Impuesto")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("ImpuestoIncluido")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("MetodoPago")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Moneda")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Nota")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("NumeroFactura")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid?>("PedidoId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal>("PorcentajeImpuesto")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("RestauranteId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal>("Subtotal")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("TipoEntrega")
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal>("Total")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PedidoId");
+
+                    b.HasIndex("RestauranteId");
+
+                    b.ToTable("FacturasVentas");
+                });
+
+            modelBuilder.Entity("MVA_FOOD.Core.Entities.FacturaVentaItem", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Cantidad")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("ComboItemsJson")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ComboNombre")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("EsCombo")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<Guid>("FacturaVentaId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Nombre")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Opciones")
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal>("Precio")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FacturaVentaId");
+
+                    b.ToTable("FacturaVentaItems");
                 });
 
             modelBuilder.Entity("MVA_FOOD.Core.Entities.Horario", b =>
@@ -374,10 +533,16 @@ namespace MVA_FOOD.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
+                    b.Property<bool>("Activo")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("ClienteNombre")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ClienteTelefono")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid?>("CuentaMesaId")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Direccion")
@@ -386,12 +551,21 @@ namespace MVA_FOOD.Infrastructure.Migrations
                     b.Property<int>("Estado")
                         .HasColumnType("INTEGER");
 
+                    b.Property<Guid?>("FacturaVentaId")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Fecha")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<Guid?>("MesaId")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("MetodoPago")
                         .HasColumnType("TEXT");
+
+                    b.Property<int?>("NumeroMesa")
+                        .HasColumnType("INTEGER");
 
                     b.Property<Guid>("RestauranteId")
                         .HasColumnType("TEXT");
@@ -403,6 +577,12 @@ namespace MVA_FOOD.Infrastructure.Migrations
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CuentaMesaId");
+
+                    b.HasIndex("FacturaVentaId");
+
+                    b.HasIndex("MesaId");
 
                     b.HasIndex("RestauranteId");
 
@@ -428,6 +608,9 @@ namespace MVA_FOOD.Infrastructure.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<bool>("EsCombo")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Estado")
                         .HasColumnType("INTEGER");
 
                     b.Property<Guid?>("MenuId")
@@ -538,10 +721,19 @@ namespace MVA_FOOD.Infrastructure.Migrations
                     b.Property<string>("Image")
                         .HasColumnType("TEXT");
 
+                    b.Property<bool>("ImpuestoIncluido")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("Instagram")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("MensajePieFactura")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Name")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("NumeroFiscal")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Pais")
@@ -555,6 +747,15 @@ namespace MVA_FOOD.Infrastructure.Migrations
 
                     b.Property<Guid>("PlanRestauranteId")
                         .HasColumnType("TEXT");
+
+                    b.Property<decimal>("PorcentajeImpuesto")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("PrefijoFactura")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("SecuenciaFactura")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Slogan")
                         .HasColumnType("TEXT");
@@ -778,6 +979,32 @@ namespace MVA_FOOD.Infrastructure.Migrations
                     b.Navigation("Menu");
                 });
 
+            modelBuilder.Entity("MVA_FOOD.Core.Entities.CuentaMesa", b =>
+                {
+                    b.HasOne("MVA_FOOD.Core.Entities.FacturaVenta", "FacturaVenta")
+                        .WithMany()
+                        .HasForeignKey("FacturaVentaId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("MVA_FOOD.Core.Entities.Mesa", "Mesa")
+                        .WithMany()
+                        .HasForeignKey("MesaId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("MVA_FOOD.Core.Entities.Restaurante", "Restaurante")
+                        .WithMany()
+                        .HasForeignKey("RestauranteId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("FacturaVenta");
+
+                    b.Navigation("Mesa");
+
+                    b.Navigation("Restaurante");
+                });
+
             modelBuilder.Entity("MVA_FOOD.Core.Entities.Empleado", b =>
                 {
                     b.HasOne("MVA_FOOD.Core.Entities.Restaurante", "Restaurante")
@@ -806,6 +1033,35 @@ namespace MVA_FOOD.Infrastructure.Migrations
                     b.Navigation("PlanRestaurante");
 
                     b.Navigation("Restaurante");
+                });
+
+            modelBuilder.Entity("MVA_FOOD.Core.Entities.FacturaVenta", b =>
+                {
+                    b.HasOne("MVA_FOOD.Core.Entities.Pedido", "Pedido")
+                        .WithMany()
+                        .HasForeignKey("PedidoId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("MVA_FOOD.Core.Entities.Restaurante", "Restaurante")
+                        .WithMany()
+                        .HasForeignKey("RestauranteId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Pedido");
+
+                    b.Navigation("Restaurante");
+                });
+
+            modelBuilder.Entity("MVA_FOOD.Core.Entities.FacturaVentaItem", b =>
+                {
+                    b.HasOne("MVA_FOOD.Core.Entities.FacturaVenta", "FacturaVenta")
+                        .WithMany("Items")
+                        .HasForeignKey("FacturaVentaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("FacturaVenta");
                 });
 
             modelBuilder.Entity("MVA_FOOD.Core.Entities.Horario", b =>
@@ -881,11 +1137,31 @@ namespace MVA_FOOD.Infrastructure.Migrations
 
             modelBuilder.Entity("MVA_FOOD.Core.Entities.Pedido", b =>
                 {
+                    b.HasOne("MVA_FOOD.Core.Entities.CuentaMesa", "CuentaMesa")
+                        .WithMany("Pedidos")
+                        .HasForeignKey("CuentaMesaId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("MVA_FOOD.Core.Entities.FacturaVenta", "FacturaVenta")
+                        .WithMany()
+                        .HasForeignKey("FacturaVentaId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("MVA_FOOD.Core.Entities.Mesa", "Mesa")
+                        .WithMany()
+                        .HasForeignKey("MesaId");
+
                     b.HasOne("MVA_FOOD.Core.Entities.Restaurante", "Restaurante")
                         .WithMany()
                         .HasForeignKey("RestauranteId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("CuentaMesa");
+
+                    b.Navigation("FacturaVenta");
+
+                    b.Navigation("Mesa");
 
                     b.Navigation("Restaurante");
                 });
@@ -1020,6 +1296,16 @@ namespace MVA_FOOD.Infrastructure.Migrations
                     b.Navigation("Items");
 
                     b.Navigation("Sugerencias");
+                });
+
+            modelBuilder.Entity("MVA_FOOD.Core.Entities.CuentaMesa", b =>
+                {
+                    b.Navigation("Pedidos");
+                });
+
+            modelBuilder.Entity("MVA_FOOD.Core.Entities.FacturaVenta", b =>
+                {
+                    b.Navigation("Items");
                 });
 
             modelBuilder.Entity("MVA_FOOD.Core.Entities.Menu", b =>

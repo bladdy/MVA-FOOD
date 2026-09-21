@@ -1,0 +1,487 @@
+---
+import LayoutMenu from "@/layouts/LayoutMenu.astro"
+---
+
+<LayoutMenu
+  title="Cotización — Renta Mensual CRM SaaS"
+  description="Cotización para implementación y renta mensual de CRM SaaS para salón de eventos."
+>
+
+<!-- Contenedor imprimible -->
+<article
+  id="cotizacion"
+  class="a4-page p-5 bg-white text-sm font-sans text-gray-900 border border-gray-300 flex flex-col justify-between"
+>
+
+  <div>
+
+    <!-- HEADER -->
+    <header class="flex justify-between items-center mb-6 border-b pb-2">
+
+      <div>
+
+        <h1 class="text-2xl font-bold">
+          COTIZACIÓN <span class="text-orange-600">0007</span>
+        </h1>
+
+        <p class="text-xs">
+          12 de Agosto de 2026
+        </p>
+
+        <p class="text-xs mt-1">
+          <strong>Vencimiento:</strong> 26 de Agosto de 2026
+        </p>
+
+      </div>
+
+
+      <div class="text-right">
+
+        <div class="mb-2 relative h-12">
+
+          <img
+            src="/ba-icon.png"
+            alt="BlueArrow"
+            class="h-12 mb-2 absolute top-0 right-2"
+          />
+
+        </div>
+
+        <p class="text-lg font-bold text-orange-600">
+          $7,500.00 MXN
+        </p>
+
+        <p class="text-xs">
+          Inicio del servicio
+        </p>
+
+      </div>
+
+    </header>
+
+
+    <!-- CLIENTE -->
+    <section class="mb-4">
+
+      <div class="flex justify-between">
+
+        <div>
+
+          <p class="font-bold">
+            Cliente
+          </p>
+
+          <p>
+            Nombre del Salón de Eventos
+          </p>
+
+          <p>
+            Ciudad, Estado, México
+          </p>
+
+        </div>
+
+
+        <div class="text-right">
+
+          <p class="font-bold">
+            Bladimir A. Almanzar V.
+          </p>
+
+          <p>
+            Desarrollo de Software
+          </p>
+
+          <p>
+            bladdy34@gmail.com
+          </p>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- DETALLE DE COTIZACIÓN -->
+    <section class="mt-4">
+
+      <table class="w-full border-collapse border text-xs">
+
+        <thead class="bg-gray-100">
+
+          <tr>
+
+            <th class="border px-2 py-1 text-left">
+              MÓDULOS
+            </th>
+
+            <th class="border px-2 py-1 text-left">
+              DETALLES
+            </th>
+
+            <th class="border px-2 py-1">
+              TOTAL DE LÍNEA
+            </th>
+
+          </tr>
+
+        </thead>
+
+
+        <tbody>
+
+          <!-- IMPLEMENTACIÓN -->
+          <tr>
+
+            <td class="border px-2 py-1 align-top">
+
+              Implementación CRM
+
+            </td>
+
+
+            <td class="border px-2 py-1">
+
+              Alta y configuración de la empresa<br>
+
+              Configuración inicial del CRM<br>
+
+              Creación de usuarios iniciales<br>
+
+              Configuración de parámetros del negocio<br>
+
+              Configuración inicial de servicios<br>
+
+              Puesta en funcionamiento<br>
+
+              Capacitación inicial
+
+            </td>
+
+
+            <td class="border px-2 py-1 text-right">
+
+              $5,000.00 MXN
+
+            </td>
+
+          </tr>
+
+
+          <!-- SUSCRIPCIÓN -->
+          <tr>
+
+            <td class="border px-2 py-1 align-top">
+
+              Renta Mensual CRM
+
+            </td>
+
+
+            <td class="border px-2 py-1">
+
+              Uso completo del CRM<br>
+
+              Hosting VPS<br>
+
+              Base de datos<br>
+
+              Certificado SSL<br>
+
+              Respaldos automáticos<br>
+
+              Mantenimiento técnico<br>
+
+              Actualizaciones del sistema<br>
+
+              Monitoreo de infraestructura<br>
+
+              Soporte técnico
+
+            </td>
+
+
+            <td class="border px-2 py-1 text-right">
+
+              $2,500.00 MXN / mes
+
+            </td>
+
+          </tr>
+
+
+          <!-- DOMINIO -->
+          <tr>
+
+            <td class="border px-2 py-1 align-top">
+
+              Dominio
+
+            </td>
+
+
+            <td class="border px-2 py-1">
+
+              Configuración del dominio para acceso al sistema<br>
+
+              Configuración DNS<br>
+
+              Certificado SSL<br>
+
+              Renovación mientras el servicio permanezca activo
+
+            </td>
+
+
+            <td class="border px-2 py-1 text-right">
+
+              Incluido
+
+            </td>
+
+          </tr>
+
+        </tbody>
+
+      </table>
+
+    </section>
+
+
+    <!-- CONDICIONES -->
+    <section class="text-xs mt-6">
+
+      <p>
+
+        <strong>
+          Implementación inicial:
+        </strong>
+
+        $5,000.00 MXN pago único.
+
+      </p>
+
+
+      <p>
+
+        <strong>
+          Renta mensual:
+        </strong>
+
+        $2,500.00 MXN.
+
+      </p>
+
+
+      <p>
+
+        <strong>
+          Dominio:
+        </strong>
+
+        Incluido mientras permanezca activa la suscripción.
+
+      </p>
+
+
+      <p>
+
+        <strong>
+          Infraestructura:
+        </strong>
+
+        Administrada por el proveedor.
+
+      </p>
+
+
+      <p>
+
+        <strong>
+          Actualizaciones:
+        </strong>
+
+        Incluidas durante la suscripción.
+
+      </p>
+
+    </section>
+
+
+    <!-- TOTALES -->
+    <section class="mt-4 border-t pt-4 text-sm">
+
+      <div class="grid grid-cols-2 gap-6">
+
+
+        <!-- IZQUIERDA -->
+
+        <div class="space-y-1 text-xs">
+
+          <p>
+            Impuestos incluidos: No
+          </p>
+
+          <p>
+            Forma de pago: Implementación + primer mes
+          </p>
+
+          <p>
+            Mensualidad posterior: $2,500.00 MXN
+          </p>
+
+        </div>
+
+
+        <!-- DERECHA -->
+
+        <div class="space-y-1 text-right">
+
+
+          <!-- TOTAL NETO -->
+
+          <div class="flex justify-between">
+
+            <span>
+              <strong>Implementación:</strong>
+            </span>
+
+            <span class="font-bold text-orange-600">
+              $5,000.00 MXN
+            </span>
+
+          </div>
+
+
+          <!-- PRIMER MES -->
+
+          <div class="flex justify-between">
+
+            <span>
+              <strong>Primer mes:</strong>
+            </span>
+
+            <span class="font-bold text-orange-600">
+              $2,500.00 MXN
+            </span>
+
+          </div>
+
+
+          <!-- TOTAL FINAL -->
+
+          <div class="flex justify-between border-t pt-1">
+
+            <span>
+              <strong>Total inicial:</strong>
+            </span>
+
+            <span class="font-bold text-orange-600">
+              $7,500.00 MXN
+            </span>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </div>
+
+
+  <!-- FOOTER -->
+
+  <footer class="text-xs border-t pt-4 mt-6">
+
+    <p class="mb-2">
+
+      Esta cotización contempla la implementación inicial y renta
+      mensual de un CRM especializado para la administración de
+      salones de eventos bajo un modelo de servicio SaaS.
+
+    </p>
+
+
+    <div class="bg-green-100 text-green-800 p-2 text-center font-semibold">
+
+      Sin inversión en servidores. Nosotros administramos la infraestructura,
+      respaldos, actualizaciones y mantenimiento del sistema.
+
+    </div>
+
+  </footer>
+
+</article>
+
+
+<!-- BOTÓN DE IMPRESIÓN -->
+
+<div class="mt-6 text-center print:hidden">
+
+  <button
+    onclick="window.print()"
+    class="bg-orange-600 hover:bg-orange-700 text-white font-semibold py-2 px-4 rounded shadow"
+  >
+
+    🖨️ Imprimir Cotización
+
+  </button>
+
+</div>
+
+
+</LayoutMenu>
+
+
+<style is:global>
+
+  @media print {
+
+    body * {
+      visibility: hidden;
+    }
+
+    #cotizacion,
+    #cotizacion * {
+      visibility: visible;
+    }
+
+    #cotizacion {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+    }
+
+    .print\:hidden {
+      display: none !important;
+    }
+
+  }
+
+
+  body {
+    background-color: #f1f1f1;
+    font-family: 'Segoe UI', sans-serif;
+  }
+
+
+  .a4-page {
+    width: 210mm;
+    min-height: 297mm;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin: auto;
+    background: white;
+  }
+
+
+  table {
+    font-size: 0.85rem;
+  }
+
+</style>

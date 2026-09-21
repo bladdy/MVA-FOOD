@@ -19,6 +19,7 @@ public class SeedDb
         await CheckAmenitiesAsync();
         await CheckPlansAsync();
         await CheckDemoRestaurantsAsync();
+        await CheckMesasAsync();
     }
     private async Task CheckDemoRestaurantsAsync()
     {
@@ -84,6 +85,32 @@ public class SeedDb
             });
             await _context.SaveChangesAsync();
         }
+    }
+
+    private async Task CheckMesasAsync()
+    {
+        var restaurantesSinMesas = _context.Restaurantes
+            .Where(r => !_context.Mesas.Any(m => m.RestauranteId == r.Id))
+            .ToList();
+
+        foreach (var restaurante in restaurantesSinMesas)
+        {
+            var capacidades = new[] { 2, 2, 4, 4, 4, 6, 6, 8, 8, 10 };
+            for (var i = 0; i < capacidades.Length; i++)
+            {
+                _context.Mesas.Add(new Mesa
+                {
+                    Numero = i + 1,
+                    Capacidad = capacidades[i],
+                    EstaOcupada = false,
+                    Codigo = $"M{(i + 1):D2}",
+                    RestauranteId = restaurante.Id
+                });
+            }
+        }
+
+        if (restaurantesSinMesas.Any())
+            await _context.SaveChangesAsync();
     }
 
     private async Task CheckAmenitiesAsync()

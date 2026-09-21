@@ -14,6 +14,14 @@ namespace MVA_FOOD.Core.Entities
         public decimal Total { get; set; }
         public Guid RestauranteId { get; set; }
         public Restaurante Restaurante { get; set; } = null!;
+        public Guid? MesaId { get; set; }
+        public Mesa? Mesa { get; set; }
+        public int? NumeroMesa { get; set; }
+        public bool Activo { get; set; } = true;
+        public Guid? FacturaVentaId { get; set; }
+        public FacturaVenta? FacturaVenta { get; set; }
+        public Guid? CuentaMesaId { get; set; }
+        public CuentaMesa? CuentaMesa { get; set; }
         public List<PedidoItem> Items { get; set; } = new List<PedidoItem>();
 
         public void CalcularTotal()

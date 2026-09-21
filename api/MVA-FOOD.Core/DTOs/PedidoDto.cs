@@ -13,6 +13,7 @@ namespace MVA_FOOD.Core.DTOs
         public string? Direccion { get; set; }
         public string? MetodoPago { get; set; }
         public Guid RestauranteId { get; set; }
+        public Guid? MesaId { get; set; }
 
         public List<PedidoItemDto> Items { get; set; } = new();
     }

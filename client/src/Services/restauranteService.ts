@@ -35,6 +35,12 @@ export async function updateRestaurante(id: string, data: RestauranteDTO) {
   formData.append("Facebook", data.facebook || "");
   formData.append("WhatsApp", data.whatsapp || "");
   if (data.pais) formData.append("Pais", data.pais);
+  if (data.numeroFiscal !== undefined) formData.append("NumeroFiscal", data.numeroFiscal);
+  if (data.prefijoFactura !== undefined) formData.append("PrefijoFactura", data.prefijoFactura);
+  if (data.secuenciaFactura !== undefined) formData.append("SecuenciaFactura", String(data.secuenciaFactura));
+  if (data.porcentajeImpuesto !== undefined) formData.append("PorcentajeImpuesto", String(data.porcentajeImpuesto));
+  if (data.impuestoIncluido !== undefined) formData.append("ImpuestoIncluido", String(data.impuestoIncluido));
+  if (data.mensajePieFactura !== undefined) formData.append("MensajePieFactura", data.mensajePieFactura);
 
   if (data.perfilImage && data.perfilImage instanceof File) {
     formData.append("PerfilImage", data.perfilImage);

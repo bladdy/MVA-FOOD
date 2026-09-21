@@ -156,6 +156,8 @@ builder.Services.AddScoped<IUsuarioService, UsuarioService>();
 builder.Services.AddHttpClient();
 builder.Services.AddMemoryCache();
 builder.Services.AddScoped<IFacturaService, FacturaService>();
+builder.Services.AddScoped<IFacturaVentaService, FacturaVentaService>();
+builder.Services.AddScoped<ICuentaMesaService, CuentaMesaService>();
 StripeConfiguration.ApiKey = builder.Configuration["Stripe:SecretKey"];
 builder.Services.AddScoped<IStripePaymentService, StripePaymentService>();
 builder.Services.AddScoped<ITipoCambioService, TipoCambioService>();
