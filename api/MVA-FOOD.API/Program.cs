@@ -5,6 +5,7 @@ using Microsoft.OpenApi.Models;
 using MVA_FOOD.API.Data;
 using MVA_FOOD.API.Middleware;
 using MVA_FOOD.API.Services;
+using MVA_FOOD.API.Services.Hubs;
 using MVA_FOOD.Core.DTOs;
 using MVA_FOOD.Core.Interfaces;
 using MVA_FOOD.Infrastructure.Data;
@@ -233,7 +234,10 @@ app.UseStaticFiles();
 // ======================================
 app.MapControllers();
 
-app.MapHub<MVA_FOOD.API.Services.Hubs.OrderHub>("/hubs/orders");
+app.MapHub<OrderHub>("/hubs/orders");
+
+app.Urls.Clear();
+app.Urls.Add("http://0.0.0.0:5147");
 
 app.Run();
 

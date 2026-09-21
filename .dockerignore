@@ -1,115 +1,26 @@
-#############################################
-# BACKEND - .NET 9 / ASP.NET Core
-#############################################
-# Ignorar todos los archivos y carpetas generados por .NET que no son necesarios para el build
-*.dll
-*.exe
-*.pdb
-*.cache
-*.config
-*.deps.json
-*.runtimeconfig.json
-*.xml
-*.nuget
-*.nupkg
-*.snk
-*.psess
-*.vsp
-*.vspscc
-*.vssscc
-*.csproj.user
-*.csproj.vspscc
-*.csproj.vssscc
-*.suo
-*.user
-*.tmp
-*.bak
-*.swp
-*.sln.docstates
-*.dbmdl
-*.log
-*.TestResults
-TestResults/
-**/TestResults/
-**/*.TestResults
-**/*.dbmdl
-**/*.log
-**/*.tmp
-**/*.bak
-**/*.swp
-# Compilados y temporales
-bin/
-obj/
-out/
-publish/
-wwwroot/
+# Frontend
+client/node_modules
+client/dist
+client/.astro
 
+# Backend
+api/**/bin
+api/**/obj
 
+# Git
+.git
+.gitignore
 
-# VS & Rider
-.vs/
-.idea/
-*.suo
-*.user
-*.userosscache
-*.sln.docstates
-
-# Archivos de configuración locales y secretos
-appsettings.Development.json
-appsettings.*.json
-secrets.json
-
-# Archivos de base de datos local
-*.db
-*.sqlite
-*.sqlite3
-*.db-journal
-*.mdf
-*.ldf
-
-# EF Core
-Migrations/
+# Docker
+Dockerfile
 
 # Logs
 *.log
-# Evitar subir node_modules
-node_modules
-**/node_modules/
 
-# Evitar subir carpetas de build
-dist
-**/dist/
-
-# Git y control de versiones
-.git
-.gitignore
-**/.git
-
-# Archivos de configuración IDEs
+# IDE
 .vscode
 .idea
 
-# Logs y archivos temporales
-npm-debug.log
-yarn-error.log
-pnpm-debug.log
-*.log
+# OS
 .DS_Store
 Thumbs.db
-
-# Variables de entorno
-.env
-.env.local
-.env.*.local
-
-# Archivos relacionados a Docker para no subirlos al build context
-Dockerfile
-docker-compose.yml
-
-# Otros temporales y caches
-coverage
-*.lcov
-
-# Carpetas bin y obj de .NET (si aplica)
-**/bin/
-**/obj/

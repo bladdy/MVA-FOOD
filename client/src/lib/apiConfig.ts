@@ -1,3 +1,9 @@
-// client/src/lib/apiConfig.ts
-export const API_URL = import.meta.env.PUBLIC_API_URL || "https://api.mr-menus.com/api";
-export const HUB_URL =  import.meta.env.PUBLIC_HUB_URL ||"https://api.mr-menus.com/hubs/orders";
+const isServer = typeof window === "undefined";
+
+export const API_URL = isServer
+    ? (process.env.PUBLIC_API_URL || "http://127.0.0.1:5147/api")
+    : "/api";
+
+export const HUB_URL = isServer
+    ? (process.env.PUBLIC_HUB_URL || "http://127.0.0.1:5147/hubs/orders")
+    : "/hubs/orders";

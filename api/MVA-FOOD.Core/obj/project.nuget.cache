@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "u0CnMFhXuwM=",
+  "dgSpecHash": "W92mdeZ8A9s=",
   "success": true,
-  "projectFilePath": "C:\\Proyectos\\MVA-FOOD\\api\\MVA-FOOD.Core\\MVA-FOOD.Core.csproj",
+  "projectFilePath": "C:\\docker\\MVA-FOOD\\api\\MVA-FOOD.Core\\MVA-FOOD.Core.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\bladd\\.nuget\\packages\\microsoft.aspnetcore.hosting.abstractions\\2.3.0\\microsoft.aspnetcore.hosting.abstractions.2.3.0.nupkg.sha512",
     "C:\\Users\\bladd\\.nuget\\packages\\microsoft.aspnetcore.hosting.server.abstractions\\2.3.0\\microsoft.aspnetcore.hosting.server.abstractions.2.3.0.nupkg.sha512",
