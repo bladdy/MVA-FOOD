@@ -112,6 +112,7 @@ namespace MVA_FOOD.Infrastructure.Services
                     SecuenciaFactura = r.SecuenciaFactura,
                     PorcentajeImpuesto = r.PorcentajeImpuesto,
                     ImpuestoIncluido = r.ImpuestoIncluido,
+                    PorcentajePropina = r.PorcentajePropina,
                     MensajePieFactura = r.MensajePieFactura,
 
                     PlanRestauranteDto = r.PlanRestaurante == null ? null : new PlanRestauranteDto
@@ -185,6 +186,7 @@ namespace MVA_FOOD.Infrastructure.Services
                     SecuenciaFactura = r.SecuenciaFactura,
                     PorcentajeImpuesto = r.PorcentajeImpuesto,
                     ImpuestoIncluido = r.ImpuestoIncluido,
+                    PorcentajePropina = r.PorcentajePropina,
                     MensajePieFactura = r.MensajePieFactura,
                     PlanRestauranteDto = new PlanRestauranteDto
                     {
@@ -254,6 +256,7 @@ namespace MVA_FOOD.Infrastructure.Services
                     SecuenciaFactura = r.SecuenciaFactura,
                     PorcentajeImpuesto = r.PorcentajeImpuesto,
                     ImpuestoIncluido = r.ImpuestoIncluido,
+                    PorcentajePropina = r.PorcentajePropina,
                     MensajePieFactura = r.MensajePieFactura,
                     Menu = r.PlanRestaurante != null && r.PlanRestaurante.Estado == "Vencido"
                         ? new List<MenuDto>()
@@ -430,6 +433,7 @@ namespace MVA_FOOD.Infrastructure.Services
                     SecuenciaFactura = r.SecuenciaFactura,
                     PorcentajeImpuesto = r.PorcentajeImpuesto,
                     ImpuestoIncluido = r.ImpuestoIncluido,
+                    PorcentajePropina = r.PorcentajePropina,
                     MensajePieFactura = r.MensajePieFactura,
                     Menu = r.Menu.Where(m => m.Activo == true)
                     .Select(m => new MenuDto
@@ -580,6 +584,7 @@ namespace MVA_FOOD.Infrastructure.Services
                     SecuenciaFactura = dto.SecuenciaFactura ?? 1,
                     PorcentajeImpuesto = dto.PorcentajeImpuesto ?? 0,
                     ImpuestoIncluido = dto.ImpuestoIncluido ?? true,
+                    PorcentajePropina = dto.PorcentajePropina ?? 0,
                     MensajePieFactura = dto.MensajePieFactura
                 };
 
@@ -694,6 +699,7 @@ namespace MVA_FOOD.Infrastructure.Services
                     SecuenciaFactura = restaurante.SecuenciaFactura,
                     PorcentajeImpuesto = restaurante.PorcentajeImpuesto,
                     ImpuestoIncluido = restaurante.ImpuestoIncluido,
+                    PorcentajePropina = restaurante.PorcentajePropina,
                     MensajePieFactura = restaurante.MensajePieFactura
                 };
             }
@@ -792,6 +798,8 @@ namespace MVA_FOOD.Infrastructure.Services
                     restaurante.PorcentajeImpuesto = dto.PorcentajeImpuesto.Value;
                 if (dto.ImpuestoIncluido.HasValue)
                     restaurante.ImpuestoIncluido = dto.ImpuestoIncluido.Value;
+                if (dto.PorcentajePropina.HasValue)
+                    restaurante.PorcentajePropina = dto.PorcentajePropina.Value;
                 if (dto.MensajePieFactura != null)
                     restaurante.MensajePieFactura = dto.MensajePieFactura;
 

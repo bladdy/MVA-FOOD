@@ -5,8 +5,17 @@ import { UserProvider, useUser } from "@/context/UserContext.tsx";
 import { HUB_URL } from "@/lib/apiConfig";
 import FacturaModal from "@/React/Admin/FacturaModal";
 
-const ESTADOS = ["Pendiente", "En Proceso", "Completado"] as const;
+const ESTADOS = ["Pendiente", "En preparación", "Listo"] as const;
 const estadosColores = ["border-yellow-500", "border-blue-500", "border-green-500"];
+
+const derivarEstado = (items: PedidoResponse["items"]): number => {
+  const enCurso = items.filter((i) => (i.estado ?? 0) < 3);
+  if (enCurso.length === 0) {
+    if (items.every((i) => i.estado === 4)) return 4;
+    return items.some((i) => i.estado === 3) ? 3 : 2;
+  }
+  return Math.min(...enCurso.map((i) => i.estado ?? 0));
+};
 
 function OrdenesManagerInner() {
   const { user } = useUser();
@@ -92,26 +101,38 @@ function OrdenesManagerInner() {
     };
   }, [restauranteId, playNotification]);
 
-  const handleAceptar = async (id: string) => {
+  const marcarItems = async (pedido: PedidoResponse, destino: number) => {
+    const pendientes = (pedido.items || []).filter((i) => (i.estado ?? 0) < destino);
+    if (pendientes.length === 0) return;
     try {
-      await pedidoService.updateEstado(id, 1);
+      await Promise.all(
+        pendientes.map((i) => pedidoService.updateItemEstado(pedido.id, i.id, destino)),
+      );
       setPedidos((prev) =>
-        prev.map((p) => (p.id === id ? { ...p, estado: 1 } : p))
+        prev.map((p) =>
+          p.id === pedido.id
+            ? (() => {
+                const items = (p.items || []).map((it) =>
+                  pendientes.some((x) => x.id === it.id)
+                    ? { ...it, estado: destino }
+                    : it,
+                );
+                return { ...p, items, estado: derivarEstado(items) };
+              })()
+            : p,
+        ),
       );
     } catch (err) {
       console.error(err);
     }
   };
 
-  const handleCompletar = async (id: string) => {
-    try {
-      await pedidoService.updateEstado(id, 2);
-      setPedidos((prev) =>
-        prev.map((p) => (p.id === id ? { ...p, estado: 2 } : p))
-      );
-    } catch (err) {
-      console.error(err);
-    }
+  const handleAceptar = async (pedido: PedidoResponse) => {
+    await marcarItems(pedido, 1);
+  };
+
+  const handleCompletar = async (pedido: PedidoResponse) => {
+    await marcarItems(pedido, 2);
   };
 
   const handleEntregar = async (id: string) => {
@@ -128,7 +149,7 @@ function OrdenesManagerInner() {
   const handleCancelar = async (id: string) => {
     if (!confirm("¿Cancelar este pedido?")) return;
     try {
-      await pedidoService.delete(id);
+      await pedidoService.cancelar(id);
       setPedidos((prev) => prev.filter((p) => p.id !== id));
     } catch (err) {
       console.error(err);
@@ -210,6 +231,16 @@ function OrdenesManagerInner() {
                       {pedido.metodoPago && (
                         <span className="ml-2 text-xs font-medium px-2 py-0.5 rounded-full bg-purple-100 text-purple-700">
                           {pedido.metodoPago}
+                        </span>
+                      )}
+                      {pedido.estaFacturado && (
+                        <span className="ml-2 text-xs font-medium px-2 py-0.5 rounded-full bg-green-100 text-green-700">
+                          Facturado
+                        </span>
+                      )}
+                      {pedido.numeroMesa && (
+                        <span className="ml-2 text-xs font-medium px-2 py-0.5 rounded-full bg-orange-100 text-orange-700">
+                          Mesa {pedido.numeroMesa}
                         </span>
                       )}
                     </div>
@@ -297,75 +328,71 @@ function OrdenesManagerInner() {
                   </div>
 
                   <div className="flex gap-2 mt-3">
-                    {col.estado === 0 && (
-                      <button
-                        onClick={() => handleAceptar(pedido.id)}
-                        className="flex-1 bg-yellow-500 hover:bg-yellow-600 text-white text-sm py-1.5 rounded-lg font-medium"
-                      >
-                        Aceptar
-                      </button>
-                    )}
-                    {col.estado === 0 && pedido.clienteTelefono && (
-                      <a
-                        href={`https://wa.me/${pedido.clienteTelefono.replace(/\D/g, "")}?text=${encodeURIComponent(`Hola ${pedido.clienteNombre}, hemos recibido su pedido. Pronto lo estaremos preparando.`)}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex-1 bg-green-600 hover:bg-green-700 text-white text-sm py-1.5 rounded-lg font-medium text-center"
-                      >
-                        WhatsApp
-                      </a>
-                    )}
-                    {col.estado === 1 && (
-                      <button
-                        onClick={() => handleCompletar(pedido.id)}
-                        className="flex-1 bg-green-500 hover:bg-green-600 text-white text-sm py-1.5 rounded-lg font-medium"
-                      >
-                        Completar
-                      </button>
-                    )}
-                    {col.estado === 1 && pedido.clienteTelefono && (
-                      <a
-                        href={`https://wa.me/${pedido.clienteTelefono.replace(/\D/g, "")}?text=${encodeURIComponent(`Hola ${pedido.clienteNombre}, su pedido ya está en proceso.`)}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex-1 bg-green-600 hover:bg-green-700 text-white text-sm py-1.5 rounded-lg font-medium text-center"
-                      >
-                        WhatsApp
-                      </a>
-                    )}
-                    {col.estado === 2 && pedido.clienteTelefono && (
-                      <a
-                        href={`https://wa.me/${pedido.clienteTelefono.replace(/\D/g, "")}?text=${encodeURIComponent(`Hola ${pedido.clienteNombre}, su orden ya está lista.`)}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex-1 bg-green-600 hover:bg-green-700 text-white text-sm py-1.5 rounded-lg font-medium text-center"
-                      >
-                        WhatsApp
-                      </a>
-                    )}
-                    {col.estado === 2 && (
-                      <button
-                        onClick={() => handleEntregar(pedido.id)}
-                        className="flex-1 bg-gray-700 hover:bg-gray-800 text-white text-sm py-1.5 rounded-lg font-medium"
-                      >
-                        Entregado
-                      </button>
-                    )}
-                    {col.estado === 2 && !pedido.mesaId && (
-                      <button
-                        onClick={() => setFacturarPedidoId(pedido.id)}
-                        className="flex-1 bg-orange-500 hover:bg-orange-600 text-white text-sm py-1.5 rounded-lg font-medium"
-                      >
-                        Facturar
-                      </button>
-                    )}
-                    {col.estado < 2 && (
-                      <button
-                        onClick={() => handleCancelar(pedido.id)}
-                        className="px-3 bg-red-100 hover:bg-red-200 text-red-700 text-sm py-1.5 rounded-lg"
-                      >
-                        Cancelar
-                      </button>
+                    {!pedido.estaFacturado && (
+                      <>
+                        {col.estado === 0 && (
+                          <button
+                            onClick={() => handleAceptar(pedido)}
+                            className="flex-1 bg-yellow-500 hover:bg-yellow-600 text-white text-sm py-1.5 rounded-lg font-medium"
+                          >
+                            Aceptar
+                          </button>
+                        )}
+                        {col.estado === 0 && pedido.clienteTelefono && (
+                          <a
+                            href={`https://wa.me/${pedido.clienteTelefono.replace(/\D/g, "")}?text=${encodeURIComponent(`Hola ${pedido.clienteNombre}, hemos recibido su pedido. Pronto lo estaremos preparando.`)}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex-1 bg-green-600 hover:bg-green-700 text-white text-sm py-1.5 rounded-lg font-medium text-center"
+                          >
+                            WhatsApp
+                          </a>
+                        )}
+                        {col.estado === 1 && (
+                          <button
+                            onClick={() => handleCompletar(pedido)}
+                            className="flex-1 bg-green-500 hover:bg-green-600 text-white text-sm py-1.5 rounded-lg font-medium"
+                          >
+                            Completar
+                          </button>
+                        )}
+                        {col.estado === 1 && pedido.clienteTelefono && (
+                          <a
+                            href={`https://wa.me/${pedido.clienteTelefono.replace(/\D/g, "")}?text=${encodeURIComponent(`Hola ${pedido.clienteNombre}, su pedido ya está en proceso.`)}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex-1 bg-green-600 hover:bg-green-700 text-white text-sm py-1.5 rounded-lg font-medium text-center"
+                          >
+                            WhatsApp
+                          </a>
+                        )}
+                        {col.estado === 2 && pedido.clienteTelefono && (
+                          <a
+                            href={`https://wa.me/${pedido.clienteTelefono.replace(/\D/g, "")}?text=${encodeURIComponent(`Hola ${pedido.clienteNombre}, su orden ya está lista.`)}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex-1 bg-green-600 hover:bg-green-700 text-white text-sm py-1.5 rounded-lg font-medium text-center"
+                          >
+                            WhatsApp
+                          </a>
+                        )}
+                        {col.estado === 2 && (
+                          <button
+                            onClick={() => handleEntregar(pedido.id)}
+                            className="flex-1 bg-gray-700 hover:bg-gray-800 text-white text-sm py-1.5 rounded-lg font-medium"
+                          >
+                            Entregado
+                          </button>
+                        )}
+                        {col.estado < 2 && (
+                          <button
+                            onClick={() => handleCancelar(pedido.id)}
+                            className="px-3 bg-red-100 hover:bg-red-200 text-red-700 text-sm py-1.5 rounded-lg"
+                          >
+                            Cancelar
+                          </button>
+                        )}
+                      </>
                     )}
                   </div>
                 </div>

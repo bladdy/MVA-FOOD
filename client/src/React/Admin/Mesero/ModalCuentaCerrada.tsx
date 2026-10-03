@@ -1,51 +1,68 @@
 import type { FacturaVentaDetalleDto } from "@/Types/Restaurante";
-import FacturaReceipt from "@/React/Admin/FacturaReceipt";
 import { IconCheck } from "@/React/Admin/Mesero/icons";
 
 interface Props {
   mesaNumero: number;
   factura: FacturaVentaDetalleDto;
-  liberando: boolean;
-  onLiberar: () => void;
   onSeguir: () => void;
 }
 
-export default function ModalCuentaCerrada({ mesaNumero, factura, liberando, onLiberar, onSeguir }: Props) {
+/**
+ * Confirmación de que la cuenta quedó en manos de caja.
+ *
+ * El mesero no cobra ni imprime: solo ve el número de factura y el total para tener la
+ * referencia. El ticket lo imprime caja, que lo lleva al cliente.
+ */
+export default function ModalCuentaCerrada({ mesaNumero, factura, onSeguir }: Props) {
+  const total = factura.totalConPropina ?? factura.total;
+
   return (
-    <div className="fixed inset-0 z-[110] overflow-y-auto bg-black/70 py-8">
-      <div className="mx-auto w-full max-w-2xl rounded-2xl bg-white p-6 shadow-2xl">
-        <div className="mb-4 flex items-center gap-3">
+    <div
+      className="fixed inset-0 z-[110] flex items-center justify-center overflow-y-auto bg-black/70 p-4"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="modal-cuenta-caja"
+    >
+      <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl">
+        <div className="mb-5 flex items-start gap-3">
           <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-green-100 text-green-600">
             <IconCheck className="h-5 w-5" />
           </span>
           <div>
-            <h3 className="text-lg font-bold text-gray-800">
-              Cuenta cerrada · Factura {factura.numeroFactura}
+            <h3 id="modal-cuenta-caja" className="text-lg font-bold text-gray-800">
+              Cuenta enviada a caja
             </h3>
-            <p className="text-sm text-gray-500">Mesa {mesaNumero} · Total {factura.total.toFixed(2)} {factura.moneda}</p>
+            <p className="mt-0.5 text-sm text-gray-500">
+              Factura {factura.numeroFactura} · Mesa {mesaNumero}
+            </p>
           </div>
         </div>
 
-        <div className="mb-5 max-h-[55vh] overflow-y-auto rounded-xl border border-gray-200">
-          <FacturaReceipt factura={factura} showPrintButton={false} />
-        </div>
+        <dl className="mb-5 space-y-2 rounded-xl bg-gray-50 p-4 text-sm">
+          <div className="flex items-center justify-between">
+            <dt className="text-gray-600">Total a cobrar</dt>
+            <dd className="text-xl font-bold text-gray-800">
+              {total.toFixed(2)} {factura.moneda}
+            </dd>
+          </div>
+          <div className="flex items-center justify-between">
+            <dt className="text-gray-600">Mesero</dt>
+            <dd className="font-medium text-gray-800">{factura.meseroNombre || "—"}</dd>
+          </div>
+        </dl>
 
-        <div className="space-y-2">
-          <button
-            onClick={onLiberar}
-            disabled={liberando}
-            className="flex w-full items-center justify-center rounded-xl bg-orange-600 py-3 text-sm font-bold uppercase tracking-wide text-white shadow-card transition hover:bg-orange-700 disabled:cursor-not-allowed disabled:bg-gray-300"
-          >
-            {liberando ? "Liberando..." : "Liberar mesa"}
-          </button>
-          <button
-            onClick={onSeguir}
-            disabled={liberando}
-            className="w-full rounded-xl border border-gray-300 bg-white py-3 text-sm font-semibold text-gray-700 transition hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            Seguir agregando órdenes
-          </button>
-        </div>
+        <p className="mb-5 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
+          <strong>Pendiente de cobro.</strong> Caja imprimirá la cuenta, se la llevará al
+          cliente y marcará la factura como pagada cuando reciba el dinero. La mesa ya
+          quedó libre.
+        </p>
+
+        <button
+          onClick={onSeguir}
+          className="flex w-full items-center justify-center rounded-xl bg-orange-600 py-3 text-sm font-bold uppercase tracking-wide text-white shadow-card transition hover:bg-orange-700"
+        >
+          Volver a mesas
+        </button>
       </div>
     </div>
   );

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MVA_FOOD.Core.DTOs;
 using MVA_FOOD.Core.Entities;
+using MVA_FOOD.Core.Enums;
 using MVA_FOOD.Core.Interfaces;
 using MVA_FOOD.Infrastructure.Services;
 
@@ -50,13 +51,29 @@ namespace MVA_FOOD.API.Controllers
                 nombre = usuario.Nombre,
                 rol = usuario.Rol,
                 restauranteId = usuario.RestauranteId,
-                usuarioId = usuario.Id
+                usuarioId = usuario.Id,
+                activo = usuario.Activo
             });
         }
 
+        /// <summary>
+        /// Creación de usuarios del panel. Requiere autenticación de Admin; el nuevo
+        /// usuario se asigna al mismo restaurante del Admin (el flujo anónimo de
+        /// alta de restaurante crea al administrador vía CrearRestauranteDto).
+        /// </summary>
         [HttpPost("register")]
+        [Authorize(Roles = Roles.SoloAdmin)]
         public IActionResult Register([FromBody] RegisterRequestDto request)
         {
+            if (!Permisos.RolesPermitidos.Contains(request.Rol))
+                return BadRequest(new { mensaje = "Rol no permitido" });
+
+            var restauranteId = Guid.TryParse(User.FindFirstValue("restauranteId"), out var rid)
+                ? (Guid?)rid
+                : null;
+            if (!restauranteId.HasValue)
+                return Unauthorized(new { mensaje = "Restaurante no determinado" });
+
             if (_usuarioService.ObtenerPorUsuario(request.Username) != null)
                 return BadRequest("El usuario ya existe");
 
@@ -65,14 +82,22 @@ namespace MVA_FOOD.API.Controllers
                 Nombre = request.Nombre,
                 UsuarioNombre = request.Username,
                 Rol = request.Rol,
-                RestauranteId = null
+                RestauranteId = restauranteId,
+                Activo = true
             };
 
             var usuarioCreado = _usuarioService.Crear(
                 nuevoUsuario,
                 request.Password);
 
-            return Ok(usuarioCreado);
+            return Ok(new UsuarioDto
+            {
+                Id = usuarioCreado.Id,
+                Nombre = usuarioCreado.Nombre,
+                UsuarioNombre = usuarioCreado.UsuarioNombre,
+                Rol = usuarioCreado.Rol,
+                Activo = usuarioCreado.Activo
+            });
         }
 
         [HttpGet("validate-token")]
@@ -134,12 +159,23 @@ namespace MVA_FOOD.API.Controllers
                 .FirstOrDefault(c => c.Type == "restauranteId")
                 ?.Value;
 
+            var permisos = User.Claims
+                .Where(c => c.Type == "permiso")
+                .Select(c => c.Value)
+                .ToList();
+
+            var activo = User.Claims
+                .FirstOrDefault(c => c.Type == "activo")
+                ?.Value;
+
             return Ok(new
             {
                 usuarioId,
                 nombre,
                 rol,
-                restauranteId
+                restauranteId,
+                permisos,
+                activo
             });
         }
     }

@@ -169,11 +169,21 @@ function DashboardInner() {
           <p className="text-3xl font-bold text-gray-800 mt-1">${ingresosHoy.toFixed(2)}</p>
         </div>
         <div className="bg-white rounded-xl shadow p-5 border-l-4 border-orange-500">
-          <p className="text-sm text-gray-500 font-medium">Facturado Hoy</p>
+          <p className="text-sm text-gray-500 font-medium">Cobrado Hoy</p>
           <p className="text-3xl font-bold text-gray-800 mt-1">
             {resumenHoy ? `${getCurrencySymbol(resumenHoy.moneda || "DOP")}${resumenHoy.ingresos.toFixed(2)}` : "—"}
           </p>
-          <p className="text-xs text-gray-400 mt-1">{resumenHoy?.cantidadVentas ?? 0} factura(s)</p>
+          <p className="text-xs text-gray-400 mt-1">{resumenHoy?.cantidadVentas ?? 0} venta(s)</p>
+          {resumenHoy && resumenHoy.cantidadPorCobrar > 0 && (
+            <a
+              href="/admin/facturacion/facturas"
+              className="mt-1 block text-xs font-medium text-amber-600 hover:text-amber-700"
+            >
+              {resumenHoy.cantidadPorCobrar} por cobrar ·{" "}
+              {getCurrencySymbol(resumenHoy.moneda || "DOP")}
+              {resumenHoy.montoPorCobrar.toFixed(2)}
+            </a>
+          )}
         </div>
         <div className="bg-white rounded-xl shadow p-5 border-l-4 border-purple-500">
           <p className="text-sm text-gray-500 font-medium">Menús Activos</p>

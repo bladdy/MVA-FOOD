@@ -22,7 +22,11 @@ namespace MVA_FOOD.Core.Entities
         public int SecuenciaFactura { get; set; } = 1;
         public decimal PorcentajeImpuesto { get; set; }
         public bool ImpuestoIncluido { get; set; } = true;
+        public decimal PorcentajePropina { get; set; }
         public string? MensajePieFactura { get; set; }
+        public ModoRepartoPropina ModoRepartoPropina { get; set; } = ModoRepartoPropina.Igual;
+        public ICollection<RepartoPropinaRol> RepartoPropinaRoles { get; set; } = new List<RepartoPropinaRol>();
+        public ICollection<PagoPropina> PagosPropina { get; set; } = new List<PagoPropina>();
         public ICollection<Usuario> Usuarios { get; set; } = new List<Usuario>();
         public ICollection<Horario> Horario { get; set; } = new List<Horario>();
         public ICollection<Menu> Menu { get; set; } = new List<Menu>();

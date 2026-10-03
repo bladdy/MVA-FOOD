@@ -1,6 +1,7 @@
 using System.Net;
 using System.Text.Json;
 using MVA_FOOD.API.Errors;
+using MVA_FOOD.Core;
 
 namespace MVA_FOOD.API.Middleware
 {
@@ -54,6 +55,16 @@ namespace MVA_FOOD.API.Middleware
             try
             {
                 await _next(context);
+            }
+            catch (BusinessException ex)
+            {
+                _logger.LogWarning(ex, ex.Message);
+                context.Response.ContentType = "application/json";
+                context.Response.StatusCode = (int)ex.StatusCode;
+
+                var response = new ApiException((int)ex.StatusCode, ex.Message, null, ex.Code);
+                var options = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
+                await context.Response.WriteAsync(JsonSerializer.Serialize(response, options));
             }
             catch (Exception ex)
             {

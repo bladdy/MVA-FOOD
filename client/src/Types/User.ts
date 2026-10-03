@@ -4,4 +4,6 @@ export interface User {
   nombre: string;
   rol: string;
   restauranteId?: string;
+  permisos?: string[];
+  activo?: boolean;
 }

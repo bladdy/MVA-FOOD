@@ -5,9 +5,12 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using MVA_FOOD.Core.Entities;
+using MVA_FOOD.Core.Enums;
+using MVA_FOOD.Infrastructure.Data;
 
 namespace MVA_FOOD.Infrastructure.Services
 {
@@ -15,10 +18,12 @@ namespace MVA_FOOD.Infrastructure.Services
     public class TokenService
     {
         private readonly IConfiguration _config;
+        private readonly AppDbContext _context;
 
-        public TokenService(IConfiguration config)
+        public TokenService(IConfiguration config, AppDbContext context)
         {
             _config = config;
+            _context = context;
         }
         public bool ValidarToken(string token)
         {
@@ -47,13 +52,27 @@ namespace MVA_FOOD.Infrastructure.Services
 
         public string GenerarToken(Usuario usuario)
         {
-            var claims = new[]
+            var permisos = _context.RolPermisos
+                .AsNoTracking()
+                .Where(rp => rp.Rol == usuario.Rol)
+                .Select(rp => rp.PermisoClave)
+                .ToList();
+
+            if (permisos.Count == 0 && Permisos.PorRol.TryGetValue(usuario.Rol, out var porDefecto))
+                permisos = porDefecto.ToList();
+
+            var claims = new List<Claim>
             {
                 new Claim("usuarioId", usuario.Id.ToString()),
                 new Claim(ClaimTypes.Name, usuario.Nombre),
                 new Claim("rol", usuario.Rol),
-                new Claim("restauranteId", usuario.RestauranteId?.ToString() ?? "")
+                new Claim(ClaimTypes.Role, usuario.Rol),
+                new Claim("restauranteId", usuario.RestauranteId?.ToString() ?? ""),
+                new Claim("activo", usuario.Activo ? "true" : "false")
             };
+
+            foreach (var permiso in permisos.Distinct())
+                claims.Add(new Claim("permiso", permiso));
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]!));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);

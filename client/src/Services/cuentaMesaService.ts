@@ -1,5 +1,10 @@
 import { API_URL } from "@/lib/apiConfig";
-import type { CerrarCuentaMesaDto, CuentaMesaDetalleDto } from "@/Types/Restaurante.ts";
+import type {
+  CerrarCuentaMesaDto,
+  CerrarCuentaResponseDto,
+  CuentaMesaDetalleDto,
+  ValidarCierreResponseDto,
+} from "@/Types/Restaurante.ts";
 
 export const cuentaMesaService = {
   async getByMesa(mesaId: string): Promise<CuentaMesaDetalleDto | null> {
@@ -30,7 +35,15 @@ export const cuentaMesaService = {
     return json;
   },
 
-  async cerrar(mesaId: string, dto: CerrarCuentaMesaDto): Promise<CuentaMesaDetalleDto> {
+  async validarCierre(cuentaMesaId: string): Promise<ValidarCierreResponseDto> {
+    const res = await fetch(`${API_URL}/CuentaMesa/${cuentaMesaId}/validar-cierre`, {
+      credentials: "include",
+    });
+    if (!res.ok) throw new Error("Error al validar el cierre");
+    return res.json();
+  },
+
+  async cerrar(mesaId: string, dto: CerrarCuentaMesaDto): Promise<CerrarCuentaResponseDto> {
     const res = await fetch(`${API_URL}/CuentaMesa/${mesaId}/cerrar`, {
       method: "POST",
       credentials: "include",

@@ -116,15 +116,14 @@ namespace MVA_FOOD.Infrastructure.Services
             var mesa = await _context.Mesas.FindAsync(id);
             if (mesa == null) return false;
 
+            // Se retiran del flujo activo los pedidos que no fueron facturados, conservando
+            // sus estados de items originales (no se fuerza Entregado).
             var pedidos = await _context.Pedidos
-                .Where(p => p.MesaId == id && p.Activo)
+                .Where(p => p.MesaId == id && p.Activo && p.FacturaVentaId == null)
                 .ToListAsync();
 
             foreach (var pedido in pedidos)
-            {
                 pedido.Activo = false;
-                pedido.Estado = Estado.Entregado;
-            }
 
             await _cuentaMesaService.LiberarMesaAsync(id);
 

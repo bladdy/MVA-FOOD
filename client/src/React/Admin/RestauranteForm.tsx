@@ -22,6 +22,7 @@ export default function RestauranteForm({ onSaved }: { onSaved?: () => void }) {
     secuenciaFactura?: number;
     porcentajeImpuesto?: number;
     impuestoIncluido?: boolean;
+    porcentajePropina?: number;
     mensajePieFactura?: string;
   }>({
     id: "",
@@ -48,6 +49,7 @@ export default function RestauranteForm({ onSaved }: { onSaved?: () => void }) {
     secuenciaFactura: 1,
     porcentajeImpuesto: 0,
     impuestoIncluido: true,
+    porcentajePropina: 0,
     mensajePieFactura: ""
   });
 
@@ -141,6 +143,7 @@ export default function RestauranteForm({ onSaved }: { onSaved?: () => void }) {
           secuenciaFactura: data.secuenciaFactura ?? 1,
           porcentajeImpuesto: data.porcentajeImpuesto ?? 0,
           impuestoIncluido: data.impuestoIncluido ?? true,
+          porcentajePropina: data.porcentajePropina ?? 0,
           mensajePieFactura: data.mensajePieFactura || "",
         }));
 
@@ -608,6 +611,26 @@ export default function RestauranteForm({ onSaved }: { onSaved?: () => void }) {
             <label htmlFor="impuestoIncluido" className="text-sm font-medium text-gray-700">
               Los precios del menú ya incluyen el impuesto
             </label>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              % Propina (ventas en mesa)
+            </label>
+            <input
+              type="number"
+              name="porcentajePropina"
+              min={0}
+              step="0.01"
+              value={restaurante.porcentajePropina ?? 0}
+              onChange={(e) =>
+                setRestaurante((prev) => ({
+                  ...prev,
+                  porcentajePropina: parseFloat(e.target.value) || 0,
+                }))
+              }
+              placeholder="0 = sin propina"
+              className="w-full mt-1 rounded-md border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-orange-300 focus:border-orange-400 outline-none transition-colors"
+            />
           </div>
           <div className="sm:col-span-2">
             <label className="block text-sm font-medium text-gray-700">Mensaje del pie del ticket</label>

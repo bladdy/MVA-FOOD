@@ -12,9 +12,11 @@ namespace MVA_FOOD.Core.Interfaces
         Task<Pedido> GetByIdAsync(Guid id);
         Task<Pedido> GetByIdSignalRAsync(Guid id);
         Task<List<Pedido>> GetByMesaAsync(Guid mesaId);
-        Task<Pedido> CreateAsync(PedidoDto dto);
+        Task<Pedido> CreateAsync(PedidoDto dto, Guid? meseroUsuarioId = null, string? meseroNombre = null);
         Task<bool> UpdateEstadoAsync(Guid id, Estado estado);
         Task<(bool success, bool promovido)> UpdateItemEstadoAsync(Guid pedidoId, Guid itemId, Estado estado);
+        Task<List<MesaPlatosListosDto>> GetPlatosListosPorMesaAsync(Guid restauranteId);
+        Task<Pedido> CancelarAsync(Guid id);
         Task<bool> DeleteAsync(Guid id);
     }
 }

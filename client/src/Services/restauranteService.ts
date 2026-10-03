@@ -40,6 +40,7 @@ export async function updateRestaurante(id: string, data: RestauranteDTO) {
   if (data.secuenciaFactura !== undefined) formData.append("SecuenciaFactura", String(data.secuenciaFactura));
   if (data.porcentajeImpuesto !== undefined) formData.append("PorcentajeImpuesto", String(data.porcentajeImpuesto));
   if (data.impuestoIncluido !== undefined) formData.append("ImpuestoIncluido", String(data.impuestoIncluido));
+  if (data.porcentajePropina !== undefined) formData.append("PorcentajePropina", String(data.porcentajePropina));
   if (data.mensajePieFactura !== undefined) formData.append("MensajePieFactura", data.mensajePieFactura);
 
   if (data.perfilImage && data.perfilImage instanceof File) {

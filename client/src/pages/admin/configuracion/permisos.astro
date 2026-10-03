@@ -1,0 +1,10 @@
+---
+import LayoutAdmin from "@/layouts/LayoutAdmin.astro";
+import PermisosManager from "@/React/Admin/PermisosManager.tsx";
+---
+
+<LayoutAdmin title="Configuración - Permisos">
+  <div class="p-6">
+    <PermisosManager client:load />
+  </div>
+</LayoutAdmin>

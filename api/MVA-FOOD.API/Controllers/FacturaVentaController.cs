@@ -1,19 +1,28 @@
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
+using MVA_FOOD.API.Services.Hubs;
+using MVA_FOOD.Core;
 using MVA_FOOD.Core.DTOs;
+using MVA_FOOD.Core.Entities;
+using MVA_FOOD.Core.Enums;
 using MVA_FOOD.Core.Interfaces;
 
 namespace MVA_FOOD.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize(Roles = Roles.CuentasYFacturas)]
     public class FacturaVentaController : ControllerBase
     {
         private readonly IFacturaVentaService _facturaVentaService;
+        private readonly IHubContext<OrderHub> _hubContext;
 
-        public FacturaVentaController(IFacturaVentaService facturaVentaService)
+        public FacturaVentaController(IFacturaVentaService facturaVentaService, IHubContext<OrderHub> hubContext)
         {
             _facturaVentaService = facturaVentaService;
+            _hubContext = hubContext;
         }
 
         private bool PuedeAcceder(Guid restauranteId)
@@ -22,11 +31,14 @@ namespace MVA_FOOD.API.Controllers
             return !string.IsNullOrEmpty(userRestauranteId) && userRestauranteId == restauranteId.ToString();
         }
 
+        private Guid UsuarioId =>
+            Guid.TryParse(User.FindFirstValue("usuarioId"), out var id) ? id : Guid.Empty;
+
         [HttpGet("restaurante/{restauranteId}")]
-        public async Task<IActionResult> GetByRestaurante(Guid restauranteId)
+        public async Task<IActionResult> GetByRestaurante(Guid restauranteId, [FromQuery] EstadoFacturaVenta? estado = null)
         {
             if (!PuedeAcceder(restauranteId)) return Forbid();
-            var facturas = await _facturaVentaService.GetByRestauranteAsync(restauranteId);
+            var facturas = await _facturaVentaService.GetByRestauranteAsync(restauranteId, estado);
             return Ok(facturas);
         }
 
@@ -79,6 +91,7 @@ namespace MVA_FOOD.API.Controllers
         }
 
         [HttpPost("desde-pedido")]
+        [Authorize(Roles = Roles.Caja)]
         public async Task<IActionResult> CrearDesdePedido(CrearFacturaVentaDto dto)
         {
             if (!dto.PedidoId.HasValue)
@@ -92,8 +105,14 @@ namespace MVA_FOOD.API.Controllers
 
             try
             {
-                var factura = await _facturaVentaService.CrearDesdePedidoAsync(pedido.Value, dto);
+                // Facturación de mostrador: el cliente paga en el acto.
+                var factura = await _facturaVentaService.CrearDesdePedidoAsync(
+                    pedido.Value, dto, EstadoFacturaVenta.Pagada, UsuarioId, User.Identity?.Name);
                 return Ok(factura);
+            }
+            catch (BusinessException ex)
+            {
+                return BadRequest(new { codigo = ex.Code, mensaje = ex.Message, error = ex.Message });
             }
             catch (Exception ex)
             {
@@ -102,6 +121,7 @@ namespace MVA_FOOD.API.Controllers
         }
 
         [HttpPost("venta-rapida")]
+        [Authorize(Roles = Roles.Caja)]
         public async Task<IActionResult> CrearVentaRapida([FromQuery] Guid restauranteId, CrearFacturaVentaDto dto)
         {
             if (restauranteId == Guid.Empty)
@@ -110,8 +130,13 @@ namespace MVA_FOOD.API.Controllers
 
             try
             {
-                var factura = await _facturaVentaService.CrearVentaRapidaAsync(restauranteId, dto);
+                var factura = await _facturaVentaService.CrearVentaRapidaAsync(
+                    restauranteId, dto, UsuarioId, User.Identity?.Name);
                 return Ok(factura);
+            }
+            catch (BusinessException ex)
+            {
+                return BadRequest(new { codigo = ex.Code, mensaje = ex.Message, error = ex.Message });
             }
             catch (Exception ex)
             {
@@ -119,16 +144,55 @@ namespace MVA_FOOD.API.Controllers
             }
         }
 
+        /// <summary>
+        /// Caja confirma el cobro de una cuenta que el mesero envió a cobrar: registra el
+        /// monto recibido, el cambio y el método de pago real. La factura pasa a Pagada y
+        /// recién entonces empieza a sumar como ingreso.
+        /// </summary>
+        [HttpPost("{id}/pagar")]
+        [Authorize(Roles = Roles.Caja)]
+        public async Task<IActionResult> Pagar(Guid id, PagarFacturaVentaDto dto)
+        {
+            var actual = await _facturaVentaService.GetByIdAsync(id);
+            if (actual == null) return NotFound();
+            if (!PuedeAcceder(actual.RestauranteId)) return Forbid();
+
+            try
+            {
+                var factura = await _facturaVentaService.MarcarPagadaAsync(
+                    id, dto, UsuarioId, User.Identity?.Name);
+                if (factura == null) return NotFound();
+
+                await _hubContext.Clients
+                    .Group($"restaurant_{factura.RestauranteId}")
+                    .SendAsync("FacturaPagada", factura);
+
+                return Ok(factura);
+            }
+            catch (BusinessException ex)
+            {
+                return BadRequest(new { codigo = ex.Code, mensaje = ex.Message, error = ex.Message });
+            }
+        }
+
         [HttpPost("{id}/anular")]
+        [Authorize(Roles = Roles.SoloAdmin)]
         public async Task<IActionResult> Anular(Guid id, AnularFacturaVentaDto dto)
         {
             var factura = await _facturaVentaService.GetByIdAsync(id);
             if (factura == null) return NotFound();
             if (!PuedeAcceder(factura.RestauranteId)) return Forbid();
 
-            var ok = await _facturaVentaService.AnularAsync(id, dto.Motivo);
-            if (!ok) return BadRequest(new { error = "No se pudo anular la factura" });
-            return NoContent();
+            try
+            {
+                var ok = await _facturaVentaService.AnularAsync(id, dto.Motivo);
+                if (!ok) return BadRequest(new { error = "No se pudo anular la factura" });
+                return NoContent();
+            }
+            catch (BusinessException ex)
+            {
+                return BadRequest(new { codigo = ex.Code, mensaje = ex.Message, error = ex.Message });
+            }
         }
 
         private async Task<Guid?> GetPedidoRestauranteIdAsync(Guid pedidoId)

@@ -1,0 +1,10 @@
+---
+import LayoutAdmin from "@/layouts/LayoutAdmin.astro";
+import UsuariosManager from "@/React/Admin/UsuariosManager.tsx";
+---
+
+<LayoutAdmin title="Configuración - Usuarios">
+  <div class="p-6">
+    <UsuariosManager client:load />
+  </div>
+</LayoutAdmin>

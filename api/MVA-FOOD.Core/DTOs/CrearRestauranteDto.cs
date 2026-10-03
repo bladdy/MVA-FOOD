@@ -36,5 +36,6 @@ public class CrearRestauranteDto
     public int? SecuenciaFactura { get; set; }
     public decimal? PorcentajeImpuesto { get; set; }
     public bool? ImpuestoIncluido { get; set; }
+    public decimal? PorcentajePropina { get; set; }
     public string? MensajePieFactura { get; set; }
 }

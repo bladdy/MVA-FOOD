@@ -1,4 +1,5 @@
 import { getCurrencySymbol } from "@/lib/currency";
+import { ESTADO_FACTURA } from "@/consts/estadosFactura";
 import type { FacturaVentaDetalleDto } from "@/Types/Restaurante";
 
 interface Props {
@@ -36,7 +37,9 @@ export default function FacturaReceipt({ factura, showPrintButton = true }: Prop
   const horaStr = fecha.toLocaleTimeString("es-MX", { hour: "2-digit", minute: "2-digit" });
 
   const fmt = (n: number) => `${moneda}${n.toFixed(2)}`;
-  const anulada = factura.estado === 1;
+  const anulada = factura.estado === ESTADO_FACTURA.Anulada;
+  const pendienteCobro = factura.estado === ESTADO_FACTURA.PendienteCobro;
+  const pagada = factura.estado === ESTADO_FACTURA.Pagada;
 
   const lineaPrecio = (nombre: string, precio: string) => {
     const ancho = 44;
@@ -80,7 +83,14 @@ export default function FacturaReceipt({ factura, showPrintButton = true }: Prop
           <p className="my-2">{SEP}</p>
 
           <div className="text-center">
-            <p className="font-bold text-[15px]">{anulada ? "FACTURA ANULADA" : "TICKET DE VENTA"}</p>
+            {/* El ticket que caja lleva al cliente dice explícitamente que falta pagar. */}
+            <p className="font-bold text-[15px]">
+              {anulada
+                ? "FACTURA ANULADA"
+                : pendienteCobro
+                  ? "CUENTA POR COBRAR"
+                  : "TICKET DE VENTA"}
+            </p>
             <p className="font-bold">FACTURA N° {factura.numeroFactura}</p>
           </div>
 
@@ -91,14 +101,17 @@ export default function FacturaReceipt({ factura, showPrintButton = true }: Prop
             {factura.pedidoId && <p>Orden: {factura.pedidoId.slice(0, 8).toUpperCase()}</p>}
             {factura.clienteNombre && <p>Cliente: {factura.clienteNombre}</p>}
             {factura.numeroMesa && <p>Mesa: {factura.numeroMesa}</p>}
+            {factura.meseroNombre && <p>Mesero: {factura.meseroNombre}</p>}
             {factura.clienteTelefono && <p>Tel: {factura.clienteTelefono}</p>}
             {factura.clienteNumeroFiscal && <p>N° Fiscal: {factura.clienteNumeroFiscal}</p>}
             <p>
               {factura.tipoEntrega === "domicilio"
                 ? "Entrega: Domicilio"
-                : factura.tipoEntrega === "en mesa"
-                  ? `Entrega: Mesa ${factura.numeroMesa ?? "—"}`
-                  : "Entrega: Recoger"}
+                : factura.tipoEntrega === "para comer aquí"
+                  ? `Entrega: Mesa ${factura.numeroMesa ?? "—"} (Comer aquí)`
+                  : factura.tipoEntrega === "en mesa"
+                    ? `Entrega: Mesa ${factura.numeroMesa ?? "—"}`
+                    : "Entrega: Recoger"}
               {factura.metodoPago ? ` | Pago: ${factura.metodoPago}` : ""}
             </p>
           </div>
@@ -145,15 +158,43 @@ export default function FacturaReceipt({ factura, showPrintButton = true }: Prop
             ) : (
               <p className="whitespace-nowrap">{lineaPrecio("Impuesto", fmt(0))}</p>
             )}
+            {factura.porcentajePropina > 0 && (
+              <p className="whitespace-nowrap">
+                {lineaPrecio(`Propina (${factura.porcentajePropina}%)`, fmt(factura.propina))}
+              </p>
+            )}
           </div>
 
           <p className="my-1">{SEP_DOBLE}</p>
 
-          <p className="whitespace-nowrap font-bold text-[16px]">{lineaPrecio("TOTAL", fmt(factura.total))}</p>
+          <p className="whitespace-nowrap font-bold text-[16px]">
+            {lineaPrecio("TOTAL", fmt(factura.totalConPropina ?? factura.total))}
+          </p>
 
           <p className="my-1">{SEP_DOBLE}</p>
 
-          {factura.metodoPago && <p className="text-center">Pago: {factura.metodoPago}</p>}
+          {pendienteCobro && (
+            <p className="text-center font-bold mt-1">PENDIENTE DE COBRO</p>
+          )}
+
+          {factura.metodoPago && !pendienteCobro && (
+            <p className="text-center">Pago: {factura.metodoPago}</p>
+          )}
+
+          {pagada && (
+            <div className="mt-1 space-y-0.5">
+              <p className="whitespace-nowrap">
+                {lineaPrecio("RECIBIDO", fmt(factura.montoRecibido ?? factura.totalConPropina ?? factura.total))}
+              </p>
+              {(factura.cambio ?? 0) > 0 && (
+                <p className="whitespace-nowrap">{lineaPrecio("CAMBIO", fmt(factura.cambio!))}</p>
+              )}
+              {factura.metodoPago && <p className="text-center">Pago: {factura.metodoPago}</p>}
+              {factura.usuarioCajaNombre && (
+                <p className="text-center text-[12px]">Cobrado por: {factura.usuarioCajaNombre}</p>
+              )}
+            </div>
+          )}
 
           {anulada && (
             <p className="text-center font-bold mt-1">ANULADA{factura.nota ? ` - ${factura.nota}` : ""}</p>

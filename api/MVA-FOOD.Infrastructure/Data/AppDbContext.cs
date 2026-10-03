@@ -38,6 +38,11 @@ namespace MVA_FOOD.Infrastructure.Data
         public DbSet<Factura> Facturas { get; set; }
         public DbSet<FacturaVenta> FacturasVentas { get; set; }
         public DbSet<FacturaVentaItem> FacturaVentaItems { get; set; }
+        public DbSet<Permiso> Permisos { get; set; }
+        public DbSet<RolPermiso> RolPermisos { get; set; }
+        public DbSet<RepartoPropinaRol> RepartoPropinaRoles { get; set; }
+        public DbSet<PagoPropina> PagosPropina { get; set; }
+        public DbSet<PagoPropinaDetalle> PagosPropinaDetalles { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -114,6 +119,19 @@ namespace MVA_FOOD.Infrastructure.Data
                 .HasForeignKey(f => f.PedidoId)
                 .OnDelete(DeleteBehavior.SetNull);
 
+            // Número de factura único por restaurante: garantiza que dos cierres
+            // concurrentes nunca emitan la misma factura (la secuencia se reserva de
+            // forma atómica en SQLite y este índice actúa de guardia final).
+            modelBuilder.Entity<FacturaVenta>()
+                .HasIndex(f => new { f.RestauranteId, f.NumeroFactura })
+                .IsUnique();
+
+            // Una sola cuenta abierta por mesa en todo momento.
+            modelBuilder.Entity<CuentaMesa>()
+                .HasIndex(c => c.MesaId)
+                .IsUnique()
+                .HasFilter("[Estado] = 0");
+
             modelBuilder.Entity<Pedido>()
                 .HasOne(p => p.FacturaVenta)
                 .WithMany()
@@ -161,6 +179,32 @@ namespace MVA_FOOD.Infrastructure.Data
                     v => DateTime.SpecifyKind(
                         DateTime.Parse(v, null, DateTimeStyles.RoundtripKind),
                         DateTimeKind.Utc));
+
+            // Un permiso no se puede asignar dos veces al mismo rol.
+            modelBuilder.Entity<RolPermiso>()
+                .HasIndex(rp => new { rp.Rol, rp.PermisoClave })
+                .IsUnique();
+
+            modelBuilder.Entity<Permiso>()
+                .HasIndex(p => p.Clave)
+                .IsUnique();
+
+            // Un solo % de reparto por rol dentro de un restaurante.
+            modelBuilder.Entity<RepartoPropinaRol>()
+                .HasIndex(r => new { r.RestauranteId, r.Rol })
+                .IsUnique();
+
+            modelBuilder.Entity<PagoPropina>()
+                .HasMany(p => p.Detalles)
+                .WithOne(d => d.PagoPropina)
+                .HasForeignKey(d => d.PagoPropinaId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<FacturaVenta>()
+                .HasOne(f => f.PagoPropina)
+                .WithMany()
+                .HasForeignKey(f => f.PagoPropinaId)
+                .OnDelete(DeleteBehavior.SetNull);
         }
     }
 }

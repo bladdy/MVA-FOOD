@@ -23,6 +23,8 @@ namespace MVA_FOOD.Infrastructure.Services
             var user = _context.Usuarios.FirstOrDefault(u => u.UsuarioNombre == username);
             if (user == null || !BCrypt.Net.BCrypt.Verify(password, user.PasswordHash))
                 return null;
+            if (!user.Activo)
+                return null;
             return user;
         }
 
@@ -59,6 +61,37 @@ namespace MVA_FOOD.Infrastructure.Services
 
         public Usuario ObtenerPorUsuario(string username) =>
             _context.Usuarios.FirstOrDefault(u => u.UsuarioNombre == username);
+
+        public async Task<List<Usuario>> GetAllByRestauranteAsync(Guid restauranteId) =>
+            await _context.Usuarios
+                .AsNoTracking()
+                .Where(u => u.RestauranteId == restauranteId)
+                .OrderBy(u => u.Nombre)
+                .ToListAsync();
+
+        public async Task<Usuario> GetByIdAsync(Guid id) =>
+            await _context.Usuarios.FirstOrDefaultAsync(u => u.Id == id);
+
+        public async Task<bool> ActualizarAsync(Guid id, Guid restauranteId, string rol, bool activo)
+        {
+            var usuario = await _context.Usuarios.FirstOrDefaultAsync(u => u.Id == id && u.RestauranteId == restauranteId);
+            if (usuario == null) return false;
+
+            usuario.Rol = rol;
+            usuario.Activo = activo;
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<bool> CambiarPasswordAsync(Guid id, Guid restauranteId, string nuevaPassword)
+        {
+            var usuario = await _context.Usuarios.FirstOrDefaultAsync(u => u.Id == id && u.RestauranteId == restauranteId);
+            if (usuario == null || string.IsNullOrWhiteSpace(nuevaPassword)) return false;
+
+            usuario.PasswordHash = BCrypt.Net.BCrypt.HashPassword(nuevaPassword);
+            await _context.SaveChangesAsync();
+            return true;
+        }
     }
 
 }

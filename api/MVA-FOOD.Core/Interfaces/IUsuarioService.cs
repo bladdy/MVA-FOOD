@@ -13,5 +13,9 @@ namespace MVA_FOOD.Core.Interfaces
         Usuario Crear(Usuario usuario, string password);
         Usuario ObtenerPorUsuario(string username);
         Task<Usuario> GetCurrentUser(ClaimsPrincipal user);
+        Task<List<Usuario>> GetAllByRestauranteAsync(Guid restauranteId);
+        Task<Usuario> GetByIdAsync(Guid id);
+        Task<bool> ActualizarAsync(Guid id, Guid restauranteId, string rol, bool activo);
+        Task<bool> CambiarPasswordAsync(Guid id, Guid restauranteId, string nuevaPassword);
     }
 }

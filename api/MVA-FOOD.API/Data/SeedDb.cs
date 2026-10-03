@@ -15,11 +15,59 @@ public class SeedDb
     public async Task SeedAsync()
     {
         await _context.Database.EnsureCreatedAsync();
+        await CheckPermisosAsync();
         await CheckCategoriesAsync();
         await CheckAmenitiesAsync();
         await CheckPlansAsync();
         await CheckDemoRestaurantsAsync();
         await CheckMesasAsync();
+    }
+
+    /// <summary>
+    /// Catálogo de permisos por módulo y asignaciones por defecto de cada rol.
+    /// Solo agrega los que faltan; no pisa configuraciones editadas.
+    /// </summary>
+    private async Task CheckPermisosAsync()
+    {
+        var catalogo = new (string Clave, string Nombre, string Modulo)[]
+        {
+            (Core.Enums.Permisos.Dashboard, "Dashboard", "General"),
+            (Core.Enums.Permisos.Menus, "Platos, variantes y combos", "Menús"),
+            (Core.Enums.Permisos.Ordenes, "Órdenes e historial", "Órdenes"),
+            (Core.Enums.Permisos.Facturacion, "Punto de venta, reportes y facturas", "Facturación"),
+            (Core.Enums.Permisos.Suscripcion, "Suscripción y planes", "Facturación"),
+            (Core.Enums.Permisos.Mesero, "Pantalla del mesero", "Servicio"),
+            (Core.Enums.Permisos.Cocina, "Pantalla de cocina", "Servicio"),
+            (Core.Enums.Permisos.Cuentas, "Cuentas de mesa", "Servicio"),
+            (Core.Enums.Permisos.Mesas, "Gestión de mesas", "Configuración"),
+            (Core.Enums.Permisos.Configuracion, "Configuración del restaurante", "Configuración"),
+            (Core.Enums.Permisos.Usuarios, "Usuarios y permisos", "Configuración"),
+            (Core.Enums.Permisos.Propinas, "Propinas: reparto y liquidación", "Facturación")
+        };
+
+        var existentes = new HashSet<string>(_context.Permisos.Select(p => p.Clave));
+        foreach (var (clave, nombre, modulo) in catalogo)
+        {
+            if (!existentes.Contains(clave))
+                _context.Permisos.Add(new Permiso { Clave = clave, Nombre = nombre, Modulo = modulo });
+        }
+
+        await _context.SaveChangesAsync();
+
+        foreach (var (rol, claves) in Core.Enums.Permisos.PorRol)
+        {
+            var asignadas = new HashSet<string>(_context.RolPermisos
+                .Where(rp => rp.Rol == rol)
+                .Select(rp => rp.PermisoClave));
+
+            foreach (var clave in claves)
+            {
+                if (!asignadas.Contains(clave))
+                    _context.RolPermisos.Add(new RolPermiso { Rol = rol, PermisoClave = clave });
+            }
+        }
+
+        await _context.SaveChangesAsync();
     }
     private async Task CheckDemoRestaurantsAsync()
     {
@@ -44,6 +92,12 @@ public class SeedDb
                         Pagado = true,
                         Estado = "Activo"
                     },
+                RepartoPropinaRoles = new List<RepartoPropinaRol>
+                {
+                    new RepartoPropinaRol { Rol = "Mesero", Porcentaje = 60m },
+                    new RepartoPropinaRol { Rol = "Cocina", Porcentaje = 30m },
+                    new RepartoPropinaRol { Rol = "Empleado", Porcentaje = 10m }
+                },
                 CategoriaRestaurantes = new List<CategoriaRestaurantes>
                 {
                     new CategoriaRestaurantes { Categoria = _context.Categorias.FirstOrDefault(c => c.Nombre == "Plato Fuerte")! },
@@ -72,14 +126,16 @@ public class SeedDb
                         Nombre = "Admin Demo",
                         UsuarioNombre = "AdminDemo",
                         PasswordHash = BCrypt.Net.BCrypt.HashPassword("Admin123!"),
-                        Rol = "Admin"
+                        Rol = "Admin",
+                        Activo = true
                     },
                     new Usuario
                     {
                         Nombre = "Empleado Demo",
                         UsuarioNombre = "EmpleadoDemo",
                         PasswordHash = BCrypt.Net.BCrypt.HashPassword("Empleado123!"),
-                        Rol = "Empleado"
+                        Rol = "Empleado",
+                        Activo = true
                     }
                 }
             });

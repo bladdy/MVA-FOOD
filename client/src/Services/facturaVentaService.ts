@@ -4,6 +4,7 @@ import type {
   CrearFacturaVentaDto,
   FacturaVentaDetalleDto,
   FacturaVentaDto,
+  PagarFacturaVentaDto,
   PedidoFacturableDto,
   ReporteVentasDto,
   ResumenFacturacionHoyDto,
@@ -11,8 +12,12 @@ import type {
 } from "@/Types/Restaurante";
 
 export const facturaVentaService = {
-  async getByRestaurante(restauranteId: string): Promise<FacturaVentaDto[]> {
-    const res = await fetch(`${API_URL}/FacturaVenta/restaurante/${restauranteId}`, {
+  async getByRestaurante(
+    restauranteId: string,
+    estado?: number,
+  ): Promise<FacturaVentaDto[]> {
+    const query = estado === undefined ? "" : `?estado=${estado}`;
+    const res = await fetch(`${API_URL}/FacturaVenta/restaurante/${restauranteId}${query}`, {
       credentials: "include",
     });
     if (!res.ok) throw new Error("Error al obtener facturas");
@@ -87,6 +92,19 @@ export const facturaVentaService = {
     return json;
   },
 
+  /** Caja confirma el cobro: registra monto recibido, cambio y método de pago real. */
+  async marcarPagada(id: string, data: PagarFacturaVentaDto): Promise<FacturaVentaDetalleDto> {
+    const res = await fetch(`${API_URL}/FacturaVenta/${id}/pagar`, {
+      method: "POST",
+      credentials: "include",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
+    const json = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(json?.error || json?.mensaje || "Error al registrar el cobro");
+    return json;
+  },
+
   async anular(id: string, motivo: string): Promise<void> {
     const res = await fetch(`${API_URL}/FacturaVenta/${id}/anular`, {
       method: "POST",
@@ -94,6 +112,7 @@ export const facturaVentaService = {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ motivo }),
     });
-    if (!res.ok) throw new Error("Error al anular factura");
+    const json = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(json?.error || json?.mensaje || "Error al anular factura");
   },
 };

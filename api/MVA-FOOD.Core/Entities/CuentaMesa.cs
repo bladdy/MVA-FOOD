@@ -1,9 +1,18 @@
 namespace MVA_FOOD.Core.Entities
 {
+    /// <summary>
+    /// Estados de la cuenta de mesa.
+    /// 0 Abierta, 1 Cerrada, 2 Cerrando (proceso atómico de cierre en curso),
+    /// 3 Cancelada (mesa liberada sin factura).
+    /// Cerrando se usa como estado intermedio dentro de la transacción de cierre;
+    /// si la transacción falla se revierte a Abierta.
+    /// </summary>
     public enum EstadoCuentaMesa
     {
         Abierta = 0,
-        Cerrada = 1
+        Cerrada = 1,
+        Cerrando = 2,
+        Cancelada = 3
     }
 
     public class CuentaMesa

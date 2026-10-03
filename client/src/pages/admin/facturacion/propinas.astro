@@ -1,0 +1,10 @@
+---
+import LayoutAdmin from "@/layouts/LayoutAdmin.astro";
+import PropinasManager from "@/React/Admin/PropinasManager";
+---
+
+<LayoutAdmin title="Propinas">
+  <div class="p-6">
+    <PropinasManager client:load />
+  </div>
+</LayoutAdmin>

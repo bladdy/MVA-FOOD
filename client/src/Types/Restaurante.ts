@@ -117,6 +117,7 @@ export interface RestauranteDTO {
   secuenciaFactura?: number;
   porcentajeImpuesto?: number;
   impuestoIncluido?: boolean;
+  porcentajePropina?: number;
   mensajePieFactura?: string;
 }
 export interface Restaurante {
@@ -150,6 +151,7 @@ export interface Restaurante {
   secuenciaFactura?: number;
   porcentajeImpuesto?: number;
   impuestoIncluido?: boolean;
+  porcentajePropina?: number;
   mensajePieFactura?: string;
 }
 
@@ -269,10 +271,12 @@ export interface FacturaDetalleDto extends FacturaDto {
 // ---- Facturación Punto de Venta (POS) ----
 
 export interface FacturaVentaItemDto {
+  productoId?: string;
   nombre: string;
   precio: number;
   cantidad: number;
   opciones?: string;
+  notas?: string;
   esCombo?: boolean;
   comboNombre?: string;
   comboItemsJson?: string;
@@ -288,13 +292,20 @@ export interface FacturaVentaDto {
   clienteNombre: string;
   clienteTelefono: string;
   metodoPago?: string;
+  meseroUsuarioId?: string;
+  meseroNombre?: string;
+  porcentajePropina: number;
+  propina: number;
   subtotal: number;
   impuesto: number;
   total: number;
+  totalConPropina: number;
   porcentajeImpuesto: number;
   impuestoIncluido: boolean;
   estado: number;
   moneda: string;
+  fechaPago?: string;
+  usuarioCajaNombre?: string;
 }
 
 export interface FacturaVentaDetalleDto extends FacturaVentaDto {
@@ -308,6 +319,8 @@ export interface FacturaVentaDetalleDto extends FacturaVentaDto {
   restauranteTelefono: string;
   restauranteNumeroFiscal?: string;
   mensajePieFactura?: string;
+  montoRecibido?: number;
+  cambio?: number;
 }
 
 export interface CrearFacturaVentaDto {
@@ -320,6 +333,13 @@ export interface CrearFacturaVentaDto {
   metodoPago?: string;
   nota?: string;
   items: FacturaVentaItemDto[];
+  /** Solo para ventas de mostrador; si se omite se asume el pago exacto del total. */
+  montoRecibido?: number;
+}
+
+export interface PagarFacturaVentaDto {
+  metodoPago?: string;
+  montoRecibido?: number;
 }
 
 export interface PedidoFacturableDto {
@@ -350,6 +370,7 @@ export interface ConfigFacturacionDto {
   secuenciaFactura: number;
   porcentajeImpuesto: number;
   impuestoIncluido: boolean;
+  porcentajePropina: number;
   moneda: string;
   numeroFiscal?: string;
   mensajePieFactura?: string;
@@ -364,6 +385,37 @@ export interface CuentaMesaItemDto {
   esCombo: boolean;
   comboNombre?: string;
   comboItemsJson?: string;
+}
+
+export interface UsuarioDto {
+  id: string;
+  nombre: string;
+  usuarioNombre: string;
+  rol: string;
+  activo: boolean;
+}
+
+export interface CrearUsuarioDto {
+  nombre: string;
+  username: string;
+  password: string;
+  rol: string;
+}
+
+export interface ActualizarUsuarioDto {
+  rol: string;
+  activo: boolean;
+}
+
+export interface PermisoDto {
+  clave: string;
+  nombre: string;
+  modulo?: string;
+}
+
+export interface RolPermisosDto {
+  rol: string;
+  permisos: string[];
 }
 
 export interface CuentaMesaPedidoDto {
@@ -389,6 +441,9 @@ export interface CuentaMesaDetalleDto {
   subtotal: number;
   impuesto: number;
   total: number;
+  porcentajePropina: number;
+  propina: number;
+  totalConPropina: number;
   facturaVentaId?: string;
   cantidadPedidos: number;
   pedidos: CuentaMesaPedidoDto[];
@@ -404,11 +459,107 @@ export interface CerrarCuentaMesaDto {
   nota?: string;
 }
 
+export interface PedidoItemPendienteDto {
+  id: string;
+  nombre: string;
+  cantidad: number;
+  estado: number;
+  estadoNombre: string;
+}
+
+export interface PedidoPendienteDto {
+  id: string;
+  clienteNombre: string;
+  numeroMesa?: number;
+  estado: number;
+  estadoNombre: string;
+  items: PedidoItemPendienteDto[];
+}
+
+export interface ValidarCierreResponseDto {
+  puedeCerrar: boolean;
+  code?: string;
+  message?: string;
+  total: number;
+  porcentajePropina: number;
+  propina: number;
+  totalConPropina: number;
+  pedidosFacturables: string[];
+  pedidosPendientes: PedidoPendienteDto[];
+}
+
+export interface MesaPlatosListosDto {
+  mesaId: string;
+  numeroMesa: number;
+  listos: number;
+}
+
+export type ModoRepartoPropina = 0 | 1;
+
+export interface RolPorcentajeDto {
+  rol: string;
+  porcentaje: number;
+}
+
+export interface ConfigPropinaDto {
+  modo: ModoRepartoPropina;
+  rolPorcentajes: RolPorcentajeDto[];
+  participantes: number;
+  porcentajePropina: number;
+}
+
+export interface PagoPropinaDetalleDto {
+  usuarioId?: string;
+  nombre?: string;
+  rol: string;
+  monto: number;
+}
+
+export interface ResumenPropinaDto {
+  desde: string;
+  hasta: string;
+  moneda: string;
+  totalPendiente: number;
+  cantidadPendiente: number;
+  totalYaLiquidado: number;
+  cantidadYaLiquidado: number;
+  propuesta: PagoPropinaDetalleDto[];
+}
+
+export interface PagarPropinaDto {
+  desde: string;
+  hasta: string;
+}
+
+export interface PagoPropinaDto {
+  id: string;
+  desde: string;
+  hasta: string;
+  totalDividir: number;
+  cantidadFacturas: number;
+  modo: ModoRepartoPropina;
+  moneda: string;
+  usuarioIdPago?: string;
+  usuarioPagoNombre?: string;
+  fechaPago: string;
+  detalles: PagoPropinaDetalleDto[];
+}
+
+export interface CerrarCuentaResponseDto {
+  success: boolean;
+  code: string;
+  message: string;
+  facturaVentaId?: string;
+  cuenta?: CuentaMesaDetalleDto;
+}
+
 export interface ResumenFacturacionHoyDto {
   desde: string;
   hasta: string;
   cantidadVentas: number;
   cantidadAnuladas: number;
+  cantidadPorCobrar: number;
+  montoPorCobrar: number;
   ingresos: number;
   moneda: string;
 }
@@ -440,6 +591,8 @@ export interface ReporteVentasDto {
   moneda: string;
   cantidadVentas: number;
   cantidadAnuladas: number;
+  cantidadPorCobrar: number;
+  montoPorCobrar: number;
   ingresos: number;
   impuestos: number;
   montoAnulado: number;

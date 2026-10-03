@@ -2,10 +2,12 @@ namespace MVA_FOOD.Core.DTOs
 {
     public class FacturaVentaItemDto
     {
+        public Guid? ProductoId { get; set; }
         public string Nombre { get; set; } = null!;
         public decimal Precio { get; set; }
         public int Cantidad { get; set; }
         public string Opciones { get; set; } = string.Empty;
+        public string Notas { get; set; } = string.Empty;
         public bool EsCombo { get; set; }
         public string? ComboNombre { get; set; }
         public string? ComboItemsJson { get; set; }
@@ -22,13 +24,20 @@ namespace MVA_FOOD.Core.DTOs
         public string ClienteNombre { get; set; } = string.Empty;
         public string ClienteTelefono { get; set; } = string.Empty;
         public string? MetodoPago { get; set; }
+        public Guid? MeseroUsuarioId { get; set; }
+        public string? MeseroNombre { get; set; }
+        public decimal PorcentajePropina { get; set; }
+        public decimal Propina { get; set; }
         public decimal Subtotal { get; set; }
         public decimal Impuesto { get; set; }
         public decimal Total { get; set; }
+        public decimal TotalConPropina { get; set; }
         public decimal PorcentajeImpuesto { get; set; }
         public bool ImpuestoIncluido { get; set; }
         public int Estado { get; set; }
         public string Moneda { get; set; } = "DOP";
+        public DateTime? FechaPago { get; set; }
+        public string? UsuarioCajaNombre { get; set; }
     }
 
     public class FacturaVentaDetalleDto : FacturaVentaDto
@@ -43,6 +52,8 @@ namespace MVA_FOOD.Core.DTOs
         public string RestauranteTelefono { get; set; } = string.Empty;
         public string RestauranteNumeroFiscal { get; set; } = string.Empty;
         public string MensajePieFactura { get; set; } = string.Empty;
+        public decimal? MontoRecibido { get; set; }
+        public decimal? Cambio { get; set; }
     }
 
     public class CrearFacturaVentaDto
@@ -56,11 +67,25 @@ namespace MVA_FOOD.Core.DTOs
         public string? MetodoPago { get; set; }
         public string? Nota { get; set; }
         public List<FacturaVentaItemDto> Items { get; set; } = new List<FacturaVentaItemDto>();
+
+        /// <summary>Monto entregado por el cliente. Solo aplica si la factura nace Pagada;
+        /// si se omite se asume el pago exacto del total.</summary>
+        public decimal? MontoRecibido { get; set; }
     }
 
     public class AnularFacturaVentaDto
     {
         public string Motivo { get; set; } = string.Empty;
+    }
+
+    /// <summary>Cobro en caja de una factura enviada por el mesero.</summary>
+    public class PagarFacturaVentaDto
+    {
+        /// <summary>Método de pago real. Si se omite se conserva el de la factura.</summary>
+        public string? MetodoPago { get; set; }
+
+        /// <summary>Entregado por el cliente. Si se omite se asume el pago exacto del total.</summary>
+        public decimal? MontoRecibido { get; set; }
     }
 
     public class PedidoFacturableItemDto
@@ -96,6 +121,7 @@ namespace MVA_FOOD.Core.DTOs
         public int SecuenciaFactura { get; set; } = 1;
         public decimal PorcentajeImpuesto { get; set; }
         public bool ImpuestoIncluido { get; set; } = true;
+        public decimal PorcentajePropina { get; set; }
         public string Moneda { get; set; } = "DOP";
         public string? NumeroFiscal { get; set; }
         public string? MensajePieFactura { get; set; }
@@ -108,6 +134,10 @@ namespace MVA_FOOD.Core.DTOs
         public DateTime Hasta { get; set; }
         public int CantidadVentas { get; set; }
         public int CantidadAnuladas { get; set; }
+
+        /// <summary>Facturas que el mesero envió a caja y siguen sin cobrarse.</summary>
+        public int CantidadPorCobrar { get; set; }
+        public decimal MontoPorCobrar { get; set; }
         public decimal Ingresos { get; set; }
         public string Moneda { get; set; } = "DOP";
     }
@@ -148,6 +178,10 @@ namespace MVA_FOOD.Core.DTOs
         public string Moneda { get; set; } = "DOP";
         public int CantidadVentas { get; set; }
         public int CantidadAnuladas { get; set; }
+
+        /// <summary>Facturas del período enviadas a caja y aún no cobradas (fuera de Ingresos).</summary>
+        public int CantidadPorCobrar { get; set; }
+        public decimal MontoPorCobrar { get; set; }
         public decimal Ingresos { get; set; }
         public decimal Impuestos { get; set; }
         public decimal MontoAnulado { get; set; }

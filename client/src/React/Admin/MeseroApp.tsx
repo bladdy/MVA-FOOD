@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import * as signalR from "@microsoft/signalr";
 import { menuService } from "@/Services/menuService";
 import { comboService } from "@/Services/comboService";
 import { pedidoService, type PedidoResponse } from "@/Services/pedidoService";
@@ -7,7 +6,8 @@ import { mesaService } from "@/Services/mesaService";
 import { cuentaMesaService } from "@/Services/cuentaMesaService";
 import { facturaVentaService } from "@/Services/facturaVentaService";
 import { UserProvider, useUser } from "@/context/UserContext.tsx";
-import { HUB_URL } from "@/lib/apiConfig";
+import { useSignalR } from "@/hooks/useSignalR";
+import { HUB_EVENTOS } from "@/consts/estadosFactura";
 import type {
   CerrarCuentaMesaDto,
   ComboResponse,
@@ -25,7 +25,7 @@ import ModalCuentaCerrada from "@/React/Admin/Mesero/ModalCuentaCerrada";
 import { IconFlecha, IconUtensilios } from "@/React/Admin/Mesero/icons";
 import { fmt, parseComboInternos, parseOpciones, type CartItem } from "@/React/Admin/Mesero/utils";
 
-const ESTADOS = ["Pendiente", "En Proceso", "Completado", "Entregado"];
+const ESTADOS = ["Pendiente", "En preparación", "Listo", "Entregado", "Cancelado"];
 
 type CartPorMesa = Record<string, CartItem[]>;
 
@@ -37,6 +37,7 @@ function MeseroAppInner() {
   const [mesaActiva, setMesaActiva] = useState<Mesa | null>(null);
   const [pedidosMesa, setPedidosMesa] = useState<PedidoResponse[]>([]);
   const [cartPorMesa, setCartPorMesa] = useState<CartPorMesa>({});
+  const [listosPorMesa, setListosPorMesa] = useState<Record<string, number>>({});
 
   const [menus, setMenus] = useState<Menu[]>([]);
   const [combos, setCombos] = useState<ComboResponse[]>([]);
@@ -51,8 +52,6 @@ function MeseroAppInner() {
   const [error, setError] = useState("");
   const [mensaje, setMensaje] = useState("");
   const [entregandoId, setEntregandoId] = useState<string | null>(null);
-  const [liberandoMesa, setLiberandoMesa] = useState(false);
-  const [facturados, setFacturados] = useState<string[]>([]);
   const [cuentaMesa, setCuentaMesa] = useState<CuentaMesaDetalleDto | null>(null);
   const [cargandoCuenta, setCargandoCuenta] = useState(false);
   const [modalCerrarCuenta, setModalCerrarCuenta] = useState(false);
@@ -93,9 +92,22 @@ function MeseroAppInner() {
     }
   }, []);
 
+  const cargarListos = useCallback(async () => {
+    if (!restauranteId) return;
+    try {
+      const lista = await pedidoService.getPlatosListosPorMesa(restauranteId);
+      setListosPorMesa(
+        Object.fromEntries(lista.map((l) => [l.mesaId, l.listos])),
+      );
+    } catch {
+      setListosPorMesa({});
+    }
+  }, [restauranteId]);
+
   useEffect(() => {
     cargarMesas();
-  }, [cargarMesas]);
+    cargarListos();
+  }, [cargarMesas, cargarListos]);
 
   useEffect(() => {
     if (!restauranteId) return;
@@ -123,41 +135,28 @@ function MeseroAppInner() {
     }
   }, [mesaActiva, cargarPedidosMesa, cargarCuentaMesa]);
 
-  useEffect(() => {
-    if (!restauranteId) return;
+  const refrescar = useCallback(() => {
+    cargarMesas();
+    cargarListos();
+    const mesa = mesaActivaRef.current;
+    if (mesa) {
+      cargarPedidosMesa(mesa.id);
+      cargarCuentaMesa(mesa.id);
+    }
+  }, [cargarMesas, cargarPedidosMesa, cargarCuentaMesa, cargarListos]);
 
-    const connection = new signalR.HubConnectionBuilder()
-      .withUrl(HUB_URL)
-      .withAutomaticReconnect()
-      .build();
-
-    const refrescar = () => {
-      cargarMesas();
-      const mesa = mesaActivaRef.current;
-      if (mesa) cargarPedidosMesa(mesa.id);
-    };
-
-    connection.on("NuevoPedido", refrescar);
-    connection.on("EstadoPedidoActualizado", refrescar);
-
-    const joinGroup = () =>
-      connection.invoke("JoinRestaurantGroup", restauranteId).catch(console.error);
-    connection.onreconnected(joinGroup);
-
-    connection
-      .start()
-      .then(joinGroup)
-      .catch((err) => console.error("[Mesero] SignalR:", err));
-
-    return () => {
-      connection.stop().catch(() => {});
-    };
-  }, [restauranteId, cargarMesas, cargarPedidosMesa]);
+  useSignalR(restauranteId, {
+    [HUB_EVENTOS.NuevoPedido]: refrescar,
+    [HUB_EVENTOS.EstadoPedidoActualizado]: refrescar,
+    [HUB_EVENTOS.EstadoItemActualizado]: refrescar,
+    // Caja cobró una de las cuentas: el mesero ve la mesa liberada al instante.
+    [HUB_EVENTOS.FacturaPagada]: refrescar,
+  });
 
   const cart = mesaActiva ? cartPorMesa[mesaActiva.id] || [] : [];
   const cartCount = cart.reduce((acc, i) => acc + i.cantidad, 0);
   const cartTotal = cart.reduce((acc, i) => acc + i.precio * i.cantidad, 0);
-  const pendientesDeFacturar = pedidosMesa.filter((p) => !facturados.includes(p.id));
+  const pendientesDeFacturar = pedidosMesa.filter((p) => !p.estaFacturado);
 
   const abrirMesa = (mesa: Mesa) => {
     setMesaActiva(mesa);
@@ -359,15 +358,11 @@ function MeseroAppInner() {
         })),
       };
       await pedidoService.create(dto);
-      try {
-        setCuentaMesa(await cuentaMesaService.abrir(mesaActiva.id));
-      } catch {
-        // La cuenta se reabrirá al momento de cobrar
-      }
       setCartPorMesa((prev) => ({ ...prev, [mesaActiva.id]: [] }));
       setCartAbierto(false);
       setMensaje("Orden enviada a cocina");
       await cargarMesas();
+      await cargarListos();
       await cargarPedidosMesa(mesaActiva.id);
       await cargarCuentaMesa(mesaActiva.id);
     } catch (e) {
@@ -377,46 +372,52 @@ function MeseroAppInner() {
     }
   };
 
-  const liberarMesa = async () => {
-    if (!mesaActiva || !restauranteId) return;
-    setLiberandoMesa(true);
-    setError("");
-    try {
-      await mesaService.liberar(mesaActiva.id);
-      setCartPorMesa((prev) => ({ ...prev, [mesaActiva.id]: [] }));
-      setFacturaCuenta(null);
-      setCuentaMesa(null);
-      setMensaje("Mesa liberada");
-      volverAMesas();
-      await cargarMesas();
-    } catch (e) {
-      setError((e as Error).message || "No se pudo liberar la mesa");
-    } finally {
-      setLiberandoMesa(false);
-    }
-  };
-
-  const seguirAgregando = () => {
+  const volverDesdeCaja = () => {
     setFacturaCuenta(null);
-    setMensaje("Factura generada. Puedes seguir agregando órdenes");
+    setMensaje("");
+    volverAMesas();
   };
 
   const abrirModalCerrarCuenta = async () => {
     if (!mesaActiva) return;
     setErrorCuenta("");
+    setCargandoCuenta(true);
     try {
-      let cuenta = cuentaMesa;
+      let cuenta = await cuentaMesaService.getByMesa(mesaActiva.id);
+      if (cuenta) setCuentaMesa(cuenta);
       if (!cuenta) {
         cuenta = await cuentaMesaService.abrir(mesaActiva.id);
         setCuentaMesa(cuenta);
       }
-      if (cuenta.items.length === 0) {
-        setErrorCuenta("La cuenta no tiene productos para cobrar");
+      const validacion = await cuentaMesaService.validarCierre(cuenta.id);
+      if (!validacion.puedeCerrar) {
+        const pendientes = validacion.pedidosPendientes ?? [];
+        setErrorCuenta(
+          pendientes.length > 0
+            ? `Hay órdenes con productos pendientes: ${pendientes
+                .map(
+                  (p) =>
+                    `${p.numeroMesa ? `Mesa ${p.numeroMesa}: ` : ""}${p.items
+                      .map((i) => `${i.cantidad}x ${i.nombre} (${i.estadoNombre})`)
+                      .join(", ")}`,
+                )
+                .join(" · ")}`
+            : validacion.message || "La cuenta aún no se puede cerrar",
+        );
         return;
       }
+      setCuentaMesa({
+        ...cuenta,
+        total: validacion.total,
+        porcentajePropina: validacion.porcentajePropina,
+        propina: validacion.propina,
+        totalConPropina: validacion.totalConPropina,
+      });
       setModalCerrarCuenta(true);
     } catch (e) {
-      setErrorCuenta((e as Error).message || "Error al abrir la cuenta");
+      setErrorCuenta((e as Error).message || "Error al validar el cierre");
+    } finally {
+      setCargandoCuenta(false);
     }
   };
 
@@ -426,25 +427,31 @@ function MeseroAppInner() {
     setErrorCuenta("");
     try {
       const cerrada = await cuentaMesaService.cerrar(mesaActiva.id, dto);
-      setFacturados((prev) =>
-        Array.from(
-          new Set([
-            ...prev,
-            ...pedidosMesa.filter((p) => !prev.includes(p.id)).map((p) => p.id),
-          ]),
-        ),
-      );
       setModalCerrarCuenta(false);
       setCuentaMesa(null);
-      if (cerrada.facturaVentaId) {
+      if (cerrada.success && cerrada.facturaVentaId) {
         const factura = await facturaVentaService.getById(cerrada.facturaVentaId);
         setFacturaCuenta(factura);
+        // La cuenta ya está en manos de caja y la mesa se liberó en el backend,
+        // así que el mesero no tiene nada más que hacer aquí.
+        setCartPorMesa((prev) => ({ ...prev, [mesaActiva.id]: [] }));
+        setMensaje("Cuenta enviada a caja");
+        await cargarMesas();
+        await cargarListos();
+      } else {
+        setErrorCuenta(
+          cerrada.success
+            ? cerrada.message || "La cuenta se cerró pero no se obtuvo la factura"
+            : cerrada.message || "No se pudo enviar la cuenta a caja",
+        );
+        await cargarCuentaMesa(mesaActiva.id);
+        await cargarPedidosMesa(mesaActiva.id);
+        await cargarMesas();
       }
-      setMensaje("Cuenta cerrada y factura generada");
-      await cargarMesas();
-      await cargarPedidosMesa(mesaActiva.id);
     } catch (e) {
-      setErrorCuenta((e as Error).message || "Error al cerrar la cuenta");
+      setErrorCuenta((e as Error).message || "Error al enviar la cuenta a caja");
+      await cargarCuentaMesa(mesaActiva.id);
+      await cargarPedidosMesa(mesaActiva.id);
     } finally {
       setCerrandoCuenta(false);
     }
@@ -457,12 +464,20 @@ function MeseroAppInner() {
     try {
       await pedidoService.updateEstado(pedidoId, 3);
       if (mesaActiva) await cargarPedidosMesa(mesaActiva.id);
+      await cargarListos();
       setMensaje("Orden marcada como entregada");
     } catch (e) {
       setError((e as Error).message || "No se pudo marcar como entregada");
     } finally {
       setEntregandoId(null);
     }
+  };
+
+  const esOrdenEntregable = (pedido: PedidoResponse) => {
+    if (pedido.estaFacturado || !pedido.items || pedido.items.length === 0) return false;
+    const activos = pedido.items.filter((i) => i.estado !== 4);
+    if (activos.length === 0) return false;
+    return activos.every((i) => i.estado === 2);
   };
 
   if (!restauranteId) {
@@ -506,6 +521,12 @@ function MeseroAppInner() {
               >
                 {mesa.estaOcupada ? "Ocupada" : "Libre"}
               </p>
+              {listosPorMesa[mesa.id] > 0 && (
+                <span className="absolute bottom-3 left-3 rounded-full bg-orange-500 px-2.5 py-1 text-xs font-bold text-white shadow">
+                  {listosPorMesa[mesa.id]} plato{listosPorMesa[mesa.id] > 1 ? "s" : ""} listo
+                  {listosPorMesa[mesa.id] > 1 ? "s" : ""}
+                </span>
+              )}
             </button>
           ))}
         </div>
@@ -551,7 +572,12 @@ function MeseroAppInner() {
           </h2>
           <div className="space-y-3">
             {pedidosMesa.map((pedido) => (
-              <div key={pedido.id} className="rounded-xl border border-gray-200 bg-white p-4">
+              <div
+                key={pedido.id}
+                className={`rounded-xl border p-4 ${
+                  pedido.estado === 4 ? "border-gray-200 bg-gray-50 opacity-60" : "border-gray-200 bg-white"
+                }`}
+              >
                 <div className="mb-2 flex items-center justify-between">
                   <span
                     className={`rounded-full px-2 py-0.5 text-xs font-semibold ${
@@ -561,7 +587,9 @@ function MeseroAppInner() {
                           ? "bg-blue-100 text-blue-700"
                           : pedido.estado === 2
                             ? "bg-green-100 text-green-700"
-                            : "bg-gray-200 text-gray-600"
+                            : pedido.estado === 4
+                              ? "bg-red-100 text-red-700"
+                              : "bg-gray-200 text-gray-600"
                     }`}
                   >
                     {ESTADOS[pedido.estado] || "—"}
@@ -607,11 +635,11 @@ function MeseroAppInner() {
                 </ul>
                 <div className="mt-2 flex items-center justify-between">
                   <p className="text-sm font-bold text-gray-800">{fmt(pedido.total)}</p>
-                  {facturados.includes(pedido.id) ? (
+                  {pedido.estaFacturado ? (
                     <span className="rounded-full bg-green-100 px-3 py-1.5 text-xs font-semibold text-green-700">
                       Facturado
                     </span>
-                  ) : pedido.estado === 2 ? (
+                  ) : esOrdenEntregable(pedido) ? (
                     <button
                       onClick={() => marcarEntregada(pedido.id)}
                       disabled={entregandoId === pedido.id}
@@ -680,13 +708,21 @@ function MeseroAppInner() {
                   <span>Impuesto</span>
                   <span>{fmt(cuentaMesa.impuesto)}</span>
                 </div>
+                {cuentaMesa.porcentajePropina > 0 && (
+                  <div className="flex justify-between">
+                    <span>Propina ({cuentaMesa.porcentajePropina}%)</span>
+                    <span>{fmt(cuentaMesa.propina)}</span>
+                  </div>
+                )}
                 <div className="flex justify-between font-bold text-gray-800">
-                  <span>Total</span>
-                  <span>{fmt(cuentaMesa.total)}</span>
+                  <span>Total a cobrar</span>
+                  <span>{fmt(cuentaMesa.totalConPropina ?? cuentaMesa.total)}</span>
                 </div>
               </div>
             ) : (
-              <p className="mb-3 text-sm text-gray-500">La cuenta se abrirá al momento de cobrar.</p>
+              <p className="mb-3 text-sm text-gray-500">
+                La cuenta se abrirá al momento de enviar la primera orden.
+              </p>
             )}
 
             {pendientesDeFacturar.length > 0 ? (
@@ -694,7 +730,7 @@ function MeseroAppInner() {
                 onClick={abrirModalCerrarCuenta}
                 className="w-full rounded-lg bg-orange-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-orange-700"
               >
-                Cerrar cuenta y facturar
+                Enviar cuenta a caja
               </button>
             ) : (
               <p className="text-xs text-gray-500">No hay órdenes pendientes por cobrar.</p>
@@ -798,9 +834,7 @@ function MeseroAppInner() {
         <ModalCuentaCerrada
           mesaNumero={mesaActiva.numero}
           factura={facturaCuenta}
-          liberando={liberandoMesa}
-          onLiberar={liberarMesa}
-          onSeguir={seguirAgregando}
+          onSeguir={volverDesdeCaja}
         />
       )}
     </div>

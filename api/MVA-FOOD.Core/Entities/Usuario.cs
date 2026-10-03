@@ -12,6 +12,7 @@ namespace MVA_FOOD.Core.Entities
         public string UsuarioNombre { get; set; } = null!;
         public string PasswordHash { get; set; } = null!;
         public string Rol { get; set; } = "Admin"; // Admin, Empleado, etc.
+        public bool Activo { get; set; } = true;
         // Relación con Restaurante
         public Guid? RestauranteId { get; set; }  // Nullable ← ✅ IMPORTANTE
 

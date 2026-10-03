@@ -1,5 +1,9 @@
 import { API_URL } from "@/lib/apiConfig";
-import type { CreatePedidoDto, PedidoFilters } from "@/Types/Restaurante.ts";
+import type {
+  CreatePedidoDto,
+  MesaPlatosListosDto,
+  PedidoFilters,
+} from "@/Types/Restaurante.ts";
 
 export interface PagedResultPedidos {
   totalItems: number;
@@ -7,6 +11,26 @@ export interface PagedResultPedidos {
   pageSize: number;
   totalPages: number;
   items: PedidoResponse[];
+}
+
+export interface PedidoItemResponse {
+  id: string;
+  menuId?: string;
+  producto?: {
+    id: string;
+    nombre: string;
+    precio: number;
+    imagen: string;
+  } | null;
+  precio: number;
+  cantidad: number;
+  notas: string;
+  opciones: string;
+  esCombo?: boolean;
+  comboId?: string;
+  comboNombre?: string;
+  comboItemsJson?: string;
+  estado: number;
 }
 
 export interface PedidoResponse {
@@ -22,25 +46,12 @@ export interface PedidoResponse {
   restauranteId: string;
   mesaId?: string;
   numeroMesa?: number;
-  items: {
-    id: string;
-    menuId?: string;
-    producto?: {
-      id: string;
-      nombre: string;
-      precio: number;
-      imagen: string;
-    } | null;
-    precio: number;
-    cantidad: number;
-    notas: string;
-    opciones: string;
-    esCombo?: boolean;
-    comboId?: string;
-    comboNombre?: string;
-    comboItemsJson?: string;
-    estado?: number;
-  }[];
+  activo: boolean;
+  facturaVentaId?: string;
+  cuentaMesaId?: string;
+  estaFacturado: boolean;
+  puedeFacturarse?: boolean;
+  items: PedidoItemResponse[];
 }
 
 export const pedidoService = {
@@ -71,6 +82,15 @@ export const pedidoService = {
       credentials: "include",
     });
     if (!res.ok) throw new Error("Error al obtener pedidos de la mesa");
+    return res.json();
+  },
+
+  async getPlatosListosPorMesa(restauranteId: string): Promise<MesaPlatosListosDto[]> {
+    const res = await fetch(
+      `${API_URL}/Pedido/platos-listos-por-mesa?restauranteId=${restauranteId}`,
+      { credentials: "include" },
+    );
+    if (!res.ok) throw new Error("Error al obtener platos listos por mesa");
     return res.json();
   },
 
@@ -116,6 +136,16 @@ export const pedidoService = {
       },
     );
     if (!res.ok) throw new Error("Error al actualizar estado del producto");
+  },
+
+  async cancelar(id: string): Promise<PedidoResponse> {
+    const res = await fetch(`${API_URL}/Pedido/${id}/cancelar`, {
+      method: "POST",
+      credentials: "include",
+    });
+    const json = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(json?.message || json?.mensaje || "Error al cancelar el pedido");
+    return json;
   },
 
   async delete(id: string): Promise<void> {

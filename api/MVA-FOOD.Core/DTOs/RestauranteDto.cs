@@ -33,6 +33,7 @@ namespace MVA_FOOD.Core.DTOs
         public int SecuenciaFactura { get; set; } = 1;
         public decimal PorcentajeImpuesto { get; set; }
         public bool ImpuestoIncluido { get; set; } = true;
+        public decimal PorcentajePropina { get; set; }
         public string? MensajePieFactura { get; set; }
     }
 }

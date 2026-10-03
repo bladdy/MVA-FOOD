@@ -105,6 +105,13 @@ function ReporteVentasInner() {
             </div>
           )}
 
+          {reporte.cantidadPorCobrar > 0 && (
+            <div className="bg-amber-50 border border-amber-200 text-amber-800 text-sm rounded-md px-4 py-3">
+              {reporte.cantidadPorCobrar} cuenta(s) por {fmt(reporte.montoPorCobrar)} aún sin
+              cobrar en el período. No están incluidas en los ingresos.
+            </div>
+          )}
+
           {/* Ventas por día */}
           <div className="bg-white border border-gray-200 rounded-xl p-5">
             <h2 className="text-sm font-semibold text-gray-700 mb-4">Ventas por día</h2>

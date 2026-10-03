@@ -148,8 +148,11 @@ function agruparItems(items: ItemKDS[]): ItemKDS[] {
 function construirOrdenes(pedidos: PedidoResponse[]): OrdenCard[] {
   const ordenes: OrdenCard[] = [];
   for (const p of pedidos) {
-    if (p.estado === 3) continue;
-    const items = agruparItems((p.items || []).map(toItemKDS));
+    if (p.estado === 3 || p.estado === 4) continue;
+    const items = agruparItems(
+      (p.items || []).map(toItemKDS).filter((i) => i.estado !== 4),
+    );
+    if (items.length === 0) continue;
     const estados = items.map((i) => i.estado);
     let estadoColumna: 0 | 1 | 2 = 0;
     if (estados.length === 0) {
@@ -320,18 +323,23 @@ function TarjetaOrden({
   onPrioridad,
   onAccion,
 }: TarjetaOrdenProps) {
+  const conMesa = orden.mesa != null;
   const accion =
     orden.estadoColumna === 0
       ? "Empezar"
       : orden.estadoColumna === 1
         ? "Listo"
-        : "Entregar";
+        : conMesa
+          ? "Mesa entregará"
+          : "Entregar";
   const accionClases =
     orden.estadoColumna === 0
       ? "bg-blue-500 hover:bg-blue-600"
       : orden.estadoColumna === 1
         ? "bg-green-500 hover:bg-green-600"
-        : "bg-gray-800 hover:bg-gray-900 dark:bg-gray-700 dark:hover:bg-gray-600";
+        : conMesa
+          ? "bg-gray-400"
+          : "bg-gray-800 hover:bg-gray-900 dark:bg-gray-700 dark:hover:bg-gray-600";
 
   return (
     <article
@@ -441,7 +449,7 @@ function TarjetaOrden({
         <div className="flex-1" />
         <button
           onClick={onAccion}
-          disabled={ocupado}
+          disabled={ocupado || (orden.estadoColumna === 2 && conMesa)}
           className={`px-6 py-2.5 rounded-lg text-sm font-bold text-white shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white disabled:cursor-not-allowed disabled:opacity-50 dark:focus:ring-offset-gray-800 ${accionClases}`}
         >
           {ocupado ? "Procesando..." : accion}
@@ -544,7 +552,7 @@ function CocinaAppInner() {
     pedidoService
       .getAll(restauranteId)
       .then((lista) => {
-        const vivos = lista.filter((p) => p.estado !== 3);
+        const vivos = lista.filter((p) => p.estado !== 3 && p.estado !== 4);
         setPedidos(vivos);
         vistosRef.current = new Set(vivos.map((p) => p.id));
       })
@@ -557,7 +565,7 @@ function CocinaAppInner() {
       .build();
 
     connection.on("NuevoPedido", (pedido: PedidoResponse) => {
-      if (!pedido || pedido.estado === 3) return;
+      if (!pedido || pedido.estado === 3 || pedido.estado === 4) return;
       setPedidos((prev) =>
         prev.some((p) => p.id === pedido.id)
           ? prev.map((p) => (p.id === pedido.id ? pedido : p))
@@ -572,7 +580,7 @@ function CocinaAppInner() {
 
     connection.on("EstadoPedidoActualizado", (pedido: PedidoResponse) => {
       setPedidos((prev) =>
-        pedido.estado === 3
+        pedido.estado === 3 || pedido.estado === 4
           ? prev.filter((p) => p.id !== pedido.id)
           : prev.map((p) => (p.id === pedido.id ? pedido : p)),
       );
@@ -665,7 +673,9 @@ function CocinaAppInner() {
     if (!restauranteId) return;
     pedidoService
       .getAll(restauranteId)
-      .then((lista) => setPedidos(lista.filter((p) => p.estado !== 3)))
+      .then((lista) =>
+        setPedidos(lista.filter((p) => p.estado !== 3 && p.estado !== 4)),
+      )
       .catch(console.error);
   }, [restauranteId]);
 

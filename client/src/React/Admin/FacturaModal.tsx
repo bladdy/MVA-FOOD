@@ -141,7 +141,6 @@ export default function FacturaModal({ onClose, pedidoIdInicial, onFacturaCreada
       const factura = await facturaVentaService.crearDesdePedido(dto);
       setResultado(factura);
       onFacturaCreada?.(factura, grupoIds.length > 1 ? grupoIds : [pedidoId]);
-      setTimeout(() => window.print(), 400);
     } catch (e: any) {
       setError(e?.message || "Error al crear factura");
     } finally {
@@ -397,7 +396,7 @@ export default function FacturaModal({ onClose, pedidoIdInicial, onFacturaCreada
                     creating ? "bg-gray-400 cursor-not-allowed" : "bg-orange-600 hover:bg-orange-700"
                   }`}
                 >
-                  {creating ? "Creando..." : "Facturar e imprimir"}
+                  {creating ? "Creando..." : "Cobrar y facturar"}
                 </button>
               </div>
             </>

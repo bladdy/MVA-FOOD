@@ -10,32 +10,51 @@ interface Props {
   onCancelar: () => void;
 }
 
-const METODOS_PAGO = ["Efectivo", "Tarjeta", "Transferencia", "QR"];
-
-export default function ModalCerrarCuenta({ cuenta, cerrando, error, onCerrar, onCancelar }: Props) {
+export default function ModalCerrarCuenta({
+  cuenta,
+  cerrando,
+  error,
+  onCerrar,
+  onCancelar,
+}: Props) {
   const [clienteNombre, setClienteNombre] = useState("");
   const [clienteTelefono, setClienteTelefono] = useState("");
   const [clienteNumeroFiscal, setClienteNumeroFiscal] = useState("");
   const [tipoEntrega, setTipoEntrega] = useState("en mesa");
-  const [metodoPago, setMetodoPago] = useState("");
   const [nota, setNota] = useState("");
 
+  const tiposEntregaMesa: { value: string; label: string }[] = [
+    { value: "en mesa", label: "En mesa" },
+    { value: "para comer aquí", label: "Para comer aquí" },
+  ];
+
+  // El método de pago no se pregunta aquí: caja lo confirma al cobrar, porque el
+  // mesero no entrega ni recibe el dinero.
   const submit = () => {
     onCerrar({
       clienteNombre,
       clienteTelefono,
       clienteNumeroFiscal: clienteNumeroFiscal || undefined,
       tipoEntrega,
-      metodoPago: metodoPago || undefined,
       nota: nota || undefined,
     });
   };
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 p-4">
+    <div
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 p-4"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="modal-cerrar-cuenta"
+    >
       <div className="max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-2xl bg-white shadow-2xl">
         <div className="sticky top-0 flex items-center justify-between border-b border-gray-200 bg-white px-6 py-4">
-          <h2 className="text-lg font-bold text-gray-800">Cerrar cuenta de la mesa {cuenta.numeroMesa}</h2>
+          <h2
+            id="modal-cerrar-cuenta"
+            className="text-lg font-bold text-gray-800"
+          >
+            Enviar cuenta de la mesa {cuenta.numeroMesa} a caja
+          </h2>
           <button
             onClick={onCancelar}
             className="rounded-lg p-2 text-gray-500 transition hover:bg-gray-100 hover:text-gray-700"
@@ -85,9 +104,17 @@ export default function ModalCerrarCuenta({ cuenta, cerrando, error, onCerrar, o
               <span>Impuesto</span>
               <span>{fmt(cuenta.impuesto)}</span>
             </div>
+            {cuenta.porcentajePropina > 0 && (
+              <div className="flex justify-between">
+                <span>Propina ({cuenta.porcentajePropina}%)</span>
+                <span>{fmt(cuenta.propina)}</span>
+              </div>
+            )}
             <div className="flex justify-between border-t border-orange-200 pt-2 font-bold text-gray-800">
-              <span>Total</span>
-              <span className="text-xl font-bold text-orange-700">{fmt(cuenta.total)}</span>
+              <span>Total a cobrar</span>
+              <span className="text-xl font-bold text-orange-700">
+                {fmt(cuenta.totalConPropina ?? cuenta.total)}
+              </span>
             </div>
           </div>
 
@@ -112,7 +139,7 @@ export default function ModalCerrarCuenta({ cuenta, cerrando, error, onCerrar, o
             </div>
           </div>
 
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div>
               <label className="mb-1 block text-sm font-medium text-gray-700">RNC/RFC (opcional)</label>
               <input
@@ -129,22 +156,9 @@ export default function ModalCerrarCuenta({ cuenta, cerrando, error, onCerrar, o
                 onChange={(e) => setTipoEntrega(e.target.value)}
                 className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-orange-300"
               >
-                <option value="en mesa">En mesa</option>
-                <option value="recoger">Para recoger</option>
-                <option value="domicilio">A domicilio</option>
-              </select>
-            </div>
-            <div>
-              <label className="mb-1 block text-sm font-medium text-gray-700">Método de pago</label>
-              <select
-                value={metodoPago}
-                onChange={(e) => setMetodoPago(e.target.value)}
-                className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-orange-300"
-              >
-                <option value="">Seleccionar...</option>
-                {METODOS_PAGO.map((m) => (
-                  <option key={m} value={m}>
-                    {m}
+                {tiposEntregaMesa.map((t) => (
+                  <option key={t.value} value={t.value}>
+                    {t.label}
                   </option>
                 ))}
               </select>
@@ -160,6 +174,11 @@ export default function ModalCerrarCuenta({ cuenta, cerrando, error, onCerrar, o
               className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-orange-300"
             />
           </div>
+
+          <p className="rounded-md border border-orange-200 bg-orange-50 px-4 py-3 text-sm text-orange-800">
+            Al enviar la cuenta, <strong>caja la imprime</strong>, se la lleva al cliente y
+            registra el pago cuando recibe el dinero. La mesa queda libre de inmediato.
+          </p>
 
           {error && (
             <div className="rounded-md border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
@@ -182,7 +201,7 @@ export default function ModalCerrarCuenta({ cuenta, cerrando, error, onCerrar, o
                 cerrando ? "cursor-not-allowed bg-gray-400" : "bg-orange-600 transition hover:bg-orange-700"
               }`}
             >
-              {cerrando ? "Cerrando..." : "Cerrar cuenta y facturar"}
+              {cerrando ? "Enviando a caja..." : "Enviar a caja"}
             </button>
           </div>
         </div>
