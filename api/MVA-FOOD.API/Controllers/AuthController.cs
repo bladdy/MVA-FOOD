@@ -39,8 +39,8 @@ namespace MVA_FOOD.API.Controllers
             Response.Cookies.Append("token", token, new CookieOptions
             {
                 HttpOnly = true,
-                Secure = true,
-                SameSite = SameSiteMode.None,
+                Secure = false, // Cambiar a true en producción
+                SameSite = SameSiteMode.Lax,
                 //Domain = ".mr-menus.com",
                 Path = "/",
                 Expires = DateTimeOffset.UtcNow.AddDays(7)
@@ -121,8 +121,8 @@ namespace MVA_FOOD.API.Controllers
             Response.Cookies.Append("token", "", new CookieOptions
             {
                 HttpOnly = true,
-                Secure = true,
-                SameSite = SameSiteMode.None,
+                Secure = false, // Cambiar a true en producción
+                SameSite = SameSiteMode.Lax,
                 //Domain = ".mr-menus.com",
                 Path = "/",
                 Expires = DateTimeOffset.UtcNow.AddDays(-1)

@@ -2,7 +2,6 @@
 import { defineConfig } from 'astro/config';
 import tailwind from '@astrojs/tailwind';
 import react from '@astrojs/react';
-import vercel from '@astrojs/vercel';
 import svgr from 'vite-plugin-svgr';
 import node from '@astrojs/node';
 import sitemap from '@astrojs/sitemap';
