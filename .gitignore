@@ -88,3 +88,9 @@ secrets.json
 
 # Logs
 *.log
+
+## Environment files
+client/.env
+client/.env.local
+client/src/lib/apiConfig.ts
+client/.env
